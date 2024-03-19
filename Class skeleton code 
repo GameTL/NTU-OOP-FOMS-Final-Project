@@ -1,0 +1,177 @@
+Class skeletons for FMOS app 
+
+
+- Menu management 
+
+public class MenuItem {
+    private String id;
+    private String name;
+    private String description;
+    private double price;
+    private String category;
+
+    // Constructor, getters, and setters
+}
+
+public class Menu {
+    private List<MenuItem> items;
+
+    public void addMenuItem(MenuItem item) {
+        // Add item to the list
+    }
+
+    public void updateMenuItem(String itemId, MenuItem updatedItem) {
+        // Update item in the list
+    }
+
+    public void removeMenuItem(String itemId) {
+        // Remove item from the list
+    }
+}
+
+
+- Order Management
+
+public class OrderItem {
+    private MenuItem menuItem;
+    private int quantity;
+
+    // Constructor, getters, and setters
+}
+
+public class Order {
+    private String orderId;
+    private List<OrderItem> items;
+    private String status;
+    private double totalPrice;
+
+    // Methods like addItem(), removeItem(), calculateTotal()
+}
+
+public class OrderManager {
+    private List<Order> orders;
+
+    public Order createOrder() {
+        // Create and return a new order
+    }
+
+    public void updateOrder(String orderId, Order updatedOrder) {
+        // Update order details
+    }
+
+    public Order trackOrder(String orderId) {
+        // Return the order with the given ID
+    }
+}
+
+
+- User Management
+
+public abstract class User {
+    protected String id;
+    protected String name;
+    protected String contactInfo;
+
+    // Common getters and setters
+}
+
+public class Customer extends User {
+    // Customer-specific properties and methods
+}
+
+public class Staff extends User {
+    protected String role;
+
+    public void processOrder(Order order) {
+        // Process the given order
+    }
+}
+
+public class Manager extends Staff {
+    public void manageMenu(Menu menu) {
+        // Manage the menu items
+    }
+}
+
+public class Admin extends User {
+    public void manageUsers(List<User> users) {
+        // Manage user accounts
+    }
+
+    public void manageBranches(List<Branch> branches) {
+        // Manage branches
+    }
+}
+
+
+- Payment Integration
+
+public interface PaymentMethod {
+    boolean processPayment(double amount);
+}
+
+public class CreditCardPayment implements PaymentMethod {
+    public boolean processPayment(double amount) {
+        // Process credit card payment
+        return true;
+    }
+}
+
+public class DebitCardPayment implements PaymentMethod {
+    public boolean processPayment(double amount) {
+        // Process debit card payment
+        return true;
+    }
+}
+
+public class OnlinePayment implements PaymentMethod {
+    public boolean processPayment(double amount) {
+        // Process online payment
+        return true;
+    }
+}
+
+
+- Branch Management
+
+public class Branch {
+    private String id;
+    private String address;
+    private List<Staff> staffMembers;
+
+    public void manageStaff() {
+        // Manage staff in the branch
+    }
+
+    public void displayMenu(Menu menu) {
+        // Display the menu items
+    }
+}
+
+
+- Utility Classes
+
+public class FileManager {
+    public static void readData(String filePath) {
+        // Read data from file
+    }
+
+    public static void writeData(String filePath, String data) {
+        // Write data to file
+    }
+}
+
+public class AuthenticationService {
+    public static boolean login(String username, String password) {
+        // Handle user login
+        return true;
+    }
+
+    public static void changePassword(String username, String newPassword) {
+        // Change user's password
+    }
+}
+
+
+
+
