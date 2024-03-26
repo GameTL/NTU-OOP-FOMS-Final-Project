@@ -12,10 +12,6 @@ public class fomsApp {
 
 
     public static void main(String[] args)  {
-
-
-
-
         int choice;
 
         Scanner sc = new Scanner(System.in);
@@ -32,7 +28,9 @@ public class fomsApp {
 
             switch (choice) {
                 case 1:
+                    customerMode();
                 case 2:
+                    staffMode();
                 case 3:
                     System.out.println("Program terminating ....");
             }
