@@ -28,14 +28,9 @@ public class fomsApp {
             switch (choice) {
                 case 1:
                     break;
-
                 case 2:
                     break;
                 case 3:
-                    System.out.println("Program terminating ....");
-            }
-        } while (choice < 3);
-    }
 
     private void staffLogin() {
         int choice;
