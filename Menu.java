@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 public class Menu {
     private List<MenuItem> items;
@@ -30,10 +33,10 @@ public class Menu {
     public void addMenuItem(MenuItem item) {
         items.add(item);
     }
-    public void removeMenuItem(String item) {
+    public void removeMenuItem(MenuItem item) {
         items.remove(item);
     }
-    public void displaymenu() {
+    public void displayMenu(String branch) {
         System.out.println("Please choose your order from the menu.");
         System.out.println("=========================================");
         for (MenuItem item : items){
@@ -47,10 +50,9 @@ public class Menu {
         
         Scanner sc = new Scanner(System.in);
         System.out.println("Please select a branch (NTU, JP, or JE): ");
-        String branch = scanner.nextLine();
+        String branch = sc.nextLine();
 
-        menu.setBranch();
-        menu.displaymenu();
+        menu.displayMenu(branch);
         
     }
 }

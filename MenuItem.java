@@ -1,17 +1,14 @@
 public class MenuItem {
     private String name;
     private double price;
-    private String description;
     private String category;
     private String branch;
 
-    public MenuItem(String name, String description, double price, String category, String branch){
+    public MenuItem(String name, double price, String category, String branch){
         this.name = name;
         this.price = price;
-        this.description = description;
         this.category = category;
         this.branch = branch;
-        this.available = true;
     }
     public String getName(){
         return name;
@@ -19,7 +16,7 @@ public class MenuItem {
     public void setName(String name){
         this.name = name;  
     }
-    public String getPrice(){
+    public double getPrice(){
         return price;
     }
     public void setName(double price){
