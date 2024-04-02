@@ -19,7 +19,7 @@ public class MenuItem {
     public double getPrice(){
         return price;
     }
-    public void setName(double price){
+    public void setPrice(double price){
         this.price = price;  
     }
     public String getBranch(){

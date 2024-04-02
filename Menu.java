@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,7 +8,6 @@ public class Menu {
     public Menu(){
         this.items = new ArrayList<>();
         initializeMenuItems();
-        sortItemsByCategory();
     }
     private void initializeMenuItems(){
         // Initialization for NTU branch
@@ -26,9 +24,6 @@ public class Menu {
         items.add(new MenuItem("COLE SLAW", 2.7, "JE", "Side"));
         items.add(new MenuItem("3PC SET MEAL", 10.4, "JE", "Set meal"));
         items.add(new MenuItem("PEPSI", 2.1, "JE", "Drink"));
-    }
-    private void sortItemsByCategory(){
-        items.sort(Comparator.comparing(MenuItem::getCategory));
     }
     public void addMenuItem(MenuItem item) {
         items.add(item);
@@ -53,6 +48,7 @@ public class Menu {
         String branch = sc.nextLine();
 
         menu.displayMenu(branch);
+        sc.close();
         
     }
 }
