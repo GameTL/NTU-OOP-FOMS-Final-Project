@@ -1,24 +1,17 @@
 public class MenuItem {
-    private String id;
     private String name;
     private double price;
     private String description;
     private String category;
     private String branch;
-    private boolean available;
 
-    public MenuItem(String id, String name, String description, double price, String category, String branch){
-        this.id = id;
+    public MenuItem(String name, String description, double price, String category, String branch){
         this.name = name;
         this.price = price;
         this.description = description;
         this.category = category;
         this.branch = branch;
         this.available = true;
-    }
-    public void displayMenu(){
-       System.out.println("Please choose from the menu below: ");
-       for ()  //refer to weeklysales.java
     }
     public String getName(){
         return name;
@@ -44,10 +37,5 @@ public class MenuItem {
     public void setCategory(String category){
         this.category = category;  
     }
-    public String isAvailable(){
-        return available;
-    }
-    public void setAvailable(boolean available){
-        this.available = available;  
-    }
 }
+
