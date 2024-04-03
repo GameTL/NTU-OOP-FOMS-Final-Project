@@ -31,25 +31,24 @@ public class Menu {
     public void removeMenuItem(MenuItem item) {
         items.remove(item);
     }
-    public void displayMenu(String branch) {
+    public void displayMenu() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please select a branch (NTU, JP, or JE): ");
+        String branchchosen = sc.nextLine();
+
         System.out.println("Please choose your order from the menu.");
         System.out.println("=========================================");
         for (MenuItem item : items){
-                if (item.getBranch().equals(branch)){
-                    System.out.println(item.getName() + "\t" + item.getPrice() + "\t" + item.getCategory());
-                }
+            if (item.getBranch().equalsIgnoreCase(branchchosen)){
+                System.out.println(item);
+            }
         }
+        sc.close();
     }
     public static void main(String[] args) {
         Menu menu = new Menu();
-        
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Please select a branch (NTU, JP, or JE): ");
-        String branch = sc.nextLine();
 
-        menu.displayMenu(branch);
-        sc.close();
-        
+        menu.displayMenu();
     }
 }
 
