@@ -1,3 +1,7 @@
+package src;
+
+import java.util.List;
+
 public class Menu {
     private List<MenuItem> items;
 

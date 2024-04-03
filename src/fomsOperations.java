@@ -1,3 +1,4 @@
+package src;
 public interface fomsOperations {
     // Main
     void userSelector();
