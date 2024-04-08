@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class fomsApp implements fomsOperations {
     // Declare the Scanner as an instance variable of the class
     private Scanner sc;
+    private String CurrentStaffType;
 
     // Constructor
     public fomsApp() {
@@ -17,13 +18,14 @@ public class fomsApp implements fomsOperations {
         int choice;
         do {
             System.out.println("""
+                    -------------------------------
                     Are you a customer or a staff?
                     (1) Customer
                     (2) Staff
-                    -------------------------------
+
                     (0) back
                     (-1) exit
-                    """);
+                    -------------------------------""");
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
@@ -44,28 +46,42 @@ public class fomsApp implements fomsOperations {
     public void adminHome() { // Complete level 1
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
-
+            String AdminChoices = String.format("""
+                    %23s
+                    (1) Assign manager
+                    (2) Display all staff
+                    (3) Edit payment
+                    (4) Open/close Branch
+                    (5) Promote a Staff
+                    (6) Transfer staff to branch
+                    """, "Admin HomePage");
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                            Admin Homepage
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
-                    """, CurrentOrderList);
+                    -------------------------------
+                    """, AdminChoices);
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    // TODO
+                    assignManager();
                     break;
                 case 2:
-                    // TODO
+                    displayStaff();
+                case 3:
+                    editPayment();
+                case 4:
+                    openCloseBranch();
+                case 5:
+                    promoteStaff();
+                case 6:
+                    transferStaff();
                 case 0:
                     break;
                 case -1:
-                    System.out.println("Program terminating ....");
                     System.exit(0);
 
             }
@@ -80,11 +96,12 @@ public class fomsApp implements fomsOperations {
 
             System.out.printf("""
 
-                    %s
                     -------------------------------
+                           Edit Staff Account
+                    %s
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -104,36 +121,63 @@ public class fomsApp implements fomsOperations {
     }
 
     public void staffLogin() { // Complete level 2
-        int choice;
-        String list_branch = "(1) Branch A\n(2) Branch A";
-        // String list_branch = "";
 
         System.out.println("""
-                Staff Login
                 -------------------------------
-                Username:\n""");
-        String username = sc.nextLine();
-        System.out.println(username);
+                          Staff Login
+                Username:""");
+        String username = sc.next();
+        System.out.println("Entered username: " + username);
         System.out.println("""
-                Password:\n""");
-        String password = sc.nextLine();
+                Password:""");
+        String password = sc.next();
+        System.out.println("Entered password: " + password);
+        System.out.println("\nACCESS GRANTED!!");
+        System.err.println("-------------------------------");
 
-        System.out.println(password);
+        /*
+         * Username 1234
+         * Password 1234
+         */
+
+        // if staff then go to staff home
+
+        // String CurrentStaffType = "admin";
+        String CurrentStaffType = "staff";
+        // String CurrentStaffType = "branchmanager";
+        switch (CurrentStaffType) {
+            case "admin":
+                adminHome();
+                break;
+            case "staff":
+                staffHome();
+                break;
+            // TODO
+            case "branchmanager":
+
+                break;
+            // TODO
+
+        }
     }
 
     public void staffHome() { // Complete level 1
+        // Show all the order that's the staff suppose to be doing
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
+            String CurrentOrderList = "(1] OrderID2\n(2) ";
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                             Staff HomePage
+
+                    Current Order
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -160,12 +204,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                           Manager Assignment
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -191,12 +236,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                            Payment Type
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -222,12 +268,12 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                               All Staff
+                    %s
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -253,12 +299,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                              Edit Payment
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -280,17 +327,18 @@ public class fomsApp implements fomsOperations {
     public void openCloseBranch() { // Complete level 1
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
+            String header = "(1) OrderID2\n(2) OrderID1";
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                           Open/Close Branch
+                    %s
+
                     (0) back
                     (-1) exit
                     \n
-                    """, CurrentOrderList);
+                    """, header);
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
@@ -315,12 +363,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                            Staff Promotion
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -346,12 +395,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                             Tranfer Staff
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -371,6 +421,46 @@ public class fomsApp implements fomsOperations {
     }
 
     // >BranchManager
+    public void branchManagerHome() { // Complete level 1
+        int choice;
+        do {
+            String BranchManagerChoices = """
+                    (1) Show Current Order
+                    (2) Display Branch Staff
+                    (3) Edit Branch Menu
+                    """;
+            System.out.printf("""
+                    -------------------------------
+                         Branch Manager Homepage
+                    %s
+
+                    (0) back
+                    (-1) exit
+                    -------------------------------
+                    """, BranchManagerChoices);
+            choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    assignManager();
+                    break;
+                case 2:
+                    displayStaff();
+                case 3:
+                    editPayment();
+                case 4:
+                    openCloseBranch();
+                case 5:
+                    promoteStaff();
+                case 6:
+                    transferStaff();
+                case 0:
+                    break;
+                case -1:
+                    System.exit(0);
+
+            }
+        } while (choice < 3);
+    }
     public void editMenu() { // Complete level 1
         int choice;
         do {
@@ -378,11 +468,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                              Menu Editor
+                    %s
+
                     (0) back
                     (-1) exit
+                    -------------------------------
                     \n
                     """, CurrentOrderList);
             choice = sc.nextInt();
@@ -405,15 +497,16 @@ public class fomsApp implements fomsOperations {
     public void displayBranchStaff() { // Complete level 1
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
+            String CurrentOrderList = "(1) Jack\n(2) Jill";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                        All staff @ this branch
+                    %s
+
                     (0) back
                     (-1) exit
+                    -------------------------------
                     \n
                     """, CurrentOrderList);
             choice = sc.nextInt();
@@ -441,12 +534,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
+                    -------------------------------
                     Which branch would you like to select?
                     %s
-                    -------------------------------
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, list_branch);
             choice = sc.nextInt();
             switch (choice) {
@@ -471,12 +565,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                             Current Order
+                    %s
+
                     (0) back
                     (-1) exit
-                    \n
+                    -------------------------------
                     """, CurrentOrderList);
             choice = sc.nextInt();
             switch (choice) {
@@ -502,11 +597,13 @@ public class fomsApp implements fomsOperations {
             // String list_branch = "";
 
             System.out.printf("""
-
-                    %s
                     -------------------------------
+                              List of Menu
+                    %s
+
                     (0) back
                     (-1) exit
+                    -------------------------------
                     \n
                     """, MenuList);
             choice = sc.nextInt();
