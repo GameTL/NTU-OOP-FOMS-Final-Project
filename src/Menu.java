@@ -1,3 +1,5 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -5,11 +7,12 @@ import java.util.Scanner;
 public class Menu {
     private List<MenuItem> items;
 
-    public Menu(){
+    public Menu() {
         this.items = new ArrayList<>();
         initializeMenuItems();
     }
-    private void initializeMenuItems(){
+
+    private void initializeMenuItems() {
         // Initialization for NTU branch
         items.add(new MenuItem("FRIES", 3.2, "NTU", "Side"));
         items.add(new MenuItem("3PC SET MEAL", 9.9, "NTU", "Set meal"));
@@ -25,12 +28,15 @@ public class Menu {
         items.add(new MenuItem("3PC SET MEAL", 10.4, "JE", "Set meal"));
         items.add(new MenuItem("PEPSI", 2.1, "JE", "Drink"));
     }
+
     public void addMenuItem(MenuItem item) {
         items.add(item);
     }
+
     public void removeMenuItem(MenuItem item) {
         items.remove(item);
     }
+
     public void displayMenu() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please select a branch (NTU, JP, or JE): ");
@@ -38,12 +44,13 @@ public class Menu {
 
         System.out.println("Please choose your order from the menu.");
         System.out.println("=========================================");
-        for (MenuItem item : items){
-            if (item.getBranch().equalsIgnoreCase(branchchosen)){
-                System.out.println(item);
+        int index = 1;
+        for (MenuItem item : items) {
+            if (item.getBranch().equalsIgnoreCase(branchchosen)) {
+                System.out.println(index + ". " + item);
+                index++;
             }
         }
-        sc.close();
+        // sc.close();
     }
 }
-

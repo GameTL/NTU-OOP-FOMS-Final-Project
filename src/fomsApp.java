@@ -6,6 +6,7 @@ public class fomsApp implements fomsOperations {
     // Declare the Scanner as an instance variable of the class
     private Scanner sc;
     private String CurrentStaffType;
+    Menu menu = new Menu();
 
     // Constructor
     public fomsApp() {
@@ -30,9 +31,10 @@ public class fomsApp implements fomsOperations {
             switch (choice) {
                 case 1:
                     branchSelector();
-
+                    break;
                 case 2:
                     staffLogin();
+                    break;
                 case 0:
                     break;
                 case -1:
@@ -393,7 +395,6 @@ public class fomsApp implements fomsOperations {
         do {
             String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
             // String list_branch = "";
-
             System.out.printf("""
                     -------------------------------
                              Tranfer Staff
@@ -461,6 +462,7 @@ public class fomsApp implements fomsOperations {
             }
         } while (choice < 3);
     }
+
     public void editMenu() { // Complete level 1
         int choice;
         do {
@@ -528,34 +530,34 @@ public class fomsApp implements fomsOperations {
 
     // >User
     public void branchSelector() { // Complete level 2
-        int choice;
-        do {
-            String list_branch = "(1) Branch A\n(2) Branch A";
-            // String list_branch = "";
+        menu.displayMenu();
+        // do {
+        // String list_branch = "(1) Branch A\n(2) Branch A";
+        // // String list_branch = "";
 
-            System.out.printf("""
-                    -------------------------------
-                    Which branch would you like to select?
-                    %s
+        // System.out.printf("""
+        // -------------------------------
+        // Which branch would you like to select?
+        // %s
 
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    """, list_branch);
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
+        // (0) back
+        // (-1) exit
+        // -------------------------------
+        // """, list_branch);
+        // choice = sc.nextInt();
+        // switch (choice) {
+        // case 1:
+        // break;
+        // case 2:
+        // break;
+        // case 0:
+        // break;
+        // case -1:
+        // System.out.println("Program terminating ....");
+        // System.exit(0);
 
-            }
-        } while (choice < 3);
+        // }
+        // } while (choice < 3);
     }
 
     public void displayCurrentOrder() { // Complete level 1
