@@ -17,25 +17,24 @@ public class MenuItem {
         return name;
     }
     public void setName(String name){
-        this.name = name;  
+        this.name = name;
     }
     public double getPrice(){
         return price;
     }
     public void setPrice(double price){
-        this.price = price;  
+        this.price = price;
     }
     public String getBranch(){
         return branch;
     }
     public void setBranch(String branch){
-        this.branch = branch;  
+        this.branch = branch;
     }
     public String getCategory(){
         return category;
     }
     public void setCategory(String category){
-        this.category = category;  
+        this.category = category;
     }
 }
-

@@ -1,5 +1,6 @@
+package src;
 import java.security.MessageDigest;
-import java.security.MessageDigest;
+
 import java.security.NoSuchAlgorithmException;
 
 public class staff {
