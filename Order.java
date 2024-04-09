@@ -3,14 +3,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class Order {
-    private String id;
+    private String orderId;
     private String customerId;
     private List<OrderItem> items;
-    private String status; // For example: "New", "Processing", "Ready to Pickup", "Completed"
+    private String status; // For example: "New", "Ready to pickup", "Completed"
     private boolean isTakeaway;
 
     public Order(String customerId, boolean isTakeaway) {
-        this.id = UUID.randomUUID().toString();
+        this.orderId = UUID.randomUUID().toString();
         this.customerId = customerId;
         this.items = new ArrayList<>();
         this.status = "New"; // Default status
@@ -28,8 +28,8 @@ public class Order {
     }
 
     // Getters and Setters
-    public String getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
     public String getCustomerId() {
@@ -60,7 +60,7 @@ public class Order {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Order ID: %s\nCustomer ID: %s\nStatus: %s\nTakeaway: %s\nItems:\n", id, customerId, status, isTakeaway ? "Yes" : "No"));
+        sb.append(String.format("Order ID: %s\nCustomer ID: %s\nStatus: %s\nTakeaway: %s\nItems:\n", orderId, customerId, status, isTakeaway ? "Yes" : "No"));
         for (OrderItem item : items) {
             sb.append(item).append("\n");
         }

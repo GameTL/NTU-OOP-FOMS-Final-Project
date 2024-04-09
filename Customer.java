@@ -13,7 +13,6 @@ public class Customer extends User {
         menu.displayMenu();
     }
 
-    // Enhanced to allow adding items to the order
     public void placeOrder(Order order, List<OrderItem> items) {
         for (OrderItem item : items) {
             order.addItem(item.getMenuItem(), item.getQuantity());
@@ -24,7 +23,7 @@ public class Customer extends User {
 
     public void checkOrderStatus(String orderId) {
         for (Order order : orderHistory) {
-            if (order.getId().equals(orderId)) {
+            if (order.getOrderId().equals(orderId)) {
                 System.out.println("Order Status: " + order.getStatus());
                 return;
             }
@@ -32,7 +31,6 @@ public class Customer extends User {
         System.out.println("Order not found.");
     }
 
-    // New method to view detailed order history
     public void viewOrderHistory() {
         if (orderHistory.isEmpty()) {
             System.out.println("No orders placed yet.");
@@ -43,4 +41,21 @@ public class Customer extends User {
             System.out.println(order);
         }
     }
+    
+    public void collectOrder(String orderId) {
+        for (Order order : orderHistory) {
+            if (order.getOrderId().equals(orderId)) {
+                if ("Ready to pickup".equals(order.getStatus())) {
+                    order.setStatus("Completed");
+                    System.out.println("Order " + orderId + " collected successfully. Status changed to Completed.");
+                } else {
+                    System.out.println("Order " + orderId + " is not ready for pickup. Current status: " + order.getStatus());
+                }
+                return;
+            }
+        }
+        System.out.println("Order with ID " + orderId + " not found in your order history.");
+    }
+
 }
+

@@ -18,7 +18,7 @@ public class Admin extends User {
                 staff.setName(newName);
                 staff.setContactInfo(newContactInfo);
                 staff.setRole(newRole);
-                staff.setBranch(newBranch); // Update branch during edit
+                staff.setBranch(newBranch);
                 System.out.println("Staff edited: " + staff.getName() + " in branch " + newBranch);
                 break;
             case "remove":

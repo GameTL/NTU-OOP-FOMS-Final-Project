@@ -1,14 +1,13 @@
-
 import java.util.List;
 
 public class Staff extends User {
     protected String role;
-    protected String branch; // New attribute for branch
+    protected String branch; 
 
     public Staff(String id, String name, String contactInfo, String role, String branch) {
         super(id, name, contactInfo);
         this.role = role;
-        this.branch = branch; // Initialize branch in constructor
+        this.branch = branch; 
     }
 
     // Getter and Setter for role
