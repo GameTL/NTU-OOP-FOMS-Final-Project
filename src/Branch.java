@@ -2,21 +2,19 @@ package src;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Branch{
     private String branchName;
     private int numOfStaff;
-    private List<Menu> branchMenu;
+    private List<MenuItem> branchMenu;
     private List<staff> staffMembers;
-    private List<Manager> managers;
     private Boolean availibility;
 
-    public Branch(String branchName, int numOfStaff){
+    public Branch(String branchName){
         this.branchName = branchName;
-        this.numOfStaff = numOfStaff;
         this.branchMenu = new ArrayList<>();
         this.staffMembers = new ArrayList<>();
-        this.managers = new ArrayList<>();
         this.availibility = true;
     }
     public String getBranchName() {
@@ -35,19 +33,19 @@ public class Branch{
         this.numOfStaff = numOfStaff;
     }
 
-    public List<FoodItem> getBranchMenu() {
+    public List<MenuItem> getBranchMenu() {
         return branchMenu;
     }
 
-    public void setBranchMenu(List<FoodItem> branchMenu) {
+    public void setBranchMenu(List<MenuItem> branchMenu) {
         this.branchMenu = branchMenu;
     }
 
-    public List<Staff> getStaffMembers() {
+    public List<staff> getStaffMembers() {
         return staffMembers;
     }
 
-    public void setStaffMembers(List<Staff> staffMembers) {
+    public void setStaffMembers(List<staff> staffMembers) {
         this.staffMembers = staffMembers;
     }
 
@@ -64,14 +62,68 @@ public class Branch{
     }
 
     public void setAvailability(boolean availability) {
-        this.availability = availability;
+        this.availability = true;
     }
     public void manageStaff() {
-        // TO DO: have options (1) Add staff (2) Kick Staff 
+        Scanner sc = new Scanner(System.in);
+        System.out.println("""
+                    -------------------------------
+                    Staff Management
+                    (1) Add staff member
+                    (2) Remove staff member
+
+                    (0) back
+                    (-1) exit
+                    -------------------------------""");
+        int manageChoice = sc.nextInt();
+        switch (manageChoice) {
+            case 1:
+                addStaff();
+                break;
+            case 2:
+                removeStaff();
+                break;
+            case 0:
+                break;
+            case -1:
+                System.out.println("Program terminating ....");
+                System.exit(0);
+        }
     }
 
     public void displayMenu(Menu menu) {
-        // TO DO: ask for branch
+        menu.displayMenu(this);
+    }
+    public static void main(String[] args) {
+        // Create an instance of Menu
+        Menu menu = new Menu();
+        BranchManager branchManager = new BranchManager();
+
+        // Ask the user to input the chosen branch
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("         OUR FAST FOOD BRANCHES");
+        System.out.println("=========================================");
+
+        List<Branch> branches = branchManager.getBranches();
+        for (int i = 0; i < branches.size(); i++) {
+            String branchName = branches.get(i).getBranchName();
+            System.out.println(String.format("%20s", "(" + (i + 1) + ") " + branchName));
+        }
+        System.out.println("=========================================");
+        int selection = -1;
+        while (selection < 1 || selection > branches.size()) {
+            System.out.print("Please choose your branch: ");
+            if (scanner.hasNextInt()) {
+                selection = scanner.nextInt();
+                scanner.nextLine();  // Consume newline character
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();  // Clear the invalid input
+            }
+    }
+
+        Branch selectedBranch = branches.get(selection - 1);
+        menu.displayMenu(selectedBranch);
     }
 }
-//Branch to initialize the menu and staff 
+
