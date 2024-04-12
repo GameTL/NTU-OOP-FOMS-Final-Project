@@ -9,13 +9,13 @@ public class Branch{
     private int numOfStaff;
     private List<MenuItem> branchMenu;
     private List<staff> staffMembers;
-    private Boolean availibility;
+    private Boolean available;
 
     public Branch(String branchName){
         this.branchName = branchName;
         this.branchMenu = new ArrayList<>();
         this.staffMembers = new ArrayList<>();
-        this.availibility = true;
+        this.available = true;
     }
     public String getBranchName() {
         return branchName;
@@ -57,12 +57,12 @@ public class Branch{
         this.managers = managers;
     }
 
-    public boolean isAvailability() {
-        return availability;
+    public boolean isAvailable() {
+        return available;
     }
 
-    public void setAvailability(boolean availability) {
-        this.availability = true;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
     public void manageStaff() {
         Scanner sc = new Scanner(System.in);
@@ -91,7 +91,7 @@ public class Branch{
         }
     }
 
-    public void displayMenu(Menu menu) {
+    public void displayBranchMenu(Menu menu) {
         menu.displayMenu(this);
     }
     public static void main(String[] args) {
