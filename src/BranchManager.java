@@ -7,7 +7,6 @@ public class BranchManager {
     private List<Branch> branches;
     
     public BranchManager() {
-<<<<<<< Updated upstream
         this.branches = new ArrayList<>();
         initializeBranches();
     }
@@ -16,12 +15,6 @@ public class BranchManager {
         branches.add(new Branch("NTU"));
         branches.add(new Branch("JP"));
         branches.add(new Branch("JE"));
-=======
-        branchList = new ArrayList<>();
-        branchList.add(new Branch("NTU"));
-        branchList.add(new Branch("JP"));
-        branchList.add(new Branch("JE"));
->>>>>>> Stashed changes
     }
     
     public void addBranch(Branch branch) {
