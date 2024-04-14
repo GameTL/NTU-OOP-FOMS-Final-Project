@@ -1,13 +1,46 @@
+/* 
+ * /usr/bin/env /Users/game/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages -cp /Users/game/Library/Application\ Support/Code/User/workspaceStorage/2f5c87283ad91abdee12af6a0051733b/redhat.java/jdt_ws/NTU-OOP-FOMS-Final-Project_ea206817/bin src.fomsApp 
+ */
+
 package src;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class fomsApp implements fomsOperations {
     // Declare the Scanner as an instance variable of the class
+    /*
+     * 1. List of Branch, Admin, CurrentUser
+     * 2. Staff, Menu, Order,
+     * 3. EditMenu,
+     * 
+     * init the branch wiht staff, brnachmanger,
+     * init with the state of who is using the app.
+     * currentUser
+     * All branch
+     * 
+     */
+    public void Initalizer() {
+        // Initialize branch
+        List<Branch> branchList = new ArrayList<>();
+        branchList.add(new Branch("NTU"));
+        branchList.add(new Branch("JP"));
+        branchList.add(new Branch("JE"));
+
+        // Initizalize order
+        List<OrderItem> items = new ArrayList<>();
+    }
+    //
+
+    private String currentBranchName;
+    private String currentUser;
+
     private Scanner sc;
     private String CurrentStaffType;
-    Menu menu = new Menu();fffffffffffffffffffffff
+
+    Menu menu = new Menu();
+
     // private //List of Branch
 
     // Constructor
@@ -91,6 +124,7 @@ public class fomsApp implements fomsOperations {
             }
         } while (choice < 3);
     }
+    // Admin
 
     public void editStaff() { // Complete level 1
         int choice;
@@ -127,6 +161,7 @@ public class fomsApp implements fomsOperations {
     public void staffLogin() { // Complete level 2
 
         System.out.println("""
+
                 -------------------------------
                           Staff Login
                 Username:""");
@@ -147,8 +182,8 @@ public class fomsApp implements fomsOperations {
         // if staff then go to staff home
 
         // String CurrentStaffType = "admin";
-        String CurrentStaffType = "staff";
-        // String CurrentStaffType = "branchmanager";
+        // String CurrentStaffType = "staff";
+        String CurrentStaffType = "branchmanager";
         switch (CurrentStaffType) {
             case "admin":
                 adminHome();
@@ -158,6 +193,7 @@ public class fomsApp implements fomsOperations {
                 break;
             // TODO
             case "branchmanager":
+                branchManagerHome();
 
                 break;
             // TODO
@@ -169,15 +205,18 @@ public class fomsApp implements fomsOperations {
         // Show all the order that's the staff suppose to be doing
         int choice;
         do {
-            String CurrentOrderList = "(1] OrderID2\n(2) ";
+            String CurrentOrderList = "1. 000011\n1. 000012 ";
             // String list_branch = "";
 
             System.out.printf("""
+
                     -------------------------------
                              Staff HomePage
 
                     Current Order
                     %s
+
+                    (1) Update Order
 
                     (0) back
                     (-1) exit
@@ -186,7 +225,7 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    // TODO
+                    // update order status
                     break;
                 case 2:
                     // TODO
@@ -266,6 +305,7 @@ public class fomsApp implements fomsOperations {
     }
 
     public void displayStaff() { // Complete level 1
+        // As an Admin this function will display all 
         int choice;
         do {
             String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
@@ -428,9 +468,10 @@ public class fomsApp implements fomsOperations {
         int choice;
         do {
             String BranchManagerChoices = """
-                    (1) Show Current Order
-                    (2) Display Branch Staff
-                    (3) Edit Branch Menu
+                    
+                (1) Show Current Order
+                (2) Display Branch Staff
+                (3) Edit Branch Menu
                     """;
             System.out.printf("""
                     -------------------------------
@@ -444,18 +485,12 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    assignManager();
+                    //show current order specific to branch
                     break;
                 case 2:
-                    displayStaff();
+                    // display branch staff
                 case 3:
-                    editPayment();
-                case 4:
-                    openCloseBranch();
-                case 5:
-                    promoteStaff();
-                case 6:
-                    transferStaff();
+                    // edit branch menu
                 case 0:
                     break;
                 case -1:
@@ -532,9 +567,34 @@ public class fomsApp implements fomsOperations {
 
     // >User
     public void branchSelector() { // Complete level 2
-        menu.displayMenu();
-        //TODO
-        //Select your food
+        Menu menu = new Menu();
+        BranchManager branchManager = new BranchManager();
+
+        // Ask the user to input the chosen branch
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("         OUR FAST FOOD BRANCHES");
+        System.out.println("=========================================");
+
+        List<Branch> branches = branchManager.getBranches();
+        for (int i = 0; i < branches.size(); i++) {
+            String branchName = branches.get(i).getBranchName();
+            System.out.println(String.format("%20s", "(" + (i + 1) + ") " + branchName));
+        }
+        System.out.println("=========================================");
+        int selection = -1;
+        while (selection < 1 || selection > branches.size()) {
+            System.out.print("Please choose your branch: ");
+            if (scanner.hasNextInt()) {
+                selection = scanner.nextInt();
+                scanner.nextLine(); // Consume newline character
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear the invalid input
+            }
+        }
+
+        Branch selectedBranch = branches.get(selection - 1);
+        menu.displayMenu(selectedBranch);
 
     }
 
