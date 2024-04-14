@@ -37,20 +37,19 @@ public class Menu {
         items.remove(item);
     }
 
-    public void displayMenu() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Please select a branch (NTU, JP, or JE): ");
-        String branchchosen = sc.nextLine();
-
+    public void displayMenu(Branch branch) {
+        List<MenuItem> branchMenu = branch.getBranchMenu();
         System.out.println("Please choose your order from the menu.");
+        System.out.println("\n                MENU");
         System.out.println("=========================================");
         int index = 1;
         for (MenuItem item : items) {
-            if (item.getBranch().equalsIgnoreCase(branchchosen)) {
+            if (item.getBranch().equalsIgnoreCase(branch.getBranchName())) {
                 System.out.println(index + ". " + item);
                 index++;
             }
         }
+        System.out.println("=========================================");
         // sc.close();
     }
 }
