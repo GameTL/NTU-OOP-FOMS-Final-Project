@@ -186,8 +186,6 @@ public class fomsApp implements fomsOperations {
                 case 1:
                     // TODO
                     break;
-                case 2:
-                    // TODO
                 case 0:
                     break;
                 case -1:
@@ -442,6 +440,7 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
+<<<<<<< Updated upstream
                     assignManager();
                     break;
                 case 2:
@@ -454,6 +453,16 @@ public class fomsApp implements fomsOperations {
                     promoteStaff();
                 case 6:
                     transferStaff();
+=======
+                    displayCurrentOrder();
+                    break;
+                case 2:
+                    displayBranchStaff();
+                    break;
+                case 3:
+                    editMenu();
+                    break;
+>>>>>>> Stashed changes
                 case 0:
                     break;
                 case -1:
@@ -463,12 +472,17 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void editMenu() { // Complete level 1
+    public void editMenu(Branch selectedBranch) { // Complete level 1
+        menu.displayMenu(selectedBranch);
+
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
-
+            String CurrentOrderList = """
+                    
+                (1) Add menu item
+                (2) Remove menu item
+                (3) Update menu item
+                    """;
             System.out.printf("""
                     -------------------------------
                               Menu Editor
@@ -486,6 +500,8 @@ public class fomsApp implements fomsOperations {
                     break;
                 case 2:
                     // TODO
+                case 3:
+                    // TODO
                 case 0:
                     break;
                 case -1:
@@ -496,36 +512,31 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void displayBranchStaff() { // Complete level 1
+    public void displayBranchStaff(Branch selectedBranch) { // Complete level 1
         int choice;
+        List<Staff> staffMembers = selectedBranch.getStaffMembers();
         do {
-            String CurrentOrderList = "(1) Jack\n(2) Jill";
-
-            System.out.printf("""
-                    -------------------------------
-                        All staff @ this branch
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    \n
-                    """, CurrentOrderList);
+            System.out.println("-------------------------------");
+            System.out.println("    All staff @ this branch");
+            for (Staff staff : staffMembers) {
+                System.out.println(staff);
+                System.out.println();
+            }
+            System.out.println("-------------------------------");
+            System.out.println("(0) Back");
+            System.out.println("(-1) Exit");
             choice = sc.nextInt();
             switch (choice) {
-                case 1:
-                    // TODO
-                    break;
-                case 2:
-                    // TODO
                 case 0:
                     break;
                 case -1:
                     System.out.println("Program terminating ....");
                     System.exit(0);
-
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+                    break;
             }
-        } while (choice < 3);
+        } while (choice != 3);
     }
 
     // >User
@@ -540,6 +551,7 @@ public class fomsApp implements fomsOperations {
         // Which branch would you like to select?
         // %s
 
+<<<<<<< Updated upstream
         // (0) back
         // (-1) exit
         // -------------------------------
@@ -558,9 +570,32 @@ public class fomsApp implements fomsOperations {
 
         // }
         // } while (choice < 3);
+=======
+        List<Branch> branches = branchManager.getBranches();
+        for (int i = 0; i < branches.size(); i++) {
+            String branchName = branches.get(i).getBranchName();
+            System.out.println(String.format("%20s", "(" + (i + 1) + ") " + branchName));
+        }
+        System.out.println("=========================================");
+        int selection = -1;
+        while (selection < 1 || selection > branches.size()) {
+            System.out.print("Please choose your branch: ");
+            if (scanner.hasNextInt()) {
+                selection = scanner.nextInt();
+                scanner.nextLine(); // Consume newline character
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear the invalid input
+            }
+        }
+
+        Branch selectedBranch = branches.get(selection - 1);
+        menu.displayMenu(selectedBranch);
+>>>>>>> Stashed changes
     }
 
-    public void displayCurrentOrder() { // Complete level 1
+    public void displayCurrentOrder(Branch selectedBranch) { // Complete level 1
+        // TODO - find a way to get orders displayed as orderID --> allow selection for orderID
         int choice;
         do {
             String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";

@@ -5,8 +5,41 @@ import java.security.NoSuchAlgorithmException;
 
 public class staff {
 
+<<<<<<< Updated upstream
     private final byte[] passHash;
 
+=======
+    // Getter and Setter for role
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // Getter and Setter for branch
+    public String getBranch() {
+        return branch;
+    }
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
+    public void processOrder(Order order) {
+        // Implementation to process the order
+        order.setStatus("Ready to pickup");
+        System.out.println("Order processed.");
+    }
+
+    public void displayNewOrders(List<Order> orders) {
+        // Implementation to display new orders according to branch
+        for (Order order : orders) {
+            if (order.getBranch().equals(branch.getBranchName()) && order.getStatus().equals("New")) {
+                System.out.println(order);
+            }  
+        }
+    }
+>>>>>>> Stashed changes
     public byte[] getHash(String input) throws NoSuchAlgorithmException {
 //        String input = "Hello, world!";
 
