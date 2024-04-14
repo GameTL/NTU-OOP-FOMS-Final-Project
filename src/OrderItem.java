@@ -1,23 +1,33 @@
-package src;
 
-public class OrderItem{
+public class OrderItem {
     private MenuItem menuItem;
     private int quantity;
 
-    public OrderItem(MenuItem menuItem, int quantity){
+    public OrderItem(MenuItem menuItem, int quantity) {
         this.menuItem = menuItem;
         this.quantity = quantity;
     }
-    public MenuItem getmenuItem(){
+
+    // Getters
+    public MenuItem getMenuItem() {
         return menuItem;
     }
-    public MenuItem setmenuItem(MenuItem menuItem){
-        this.menuItem = menuItem;
-    }
-    public int getQuantity(){
+
+    public int getQuantity() {
         return quantity;
     }
-    public int setQuantity(int quantity){
+
+    // Setters
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
+    }
+
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s x%d", menuItem.getName(), quantity);
     }
 }
