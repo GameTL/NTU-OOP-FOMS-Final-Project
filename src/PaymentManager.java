@@ -2,71 +2,63 @@ package src;
 import java.util.Scanner;
 
 public class PaymentManager {
-    public static boolean processPayment(Order OrderItem) {
-        Scanner sc = new Scanner(System.in);
-        if(OrderItem == null){
+    private static PaymentRegistry paymentRegistry = new PaymentRegistry();
+
+    static {
+        // Registering default payment methods with descriptions
+        paymentRegistry.registerPaymentMethod(1, new CreditCardPayment(), "Credit Card");
+        paymentRegistry.registerPaymentMethod(2, new DebitCardPayment(), "Debit Card");
+        paymentRegistry.registerPaymentMethod(3, new OnlinePayment(), "Online Payment");
+    }
+
+    public static boolean processPayment(Order order) {
+        if (order == null) {
             System.out.println("Error: Order Not Assigned. Exiting...");
+            return false;
         }
 
-        double amount = calculate(OrderItem);
-        System.out.println("Due Amount: S$ "+String.format("%.2f",amount));
+        double amount = calculate(order);
+        System.out.println("Due Amount: S$ " + String.format("%.2f", amount));
+        displayPaymentMethods();
+
+        Scanner scanner = new Scanner(System.in);
+        int paymentMethodChoice = scanner.nextInt();
+
+        Payment selectedPaymentMethod = paymentRegistry.getPaymentMethod(paymentMethodChoice);
+        if (selectedPaymentMethod != null) {
+            return processPayment(selectedPaymentMethod, order, amount);
+        } else {
+            System.out.println("Invalid payment method choice. Payment canceled.");
+            return false;
+        }
+    }
+
+    private static void displayPaymentMethods() {
         System.out.println("Please choose your payment method");
         System.out.println("=========================================");
-        System.out.println("(1) Credit Card");
-        System.out.println("(2) Debit Card");
-        System.out.println("(3) Online Payment");
+        paymentRegistry.getAllPaymentMethods().forEach(entry -> {
+            System.out.println("(" + entry.getKey() + ") " + entry.getValue().getDescription());
+        });
         System.out.println("=========================================\nPlease enter your choice:\n Enter -1 to cancel payment.");
-        switch (sc.nextInt()){
-            default:
-                return false;
-            case 1:
-                Payment creditCardPayment = new CreditCardPayment();
-                boolean cPaymentSuccess = creditCardPayment.processPayment(amount);
-                if (cPaymentSuccess) {
-                    creditCardPayment.displayCompletePayment();
-                    return true;
-                } else {
-                    System.out.println("Payment failed.");
-                    return false;
-                }
-                break;
-            case 2:
-                Payment debitCardPayment = new DebitCardPayment();
-                boolean dPaymentSuccess = debitCardPayment.processPayment(amount);
-                if (dPaymentSuccess) {
-                    debitCardPayment.displayCompletePayment();
-                    return true;
-                } else {
-                    System.out.println("Payment failed.");
-                    return false;
-                }
-                break;
-            case 3:
-                Payment onlinePayment = new OnlinePayment();
-                boolean oPaymentSuccess = onlinePayment.processPayment(amount);
-                if (oPaymentSuccess) {
-                    onlinePayment.displayCompletePayment();
-                    return true;
-                } else {
-                    System.out.println("Payment failed.");
-                    return false;
-                }
-                break;
+    }
+
+    private static boolean processPayment(Payment payment, Order order, double amount) {
+        boolean paymentSuccess = payment.processPayment(amount);
+        if (paymentSuccess) {
+            payment.displayCompletePayment();
+            order.setStatus("Completed");
+            return true;
+        } else {
+            System.out.println("Payment failed.");
+            return false;
         }
-        OrderItem.setStatus(OrderStatus.PREPARING);
-        return true;
     }
     
-    public List<String> getPaymentMethod(){
-        return paymentMethodsList;
-    }
-    
-    private static double calculate(Order OrderItem){
+    private static double calculate(Order order) {
         double amount = 0;
-        for(OrderEntry oe : OrderItem.getMenuItem()){
-            amount += oe.getQuantity() * oe.getFood().getPrice();
+        for (OrderItem orderEntry : order.getItems()) {
+            amount += orderEntry.getQuantity() * orderEntry.getMenuItem().getPrice();
         }
         return amount;
     }
-} 
-
+}

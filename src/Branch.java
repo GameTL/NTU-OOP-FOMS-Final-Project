@@ -7,14 +7,16 @@ import java.util.Scanner;
 public class Branch{
     private String branchName;
     private int numOfStaff;
-    private List<MenuItem> branchMenu;
-    private List<staff> staffMembers;
+    private Menu branchMenu;
+    private List<BranchManager> branchManagerMembers;
+    private List<Staff> staffMembers;
     private Boolean available;
 
     public Branch(String branchName){
         this.branchName = branchName;
-        this.branchMenu = new ArrayList<>();
+        this.branchMenu = new Menu();
         this.staffMembers = new ArrayList<>();
+        this.branchManagerMembers = new ArrayList<>();
         this.available = true;
     }
     public String getBranchName() {
@@ -33,28 +35,28 @@ public class Branch{
         this.numOfStaff = numOfStaff;
     }
 
-    public List<MenuItem> getBranchMenu() {
+    public Menu getBranchMenu() {
         return branchMenu;
     }
 
-    public void setBranchMenu(List<MenuItem> branchMenu) {
+    public void setBranchMenu(Menu branchMenu) {
         this.branchMenu = branchMenu;
     }
 
-    public List<staff> getStaffMembers() {
+    public List<Staff> getStaffMembers() {
         return staffMembers;
     }
 
-    public void setStaffMembers(List<staff> staffMembers) {
+    public void setStaffMembers(List<Staff> staffMembers) {
         this.staffMembers = staffMembers;
     }
 
-    public List<Manager> getManagers() {
-        return managers;
+    public List<BranchManager> getbranchManagerMembers() {
+        return branchManagerMembers;
     }
 
-    public void setManagers(List<Manager> managers) {
-        this.managers = managers;
+    public void setBranchManagerMembers(List<BranchManager> branchManagerMembers) {
+        this.branchManagerMembers = branchManagerMembers;
     }
 
     public boolean isAvailable() {
@@ -64,36 +66,13 @@ public class Branch{
     public void setAvailable(boolean available) {
         this.available = available;
     }
-    public void manageStaff() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("""
-                    -------------------------------
-                    Staff Management
-                    (1) Add staff member
-                    (2) Remove staff member
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------""");
-        int manageChoice = sc.nextInt();
-        switch (manageChoice) {
-            case 1:
-                addStaff();
-                break;
-            case 2:
-                removeStaff();
-                break;
-            case 0:
-                break;
-            case -1:
-                System.out.println("Program terminating ....");
-                System.exit(0);
-        }
+    public void displayCurrentOrder() {
+        this.branchMenu.displayMenu(this);
     }
 
-    public void displayBranchMenu(Menu menu) {
-        menu.displayMenu(this);
-    }
+    // public void displayCurrentOrder(Menu menu) {
+    //     menu.displayMenu(this);
+    // }
     public static void main(String[] args) {
         // Create an instance of Menu
         Menu menu = new Menu();

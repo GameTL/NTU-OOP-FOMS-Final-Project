@@ -4,29 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BranchManager {
-    private List<Branch> branches;
+    private List<Branch> branchList;
     
     public BranchManager() {
-        this.branches = new ArrayList<>();
-        initializeBranches();
-    }
-
-    private void initializeBranches(){
-        branches.add(new Branch("NTU"));
-        branches.add(new Branch("JP"));
-        branches.add(new Branch("JE"));
+        branchList = new ArrayList<>();
     }
     
     public void addBranch(Branch branch) {
-        branches.add(branch);
+        branchList.add(branch);
     }
 
     public void removeBranch(Branch branch) {
-        branches.remove(branch);
+        branchList.remove(branch);
     }
 
     public List<Branch> getBranches() {
-        return branches;
+        return branchList;
     }
 }
 

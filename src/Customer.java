@@ -1,3 +1,5 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,10 +9,6 @@ public class Customer extends User {
     public Customer(String id, String name, String contactInfo) {
         super(id, name, contactInfo);
         this.orderHistory = new ArrayList<>();
-    }
-
-    public void viewMenu(Menu menu) {
-        menu.displayMenu();
     }
 
     public void placeOrder(Order order, List<OrderItem> items) {

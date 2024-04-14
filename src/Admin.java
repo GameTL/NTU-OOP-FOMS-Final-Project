@@ -1,12 +1,17 @@
+package src;
+
 import java.util.List;
 
 public class Admin extends User {
 
-    public Admin(String id, String name, String contactInfo) {
+    private PaymentRegistry paymentRegistry;
+
+    public Admin(String id, String name, String contactInfo, PaymentRegistry paymentRegistry) {
         super(id, name, contactInfo);
+        this.paymentRegistry = paymentRegistry;
     }
 
-    // Consolidated method for managing staff accounts (add, edit, remove)
+    // Method for managing staff accounts (add, edit, remove)
     public void manageStaff(String action, List<Staff> staffList, Staff staff, String newName, String newContactInfo, String newRole, String newBranch) {
         switch (action) {
             case "add":
@@ -30,26 +35,28 @@ public class Admin extends User {
         }
     }
 
-    // Consolidated method for managing payment methods (add, remove)
-    public void managePaymentMethod(String action, List<String> paymentMethods, String method) {
+    // Method for managing payment methods (add, remove)
+    public void managePaymentMethod(String action, int methodOption, Payment payment, String description) {
         switch (action) {
             case "add":
-                if (!paymentMethods.contains(method)) {
-                    paymentMethods.add(method);
-                    System.out.println("Payment method added: " + method);
+                if (paymentRegistry.getPaymentMethod(methodOption) == null) {
+                    paymentRegistry.registerPaymentMethod(methodOption, payment, description);
+                    System.out.println("Payment method added: " + description);
                 } else {
                     System.out.println("Payment method already exists.");
                 }
                 break;
             case "remove":
-                if (paymentMethods.remove(method)) {
-                    System.out.println("Payment method removed: " + method);
+                if (paymentRegistry.getPaymentMethod(methodOption) != null) {
+                    paymentRegistry.unregisterPaymentMethod(methodOption);
+                    System.out.println("Payment method removed: " + description);
                 } else {
                     System.out.println("Payment method not found.");
                 }
                 break;
             default:
                 System.out.println("Invalid action for managePaymentMethod");
+                break;
         }
     }
 
@@ -58,11 +65,11 @@ public class Admin extends User {
         switch (action) {
             case "open":
                 branches.add(branch);
-                System.out.println("Branch opened: " + branch.getName());
+                System.out.println("Branch opened: " + branch.getBranchName());
                 break;
             case "close":
                 branches.remove(branch);
-                System.out.println("Branch closed: " + branch.getName());
+                System.out.println("Branch closed: " + branch.getBranchName());
                 break;
             default:
                 System.out.println("Invalid action for manageBranch");

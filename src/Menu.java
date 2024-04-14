@@ -2,7 +2,6 @@ package src;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Menu {
     private List<MenuItem> items;
@@ -38,7 +37,6 @@ public class Menu {
     }
 
     public void displayMenu(Branch branch) {
-        List<MenuItem> branchMenu = branch.getBranchMenu();
         System.out.println("Please choose your order from the menu.");
         System.out.println("\n                MENU");
         System.out.println("=========================================");
