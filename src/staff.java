@@ -1,9 +1,13 @@
 package src;
+
 import java.util.List;
+import java.util.Scanner;
+import static src.fomsApp.orderList;
 
 public class Staff extends User {
     protected String role;
-    protected String branch; 
+    protected String branch;
+    Scanner sc = new Scanner(System.in);
 
     public Staff(String id, String name, String contactInfo, String role, String branch) {
         super(id, name, contactInfo);
@@ -12,12 +16,20 @@ public class Staff extends User {
     }
 
     // Getter and Setter for role
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     // Getter and Setter for branch
-    public String getBranch() { return branch; }
-    public void setBranch(String branch) { this.branch = branch; }
+    public String getBranch() {
+        return branch;
+    }
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
 
     public void processOrder(Order order) {
         // Implementation to process the order
@@ -25,18 +37,15 @@ public class Staff extends User {
         System.out.println("Order processed.");
     }
 
-    public void displayNewOrders(List<Order> orders) {
-        // Implementation to display new orders
-        for (Order order : orders) {
-            if (order.getStatus().equals("New")) {
-                System.out.println(order);
-            }
-        }
+    public void viewOrderDetails(){
+        System.out.println("Enter OrderID to view order: ");
+        int orderID = scanner.nextInt();
+        
     }
     public byte[] getHash(String input) throws NoSuchAlgorithmException {
 //        String input = "Hello, world!";
 
-        // get an instance of the SHA-256 message digest algorithm
+        // get an instance of the SHA-256 messsage digest algorithm
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
         // compute the hash of the input string

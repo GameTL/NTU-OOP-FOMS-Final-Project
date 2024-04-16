@@ -29,7 +29,9 @@ public class fomsApp implements fomsOperations {
         branchList.add(new Branch("JE"));
 
         // Initizalize order
-        List<OrderItem> items = new ArrayList<>();
+        
+
+        //Initialize orders made to branch
     }
     //
 
@@ -38,6 +40,8 @@ public class fomsApp implements fomsOperations {
 
     private Scanner sc;
     private String CurrentStaffType;
+
+    public static List<Order> orderList;
 
     Menu menu = new Menu();
 
@@ -227,8 +231,6 @@ public class fomsApp implements fomsOperations {
                 case 1:
                     // update order status
                     break;
-                case 2:
-                    // TODO
                 case 0:
                     break;
                 case -1:
@@ -485,12 +487,14 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    //show current order specific to branch
+                    displayCurrentOrder();
                     break;
                 case 2:
-                    // display branch staff
+                    displayBranchStaff();
+                    break;
                 case 3:
-                    // edit branch menu
+                    editMenu();
+                    break;
                 case 0:
                     break;
                 case -1:
@@ -500,12 +504,16 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void editMenu() { // Complete level 1
+    public void editMenu() { // TODO problem: shuya has this already..build from there?
+        Manager manager = new Manager();
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
-
+            String CurrentOrderList = """
+                    
+                (1) Add menu item
+                (2) Remove menu item
+                (3) Update menu item
+                    """;
             System.out.printf("""
                     -------------------------------
                               Menu Editor
@@ -519,10 +527,12 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    // TODO
+                    manager.addItem(menu);
                     break;
                 case 2:
-                    // TODO
+                    manager.removeItem(menu);
+                case 3:
+                    manager.updateItem(menu);
                 case 0:
                     break;
                 case -1:
@@ -533,36 +543,31 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void displayBranchStaff() { // Complete level 1
+    public void displayBranchStaff(Branch selectedBranch) { // Complete level 1
         int choice;
+        List<Staff> staffMembers = selectedBranch.getStaffMembers();
         do {
-            String CurrentOrderList = "(1) Jack\n(2) Jill";
-
-            System.out.printf("""
-                    -------------------------------
-                        All staff @ this branch
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    \n
-                    """, CurrentOrderList);
+            System.out.println("-------------------------------");
+            System.out.println("    All staff @ this branch");
+            for (Staff staff : staffMembers) {
+                System.out.println(staff);
+                System.out.println();
+            }
+            System.out.println("-------------------------------");
+            System.out.println("(0) Back");
+            System.out.println("(-1) Exit");
             choice = sc.nextInt();
             switch (choice) {
-                case 1:
-                    // TODO
-                    break;
-                case 2:
-                    // TODO
                 case 0:
                     break;
                 case -1:
                     System.out.println("Program terminating ....");
                     System.exit(0);
-
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+                    break;
             }
-        } while (choice < 3);
+        } while (choice != 3);
     }
 
     // >User
@@ -595,39 +600,33 @@ public class fomsApp implements fomsOperations {
 
         Branch selectedBranch = branches.get(selection - 1);
         menu.displayMenu(selectedBranch);
-
     }
 
-    public void displayCurrentOrder() { // Complete level 1
+    public void displayCurrentOrder(Branch selectedBranch) { // Complete level 1
         int choice;
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
-
-            System.out.printf("""
-                    -------------------------------
-                             Current Order
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    """, CurrentOrderList);
+            System.out.println("-------------------------------");
+            System.out.println("        Current orders         ");
+            for (Order order : orderList) {
+                if (order.getBranchName().equals(selectedBranch.getBranchName()) && order.getStatus().equals("New")) {
+                    System.out.println(order.getOrderId()); // TODO no branch parameter in order class..to put?
+                }
+            }
+            System.out.println("-------------------------------");
+            System.out.println("(0) Back");
+            System.out.println("(-1) Exit");
             choice = sc.nextInt();
             switch (choice) {
-                case 1:
-                    // TODO
-                    break;
-                case 2:
-                    // TODO
                 case 0:
                     break;
                 case -1:
                     System.out.println("Program terminating ....");
                     System.exit(0);
-
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+                    break;
             }
-        } while (choice < 3);
+        } while (choice != 3); // TODO decide while limits
     }
 
     public void menuList() { // Complete level 1
