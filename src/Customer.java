@@ -6,8 +6,8 @@ import java.util.List;
 public class Customer extends User {
     private List<Order> orderHistory;
 
-    public Customer(String id, String name, String contactInfo) {
-        super(id, name, contactInfo);
+    public Customer(String id, String name) {
+        super(id, name);
         this.orderHistory = new ArrayList<>();
     }
 

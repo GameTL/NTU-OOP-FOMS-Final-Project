@@ -5,14 +5,19 @@ import java.util.Scanner;
 import static src.fomsApp.orderList;
 
 public class Staff extends User {
-    protected String role;
-    protected String branch;
+    private String role;
+    private String branch;
+    private String gender;
+    private Integer age;
+    
     Scanner sc = new Scanner(System.in);
 
-    public Staff(String id, String name, String contactInfo, String role, String branch) {
-        super(id, name, contactInfo);
+    public Staff(String id, String name, String role, String branch, String gender, Integer age) {
+        super(id, name);
         this.role = role;
         this.branch = branch; 
+        this.gender = gender;
+        this.age = age;
     }
 
     // Getter and Setter for role
@@ -29,6 +34,22 @@ public class Staff extends User {
     }
     public void setBranch(String branch) {
         this.branch = branch;
+    }
+    
+ // Getter and Setter for gender
+    public String getGender() {
+        return gender;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    // Getter and Setter for age
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public void processOrder(Order order) {
