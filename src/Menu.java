@@ -33,7 +33,16 @@ public class Menu {
     }
 
     public void removeMenuItem(MenuItem item) {
-        items.remove(item);
+        items.removeIf(existingItem -> existingItem.getName().equals(item.getName()) && existingItem.getBranch().equals(item.getBranch()));
+    }
+
+    public MenuItem findMenuItem(String name, String branch){
+        for (MenuItem item : items){
+            if (item.getName().equals(name) && item.getBranch().equals(branch)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public void displayMenu(Branch branch) {

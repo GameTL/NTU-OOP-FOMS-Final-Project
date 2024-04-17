@@ -6,7 +6,7 @@ import java.util.List;
 public class BranchManager {
     private List<Branch> branchList;
     
-    public BranchManager() {
+    private BranchManager() {
         branchList = new ArrayList<>();
         branchList.add(new Branch("NTU"));
         branchList.add(new Branch("JP"));

@@ -21,20 +21,6 @@ public class fomsApp implements fomsOperations {
      * All branch
      * 
      */
-    public void Initalizer() {
-        // Initialize branch
-        List<Branch> branchList = new ArrayList<>();
-        branchList.add(new Branch("NTU"));
-        branchList.add(new Branch("JP"));
-        branchList.add(new Branch("JE"));
-
-        // Initizalize order
-        
-
-        //Initialize orders made to branch
-    }
-    //
-
     private String currentBranchName;
     private String currentUser;
 
@@ -42,9 +28,21 @@ public class fomsApp implements fomsOperations {
     private String CurrentStaffType;
 
     public static List<Order> orderList;
+    public static List<Branch> branchList = new ArrayList<>();
 
     Menu menu = new Menu();
 
+    public static void initializer() {
+        // Initialize branch
+        branchList.add(new Branch("NTU"));
+        branchList.add(new Branch("JP"));
+        branchList.add(new Branch("JE"));
+        
+        // Initizalize order
+        
+
+        //Initialize orders made to branch
+    }
     // private //List of Branch
 
     // Constructor
@@ -504,7 +502,7 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void editMenu() { // TODO problem: shuya has this already..build from there?
+    public void editMenu() {
         Manager manager = new Manager();
         int choice;
         do {
@@ -538,25 +536,36 @@ public class fomsApp implements fomsOperations {
                 case -1:
                     System.out.println("Program terminating ....");
                     System.exit(0);
-
             }
         } while (choice < 3);
     }
 
-    public void displayBranchStaff(Branch selectedBranch) { // Complete level 1
+    public void displayBranchStaff() { // Complete level 1
+        Branch selectedBranch = ApplicationState.getCurrentBranch();
         int choice;
         List<Staff> staffMembers = selectedBranch.getStaffMembers();
         do {
-            System.out.println("-------------------------------");
-            System.out.println("    All staff @ this branch");
-            for (Staff staff : staffMembers) {
-                System.out.println(staff);
-                System.out.println();
+            if (staffMembers.isEmpty()){
+                System.out.println("No staff members in this branch.");
+            } else {
+                System.out.println("-------------------------------");
+                System.out.println("    All staff @ this branch");
+                for (Staff staff : staffMembers) {
+                    System.out.println("Name: " + staff.getName() + ", Role: " + staff.getRole() + ", Contact: " + staff.getContactInfo());
+                    System.out.println();
+                }
+                System.out.println("-------------------------------");
+                System.out.println("(0) Back");
+                System.out.println("(-1) Exit");
             }
-            System.out.println("-------------------------------");
-            System.out.println("(0) Back");
-            System.out.println("(-1) Exit");
+
+            System.out.print("Enter your choice: ");
+            while (!sc.hasNextInt()) {
+                System.out.println("Invalid choice. Please enter a valid option.");
+                sc.next(); 
+            }
             choice = sc.nextInt();
+    
             switch (choice) {
                 case 0:
                     break;
@@ -564,41 +573,39 @@ public class fomsApp implements fomsOperations {
                     System.out.println("Program terminating ....");
                     System.exit(0);
                 default:
-                    System.out.println("Invalid choice. Please enter a valid option.");
-                    break;
+                    System.out.println("Invalid choice. Please enter a valid number.");
             }
-        } while (choice != 3);
+        } while (choice != 0 && choice != -1);
     }
 
     // >User
     public void branchSelector() { // Complete level 2
-        Menu menu = new Menu();
-        BranchManager branchManager = new BranchManager();
-
         // Ask the user to input the chosen branch
-        Scanner scanner = new Scanner(System.in);
         System.out.println("         OUR FAST FOOD BRANCHES");
         System.out.println("=========================================");
 
-        List<Branch> branches = branchManager.getBranches();
+        List<Branch> branches = fomsApp.branchList;
         for (int i = 0; i < branches.size(); i++) {
-            String branchName = branches.get(i).getBranchName();
-            System.out.println(String.format("%20s", "(" + (i + 1) + ") " + branchName));
+            System.out.println(String.format("%20s", "(" + (i + 1) + ") " + branches.get(i).getBranchName()));
         }
         System.out.println("=========================================");
+        
+        Scanner sc = new Scanner(System.in);
         int selection = -1;
+
         while (selection < 1 || selection > branches.size()) {
             System.out.print("Please choose your branch: ");
-            if (scanner.hasNextInt()) {
-                selection = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
+            if (sc.hasNextInt()) {
+                selection = sc.nextInt();
+                sc.nextLine(); // Consume newline character
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); // Clear the invalid input
+                sc.nextLine(); // Clear the invalid input
             }
         }
 
         Branch selectedBranch = branches.get(selection - 1);
+        ApplicationState.setCurrentBranch(selectedBranch);
         menu.displayMenu(selectedBranch);
     }
 
@@ -607,15 +614,21 @@ public class fomsApp implements fomsOperations {
         do {
             System.out.println("-------------------------------");
             System.out.println("        Current orders         ");
+            boolean found = false;
             for (Order order : orderList) {
-                if (order.getBranchName().equals(selectedBranch.getBranchName()) && order.getStatus().equals("New")) {
-                    System.out.println(order.getOrderId()); // TODO no branch parameter in order class..to put?
+                if (order.getStatus().equals("New") && order.getCustomerId().equals(selectedBranch.getBranchName())) {
+                    System.out.println(order.getOrderId());
+                    found = true; 
                 }
+            }
+            if (!found){
+                System.out.println("No current orders available.");
             }
             System.out.println("-------------------------------");
             System.out.println("(0) Back");
             System.out.println("(-1) Exit");
             choice = sc.nextInt();
+            sc.nextLine();  
             switch (choice) {
                 case 0:
                     break;
@@ -626,7 +639,7 @@ public class fomsApp implements fomsOperations {
                     System.out.println("Invalid choice. Please enter a valid option.");
                     break;
             }
-        } while (choice != 3); // TODO decide while limits
+        } while (choice != 0 && choice != -1);
     }
 
     public void menuList() { // Complete level 1
@@ -665,6 +678,7 @@ public class fomsApp implements fomsOperations {
 
     public static void main(String[] args) {
         fomsApp app = new fomsApp();
+        initializer();
         app.userSelector(); // Call the instance method on the object
 
     }
