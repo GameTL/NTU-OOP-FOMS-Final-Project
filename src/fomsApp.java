@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Map;
 
 public class fomsApp implements fomsOperations {
     // Declare the Scanner as an instance variable of the class
@@ -485,36 +486,30 @@ public class fomsApp implements fomsOperations {
         onlyAdmin.managePaymentMethod("remove", id, null, "");
     }
 
-    public void openCloseBranch() { // tracey
-        int choice;
-        do {
-            String header = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
+    public void openCloseBranch() {
+        divider();
+        System.out.println("Available branches: ");
+        Map<String, Branch> branches = branchOP.getBranchMap();
+        for (Map.Entry<String, Branch> entry : branches.entrySet()) {
+            String status = entry.getValue().isAvailable() ? "Open" : "Closed";
+            System.out.println(entry.getKey() + " - " + status);
+        }
+        divider();
+        System.out.println("Please enter the name of the branch you would like to (open/close).");
+        System.out.println("You may type 'exit' to return.");
+        String chosenBranch = sc.nextLine();
+        if (chosenBranch.equalsIgnoreCase("exit")) {
+            return;
+        }
 
-            System.out.printf("""
-                    -------------------------------
-                           Open/Close Branch
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    \n
-                    """, header);
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-
-                    break;
-                case 2:
-                    // TODO
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
-
-            }
-        } while (choice < 3);
+        Branch branch = branches.get(chosenBranch);
+        if (branch != null) { //
+            branch.setAvailable(!branch.isAvailable());
+            String newStatus = branch.isAvailable() ? "opened" : "closed";
+            System.out.println("Branch " + chosenBranch + " has been " + newStatus + ".");
+        } else {
+            System.out.println("Branch not found. Please try again.");
+        }
     }
 
     public void promoteStaff() {
