@@ -29,7 +29,7 @@ public interface fomsOperations {
     public abstract void  transferStaff(); // 1.2.1.7
 
     // >>BranchManager
-    public abstract void  branchManagerHome(); // 1.2.3.X
+    public abstract void  ManagerHome(); // 1.2.3.X
 
     public abstract void  editMenu(); // 1.2.3.1
 

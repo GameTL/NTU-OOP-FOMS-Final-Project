@@ -24,12 +24,10 @@ public class fomsApp implements fomsOperations {
      * 
      */
     BranchOperator branchOP = new BranchOperator();
-    // Adding branches
-    private String currentBranchName;
-    private String currentUser;
+    // Adding branchess
 
     private Scanner sc;
-    private String CurrentStaffType;
+    private User currentUser;
 
     public static List<Order> orderList;
     private Order currentOrder = new Order("123", false);
@@ -39,9 +37,14 @@ public class fomsApp implements fomsOperations {
     private PaymentRegistry paymentRegistry = PaymentManager.getPaymentRegistry();
 
     public void initializer() {
+        List<Order> mockorderList = new ArrayList<>();
+        mockorderList.add(new Order("123", true));
+        mockorderList.add(new Order("924875", true));
+        mockorderList.add(new Order("0000", true));
         branchOP.addOrReplaceBranch("NTU", new Branch("NTU", "North Spine Plaza", 8));
         branchOP.addOrReplaceBranch("JP", new Branch("JP", "Jurong Point", 15));
         branchOP.addOrReplaceBranch("JE", new Branch("JE", "Jurong East", 11));
+        // Init for JP
         branchOP.setCurrentBranch("JP");
         branchOP.getCurrentBranch().addManager(new Manager(
                 "TomC",
@@ -49,13 +52,15 @@ public class fomsApp implements fomsOperations {
                 Manager.Gender.Male,
                 56,
                 "JP"));
+        branchOP.getCurrentBranch().setOrders(mockorderList);
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "JustinL",
                 "Justin Loh",
                 Staff.Gender.Male,
                 49,
                 "JP"));
-
+        branchOP.getCurrentBranch().setOrders(mockorderList);
+        // Init for NTU
         branchOP.setCurrentBranch("NTU");
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "kumarB",
@@ -69,6 +74,8 @@ public class fomsApp implements fomsOperations {
                 User.Gender.Male,
                 25,
                 "NTU"));
+        branchOP.getCurrentBranch().setOrders(mockorderList);
+        // Init for JE
         branchOP.setCurrentBranch("JE");
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "MaryL",
@@ -82,6 +89,8 @@ public class fomsApp implements fomsOperations {
                 Manager.Gender.Female,
                 27,
                 "JE"));
+        branchOP.getCurrentBranch().setOrders(mockorderList);
+
     }
     // private //List of Branch
 
@@ -121,6 +130,7 @@ public class fomsApp implements fomsOperations {
                     UserBranchSelector();
                     break;
                 case 2:
+                    clearConsole();
                     staffLogin();
                     break;
                 case 0:
@@ -138,16 +148,16 @@ public class fomsApp implements fomsOperations {
         do {
             divider();
             System.out.println("""
-                        Admin Homepage
-                (1) Assign manager
-                (2) Display all staff
-                (3) Edit payment
-                (4) Open/close Branch
-                (5) Promote a Staff
-                (6) Transfer staff to branch
-                
-                (0) back
-                (-1) exit""");
+                            Admin Homepage
+                    (1) Assign manager
+                    (2) Display all staff
+                    (3) Edit payment
+                    (4) Open/close Branch
+                    (5) Promote a Staff
+                    (6) Transfer staff to branch
+
+                    (0) back
+                    (-1) exit""");
             divider();
             choice = sc.nextInt();
             switch (choice) {
@@ -180,13 +190,13 @@ public class fomsApp implements fomsOperations {
         do {
             divider();
             System.out.println("""
-                        Admin Homepage
-                (1) Add staff
-                (2) Remove staff
-                (3) Transfer staff
-                
-                (0) back
-                (-1) exit""");
+                            Admin Homepage
+                    (1) Add staff
+                    (2) Remove staff
+                    (3) Transfer staff
+
+                    (0) back
+                    (-1) exit""");
             divider();
             choice = sc.nextInt();
             switch (choice) {
@@ -213,38 +223,38 @@ public class fomsApp implements fomsOperations {
                           Staff Login
                 Username:""");
         String username = sc.next();
-        System.out.println("Entered username: " + username);
+        // System.out.println("Entered username: " + username);
         System.out.println("""
                 Password:""");
         String password = sc.next();
-        System.out.println("Entered password: " + password);
-        System.out.println("\nACCESS GRANTED!!");
+        // System.out.println("Entered password: " + password);
+        currentUser = Staff.loginStaff(branchOP.getAllStaff(), username, password);
         divider();
-
-        /*
-         * Username 1234
-         * Password 1234
-         */
-
-        // if staff then go to staff home
-
-        // String CurrentStaffType = "admin";
-        // String CurrentStaffType = "staff";
-        String CurrentStaffType = "branchmanager";
-        switch (CurrentStaffType) {
-            case "admin":
+        if (currentUser != null) {
+            if (currentUser instanceof Manager) {
+                // Alexei
+                Manager currentManager = (Manager) currentUser;
+                branchOP.setCurrentBranch(currentManager.getBranch());
+                clearConsole();
+                System.out.println("Login successful for: " + currentUser.getName() + "(Manager)");
+                ManagerHome();
+            } else if (currentUser instanceof Admin) {
+                // boss
+                clearConsole();
+                System.out.println("Login successful for: " + currentUser.getName() + "(Admin)");
                 adminHome();
-                break;
-            case "staff":
+            } else if (currentUser instanceof Staff) {
+                // kumarB
+                Staff currentStaff = (Staff) currentUser;
+                branchOP.setCurrentBranch(currentStaff.getBranch());
+                clearConsole();
+                System.out.println("Login successful for: " + currentUser.getName() + "(Staff)");
                 staffHome();
-                break;
-            // TODO
-            case "branchmanager":
-                branchManagerHome();
-
-                break;
-            // TODO
-
+            } else {
+                System.out.println("No valid staff type found or login failed");
+            }
+        } else {
+            staffLogin();
         }
     }
 
@@ -259,21 +269,28 @@ public class fomsApp implements fomsOperations {
         int choice;
         do {
             divider();
-            System.out.println("        Current orders         ");
+            List<Order> listOrder = branchOP.getCurrentBranch().getOrders();
+            System.out.printf("""
+                                 Staff Homepage @ %s
+                                Show Current Order
+                    %s
+                    (0) back
+                    (-1) exit
+                    """, selectedBranch.getBranchName(), listOrder);
             List<Order> currentOrders = new ArrayList<>();
             int index = 1;
 
-            for (Order order : orderList) {
-                if (order.getStatus().equals("New") && order.getCustomerId().equals(selectedBranch.getBranchName())) {
-                    System.out.println(order.getOrderId());
-                    currentOrders.add(order);
-                    index++;
-                }
-            }
-            if (currentOrders.isEmpty()) {
-                System.out.println("No current orders available.");
-                break; // loop is broken if there are no orders
-            }
+            // for (Order order : orderList) {
+            //     if (order.getStatus().equals("New") && order.getCustomerId().equals(selectedBranch.getBranchName())) {
+            //         System.out.println(order.getOrderId());
+            //         currentOrders.add(order);
+            //         index++;
+            //     }
+            // }
+            // if (currentOrders.isEmpty()) {
+            //     System.out.println("No current orders available.");
+            //     break; // loop is broken if there are no orders
+            // }
             divider();
             System.out.println("(0) Back");
             System.out.println("(-1) Exit");
@@ -393,7 +410,7 @@ public class fomsApp implements fomsOperations {
         } while (choice < 2);
     }
 
-    public void editPayment() { //shuya
+    public void editPayment() { // shuya
         int choice;
         listExistingPaymentMethods(); // Display existing payment methods at the start
         do {
@@ -406,7 +423,7 @@ public class fomsApp implements fomsOperations {
             System.out.println("----------------------------------------");
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
-            sc.nextLine(); 
+            sc.nextLine();
 
             switch (choice) {
                 case 1:
@@ -450,7 +467,8 @@ public class fomsApp implements fomsOperations {
         String className = sc.nextLine();
 
         try {
-            Class<?> cls = Class.forName("src." + className); // assumes that the payment classes are in the 'src' package
+            Class<?> cls = Class.forName("src." + className); // assumes that the payment classes are in the 'src'
+                                                              // package
             Payment newPayment = (Payment) cls.getDeclaredConstructor().newInstance();
             onlyAdmin.managePaymentMethod("add", id, newPayment, description);
             System.out.println("Payment method added: " + description);
@@ -467,7 +485,7 @@ public class fomsApp implements fomsOperations {
         onlyAdmin.managePaymentMethod("remove", id, null, "");
     }
 
-    public void openCloseBranch() { //tracey
+    public void openCloseBranch() { // tracey
         int choice;
         do {
             String header = "(1) OrderID2\n(2) OrderID1";
@@ -579,19 +597,19 @@ public class fomsApp implements fomsOperations {
     }
 
     // >BranchManager
-    public void branchManagerHome() { // Complete level 1
+    public void ManagerHome() { // Complete level 1
         int choice;
         do {
             divider();
             System.out.printf("""
-                            Branch Manager Homepage
+                             Manager Homepage @ %s
                     (1) Show Current Order
                     (2) Display Branch Staff
                     (3) Edit Branch Menu
 
                     (0) back
                     (-1) exit
-                    """);
+                    """, branchOP.getCurrentBranch().getBranchName());
             divider();
             choice = sc.nextInt();
             switch (choice) {

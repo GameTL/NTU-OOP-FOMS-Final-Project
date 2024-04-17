@@ -11,6 +11,7 @@ public class Branch{
     // private List<BranchManager> branchManagerMembers;
     private List<Staff> staffMembers;
     private List<Manager> managerMembers;
+    private List<Order> Orders;
     private Boolean available;
 
     public Branch(String branchName, String location, Integer staffQuota){
@@ -35,7 +36,7 @@ public class Branch{
     public List<Staff> getStaffMembers() {
         return new ArrayList<>(staffMembers); // Return a copy of the staff list
     }
-
+    
     public List<Manager> getManagerMembers() {
         return new ArrayList<>(managerMembers); // Return a copy of the manager list
     }
@@ -43,47 +44,59 @@ public class Branch{
     public String getBranchName() {
         return branchName;
     }
-
+    
     public void setBranchName(String branchName) {
         this.branchName = branchName;
     }
-
+    
     public int getNumOfStaff() {
         return staffMembers.size();
     }
-
+    
     public Menu getBranchMenu() {
         return branchMenu;
     }
-
+    
     public void setBranchMenu(Menu branchMenu) {
         this.branchMenu = branchMenu;
     }
-
+    
     public void setStaffMembers(List<Staff> staffMembers) {
         this.staffMembers = staffMembers;
     }
+    // Orders
+    public List<Order> getOrders() {
+        return new ArrayList<>(Orders); // Return a copy of the staff list
+    }
+    public void setOrders(List<Order> orderList) {
+        Orders = orderList;
+    }
+    public void setOrders(Order order) {
+        Orders.add(order);
+    }
+
+
 
     // public List<BranchManager> getbranchManagerMembers() {
-    //     return branchManagerMembers;
-    // }
-
-    // public void setBranchManagerMembers(List<BranchManager> branchManagerMembers) {
-    //     this.branchManagerMembers = branchManagerMembers;
-    // }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-    public void printCurrentOrder() {
-        this.branchMenu.displayMenu(this);
+        //     return branchManagerMembers;
+        // }
+        
+        // public void setBranchManagerMembers(List<BranchManager> branchManagerMembers) {
+            //     this.branchManagerMembers = branchManagerMembers;
+            // }
+            
+            public boolean isAvailable() {
+                return available;
+            }
+            
+            public void setAvailable(boolean available) {
+                this.available = available;
+            }
+            public void printCurrentOrder() {
+                this.branchMenu.displayMenu(this);
     }
 	public void printAndModifyStaffDetails(List<Staff> staffMembers2, Object object, Object object2) {
-		// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'printAndModifyStaffDetails'");
 	}
     public void printStaffAndManagers() {
@@ -98,8 +111,8 @@ public class Branch{
     }
     
     
-
+    
     // public void displayCurrentOrder(Menu menu) {
-    //     menu.displayMenu(this);
-    // }
-}
+        //     menu.displayMenu(this);
+        // }
+    }
