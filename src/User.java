@@ -1,6 +1,12 @@
-package src;
+    package src;
 
 public abstract class User {
+    public enum Gender {
+        Male, Female
+    }
+    public enum Role {
+        Staff, Admin, Manager
+    }
     protected String id;
     protected String name;
 

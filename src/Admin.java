@@ -3,18 +3,19 @@ package src;
 import java.util.List;
 
 public class Admin extends User {
+    private String password;
 
-    private PaymentRegistry paymentRegistry;
-    private BranchManager branchManager;
+    // private PaymentRegistry paymentRegistry;
+    // // private BranchManager branchManager;
 
-    public Admin(String id, String name, PaymentRegistry paymentRegistry, BranchManager branchManager) {
+    public Admin(String id, String name) {
         super(id, name);
-        this.paymentRegistry = paymentRegistry;
-        this.branchManager = branchManager;
+        // this.paymentRegistry = paymentRegistry; //TODO
     }
 
     // Method for managing staff accounts (add, edit, remove)
-    public void manageStaff(String action, List<Staff> staffList, Staff staff, String newName, String newRole, String newBranch) {
+    public void manageStaff(String action, List<Staff> staffList, Staff staff, String newName, String newRole,
+            String newBranch) {
         switch (action) {
             case "add":
                 staff.setBranch(newBranch); // Set branch when adding new staff
@@ -23,7 +24,7 @@ public class Admin extends User {
                 break;
             case "edit":
                 staff.setName(newName);
-                staff.setRole(newRole);
+                // staff.setRole(newRole);
                 staff.setBranch(newBranch);
                 System.out.println("Staff edited: " + staff.getName() + " in branch " + newBranch);
                 break;
@@ -38,6 +39,7 @@ public class Admin extends User {
 
     // Method for managing payment methods (add, remove)
     public void managePaymentMethod(String action, int methodOption, Payment payment, String description) {
+        PaymentRegistry paymentRegistry = PaymentManager.getPaymentRegistry();
         switch (action) {
             case "add":
                 if (paymentRegistry.getPaymentMethod(methodOption) == null) {
@@ -57,37 +59,39 @@ public class Admin extends User {
                 break;
             default:
                 System.out.println("Invalid action for managePaymentMethod");
-                break;
         }
     }
 
     // Method for managing branches (open, close)
-    public void manageBranch(String action, Branch branch) {
+    public void manageBranch(String action, Branch branch, BranchOperator branchOP) {
         switch (action) {
             case "open":
-                branchManager.addBranch(branch);
+                // BranchOperator.(branch.getBranchName(),branch);
+                branchOP.addOrReplaceBranch(branch.getBranchName(), branch);
                 System.out.println("Branch opened: " + branch.getBranchName());
                 break;
             case "close":
-                branchManager.removeBranch(branch);
+                branchOP.removeBranch(branch.getBranchName());
                 System.out.println("Branch closed: " + branch.getBranchName());
                 break;
             default:
                 System.out.println("Invalid action for manageBranch");
         }
     }
-    
- // Display staff list with filters: branch, role, gender, age
-    public void displayStaffList(List<Staff> staffList, String branch, String role, String gender, Integer age) {
-        StaffDisplay.displayStaffList(staffList, branch, role, gender, age);
-    }
 
+    // Display staff list with filters: branch, role, gender, age
+    // public void displayStaffList(List<Staff> staffList, String branch, String role, String gender, Integer age) {
+    //     StaffPrinter.displayStaffList(staffList, branch, role, gender, age);
+    // }
+    
     // Promote a staff to Manager
-    public void promoteToManager(List<Staff> staffList, Staff staff, List<Manager> managerList, String branch) {
+    public void promoteToManager(List<Staff> staffList, Staff staff, List<Manager> managerList, String branchName) {
         if (staffList.remove(staff)) {
-            Manager newManager = new Manager(staff.getId(), staff.getName(), "Manager", branch, staff.getGender(), staff.getAge()); // Pass branch to Manager constructor
+            // String id, String name, Gender gender, Integer age, String branch
+            Manager newManager = new Manager(staff.getId(), staff.getName(), staff.getGender(), staff.getAge(),
+                    branchName);
             managerList.add(newManager);
-            System.out.println("Staff promoted to Manager: " + newManager.getName() + " in branch " + branch);
+            System.out.println("Staff promoted to Manager: " + newManager.getName() + " in branch " + branchName);
         } else {
             System.out.println("Staff not found.");
         }
@@ -95,7 +99,7 @@ public class Admin extends User {
 
     // Transfer a staff or manager among branches
     public void transferStaff(Staff staff, String newBranch) {
-        staff.setBranch(newBranch); // Use the setBranch method to update the branch
+        staff.setBranch(newBranch);
         System.out.println("Staff/Manager transferred: " + staff.getName() + " to branch " + newBranch);
     }
 

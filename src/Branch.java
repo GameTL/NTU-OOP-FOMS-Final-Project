@@ -5,19 +5,41 @@ import java.util.List;
 
 public class Branch{
     private String branchName;
-    private int numOfStaff;
+    // private int numOfStaff;
     private Menu branchMenu;
-    private List<BranchManager> branchManagerMembers;
+    private String location;
+    // private List<BranchManager> branchManagerMembers;
     private List<Staff> staffMembers;
+    private List<Manager> managerMembers;
     private Boolean available;
 
-    public Branch(String branchName){
+    public Branch(String branchName, String location, Integer staffQuota){
+        this.location = location;
         this.branchName = branchName;
         this.branchMenu = new Menu();
         this.staffMembers = new ArrayList<>();
-        this.branchManagerMembers = new ArrayList<>();
+        this.managerMembers = new ArrayList<>(); // Initialize manager lists
         this.available = true;
     }
+    public void addStaffMember(Staff staff) {
+        if (staff != null) {
+            this.staffMembers.add(staff);
+        }
+    }
+    public void addManager(Manager manager) {
+        if (manager != null) {
+            this.staffMembers.add(manager);
+        }
+    }
+    // Get List of staff
+    public List<Staff> getStaffMembers() {
+        return new ArrayList<>(staffMembers); // Return a copy of the staff list
+    }
+
+    public List<Manager> getManagerMembers() {
+        return new ArrayList<>(managerMembers); // Return a copy of the manager list
+    }
+    
     public String getBranchName() {
         return branchName;
     }
@@ -27,11 +49,7 @@ public class Branch{
     }
 
     public int getNumOfStaff() {
-        return numOfStaff;
-    }
-
-    public void setNumOfStaff(int numOfStaff) {
-        this.numOfStaff = numOfStaff;
+        return staffMembers.size();
     }
 
     public Menu getBranchMenu() {
@@ -42,21 +60,17 @@ public class Branch{
         this.branchMenu = branchMenu;
     }
 
-    public List<Staff> getStaffMembers() {
-        return staffMembers;
-    }
-
     public void setStaffMembers(List<Staff> staffMembers) {
         this.staffMembers = staffMembers;
     }
 
-    public List<BranchManager> getbranchManagerMembers() {
-        return branchManagerMembers;
-    }
+    // public List<BranchManager> getbranchManagerMembers() {
+    //     return branchManagerMembers;
+    // }
 
-    public void setBranchManagerMembers(List<BranchManager> branchManagerMembers) {
-        this.branchManagerMembers = branchManagerMembers;
-    }
+    // public void setBranchManagerMembers(List<BranchManager> branchManagerMembers) {
+    //     this.branchManagerMembers = branchManagerMembers;
+    // }
 
     public boolean isAvailable() {
         return available;
@@ -65,9 +79,25 @@ public class Branch{
     public void setAvailable(boolean available) {
         this.available = available;
     }
-    public void displayCurrentOrder() {
+    public void printCurrentOrder() {
         this.branchMenu.displayMenu(this);
     }
+	public void printAndModifyStaffDetails(List<Staff> staffMembers2, Object object, Object object2) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'printAndModifyStaffDetails'");
+	}
+    public void printStaffAndManagers() {
+        System.out.println("Branch: " + this.branchName);
+        System.out.printf("%-20s %-10s %-10s %-5s\n", "Name", "Role", "Gender", "Age");
+        for (Staff staff : this.staffMembers) {
+            System.out.printf("%-20s %-10s %-10s %-5s\n", staff.getName(), "Staff", staff.getGender().toString(), staff.getAge());
+        }
+        for (Manager manager : this.managerMembers) {
+            System.out.printf("%-20s %-10s %-10s %-5s\n", manager.getName(), "Manager", manager.getGender().toString(), manager.getAge());
+        }
+    }
+    
+    
 
     // public void displayCurrentOrder(Menu menu) {
     //     menu.displayMenu(this);

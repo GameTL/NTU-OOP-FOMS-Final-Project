@@ -28,6 +28,9 @@ public class Menu {
         items.add(new MenuItem("PEPSI", 2.1, "JE", "Drink"));
     }
 
+    public List<MenuItem> getMenuItems() {
+        return items;
+    }
     public void addMenuItem(MenuItem item) {
         items.add(item);
     }
@@ -45,10 +48,16 @@ public class Menu {
         return null;
     }
 
+    public MenuItem findMenuItemByName(String name) {
+        for (MenuItem item : items) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     public void displayMenu(Branch branch) {
-        System.out.println("Please choose your order from the menu.");
-        System.out.println("\n                MENU");
-        System.out.println("=========================================");
         int index = 1;
         for (MenuItem item : items) {
             if (item.getBranch().equalsIgnoreCase(branch.getBranchName())) {
@@ -56,7 +65,6 @@ public class Menu {
                 index++;
             }
         }
-        System.out.println("=========================================");
         // sc.close();
     }
 }

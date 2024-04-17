@@ -11,6 +11,10 @@ public class PaymentManager {
         paymentRegistry.registerPaymentMethod(3, new OnlinePayment(), "Online Payment");
     }
 
+    public static PaymentRegistry getPaymentRegistry() {
+        return paymentRegistry;
+    }
+
     public static boolean processPayment(Order order) {
         if (order == null) {
             System.out.println("Error: Order Not Assigned. Exiting...");
@@ -46,7 +50,7 @@ public class PaymentManager {
         boolean paymentSuccess = payment.processPayment(amount);
         if (paymentSuccess) {
             payment.displayCompletePayment();
-            order.setStatus("Completed");
+            order.setStatus(Order.Status.Completed);
             return true;
         } else {
             System.out.println("Payment failed.");

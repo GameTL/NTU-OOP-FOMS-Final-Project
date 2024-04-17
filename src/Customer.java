@@ -44,7 +44,7 @@ public class Customer extends User {
         for (Order order : orderHistory) {
             if (order.getOrderId().equals(orderId)) {
                 if ("Ready to pickup".equals(order.getStatus())) {
-                    order.setStatus("Completed");
+                    order.setStatus(Order.Status.Completed);
                     System.out.println("Order " + orderId + " collected successfully. Status changed to Completed.");
                 } else {
                     System.out.println("Order " + orderId + " is not ready for pickup. Current status: " + order.getStatus());

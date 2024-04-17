@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class Manager extends Staff {
     private Scanner scanner = new Scanner(System.in);
 
-    public Manager(String id, String name, String contactInfo, String role, String branch) {
-        super(id, name, contactInfo, role, branch);
+     public Manager(String id, String name, Gender gender, Integer age, String branch) {
+        super(id, name, gender, age, branch);
     }
 
     public void addItem(Menu menu) {

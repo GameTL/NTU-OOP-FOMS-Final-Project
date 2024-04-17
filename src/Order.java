@@ -1,20 +1,28 @@
 package src;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Order {
+    public enum Status {
+        New,
+        ReadyForPickup,
+        Completed
+    }
+
+    private Status status;
     private String orderId;
     private String customerId;
     private List<OrderItem> items;
-    private String status; // For example: "New", "Ready to pickup", "Completed"
+
     private boolean isTakeaway;
 
     public Order(String customerId, boolean isTakeaway) {
         this.orderId = UUID.randomUUID().toString();
         this.customerId = customerId;
         this.items = new ArrayList<>();
-        this.status = "New"; // Default status
+        this.status = status.New; // Default status
         this.isTakeaway = isTakeaway;
     }
 
@@ -41,11 +49,11 @@ public class Order {
         return new ArrayList<>(items); // Return a copy to prevent external modifications
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -61,7 +69,8 @@ public class Order {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Order ID: %s\nCustomer ID: %s\nStatus: %s\nTakeaway: %s\nItems:\n", orderId, customerId, status, isTakeaway ? "Yes" : "No"));
+        sb.append(String.format("Order ID: %s\nCustomer ID: %s\nStatus: %s\nTakeaway: %s\nItems:\n", orderId,
+                customerId, status, isTakeaway ? "Yes" : "No"));
         for (OrderItem item : items) {
             sb.append(item).append("\n");
         }
