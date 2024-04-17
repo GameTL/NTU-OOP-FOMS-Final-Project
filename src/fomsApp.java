@@ -7,6 +7,8 @@ package src;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.Map.Entry;
 
 public class fomsApp implements fomsOperations {
     // Declare the Scanner as an instance variable of the class
@@ -34,6 +36,7 @@ public class fomsApp implements fomsOperations {
 
     Menu menu = new Menu();
     private Admin onlyAdmin = new Admin("boss", "Boss");
+    private PaymentRegistry paymentRegistry = PaymentManager.getPaymentRegistry();
 
     public void initializer() {
         branchOP.addOrReplaceBranch("NTU", new Branch("NTU", "North Spine Plaza", 8));
@@ -392,34 +395,76 @@ public class fomsApp implements fomsOperations {
 
     public void editPayment() { //shuya
         int choice;
+        listExistingPaymentMethods(); // Display existing payment methods at the start
         do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
-
-            System.out.printf("""
-                    -------------------------------
-                              Edit Payment
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    """, CurrentOrderList);
+            System.out.println("----------------------------------------");
+            System.out.println("Edit Payment Methods");
+            System.out.println("(1) Add Payment Method");
+            System.out.println("(2) Remove Payment Method");
+            System.out.println("(0) Back");
+            System.out.println("(-1) Exit");
+            System.out.println("----------------------------------------");
+            System.out.print("Enter your choice: ");
             choice = sc.nextInt();
+            sc.nextLine(); 
+
             switch (choice) {
                 case 1:
-                    // TODO
+                    addPaymentMethod();
                     break;
                 case 2:
-                    // TODO
-                case 0:
+                    removePaymentMethod();
                     break;
+                case 0:
+                    return; // go back
                 case -1:
-                    System.out.println("Program terminating ....");
+                    System.out.println("Program terminating...");
                     System.exit(0);
-
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
             }
-        } while (choice < 3);
+        } while (choice != 0);
+    }
+
+    private void listExistingPaymentMethods() {
+        Set<Entry<Integer, PaymentRegistry.PaymentMethod>> methods = paymentRegistry.getAllPaymentMethods();
+        if (methods.isEmpty()) {
+            System.out.println("No payment methods available.");
+        } else {
+            System.out.println("Existing Payment Methods:");
+            for (Entry<Integer, PaymentRegistry.PaymentMethod> method : methods) {
+                System.out.println("ID: " + method.getKey() + ", Description: " + method.getValue().getDescription());
+            }
+        }
+    }
+
+    private void addPaymentMethod() {
+        System.out.println("Enter payment method ID:");
+        int id = sc.nextInt();
+        sc.nextLine(); // consume the newline
+        System.out.println("Enter payment description:");
+        String description = sc.nextLine();
+        System.out.println("Enter the class name of the new payment method (e.g., BitCoinPayment):");
+        String className = sc.nextLine();
+
+        try {
+            Class<?> cls = Class.forName("src." + className); // assumes that the payment classes are in the 'src' package
+            Payment newPayment = (Payment) cls.getDeclaredConstructor().newInstance();
+            onlyAdmin.managePaymentMethod("add", id, newPayment, description);
+            System.out.println("Payment method added: " + description);
+        } catch (Exception e) {
+            System.out.println("Failed to add payment method. Error: " + e.getMessage());
+        }
+    }
+
+    private void removePaymentMethod() {
+        System.out.println("Enter payment method ID to remove:");
+        int id = sc.nextInt();
+        sc.nextLine(); // consume the newline
+        System.out.println("Removing payment method...");
+        onlyAdmin.managePaymentMethod("remove", id, null, "");
     }
 
     public void openCloseBranch() { //tracey
