@@ -5,14 +5,16 @@ import java.util.List;
 public class Admin extends User {
 
     private PaymentRegistry paymentRegistry;
+    private BranchManager branchManager;
 
-    public Admin(String id, String name, String contactInfo, PaymentRegistry paymentRegistry) {
-        super(id, name, contactInfo);
+    public Admin(String id, String name, PaymentRegistry paymentRegistry, BranchManager branchManager) {
+        super(id, name);
         this.paymentRegistry = paymentRegistry;
+        this.branchManager = branchManager;
     }
 
     // Method for managing staff accounts (add, edit, remove)
-    public void manageStaff(String action, List<Staff> staffList, Staff staff, String newName, String newContactInfo, String newRole, String newBranch) {
+    public void manageStaff(String action, List<Staff> staffList, Staff staff, String newName, String newRole, String newBranch) {
         switch (action) {
             case "add":
                 staff.setBranch(newBranch); // Set branch when adding new staff
@@ -21,7 +23,6 @@ public class Admin extends User {
                 break;
             case "edit":
                 staff.setName(newName);
-                staff.setContactInfo(newContactInfo);
                 staff.setRole(newRole);
                 staff.setBranch(newBranch);
                 System.out.println("Staff edited: " + staff.getName() + " in branch " + newBranch);
@@ -60,15 +61,15 @@ public class Admin extends User {
         }
     }
 
-    // Consolidated method for managing branches (open, close)
-    public void manageBranch(String action, List<Branch> branches, Branch branch) {
+    // Method for managing branches (open, close)
+    public void manageBranch(String action, Branch branch) {
         switch (action) {
             case "open":
-                branches.add(branch);
+                branchManager.addBranch(branch);
                 System.out.println("Branch opened: " + branch.getBranchName());
                 break;
             case "close":
-                branches.remove(branch);
+                branchManager.removeBranch(branch);
                 System.out.println("Branch closed: " + branch.getBranchName());
                 break;
             default:
@@ -76,12 +77,9 @@ public class Admin extends User {
         }
     }
     
- // Display staff list with filters: branch, role
-    public void displayStaffList(List<Staff> staffList, String branch, String role) {
-        staffList.stream()
-                .filter(staff -> (branch == null || staff.getBranch().equals(branch)) &&
-                        (role == null || staff.getRole().equals(role)))
-                .forEach(System.out::println);
+ // Display staff list with filters: branch, role, gender, age
+    public void displayStaffList(List<Staff> staffList, String branch, String role, String gender, Integer age) {
+        StaffDisplay.displayStaffList(staffList, branch, role, gender, age);
     }
 
     // Promote a staff to Manager

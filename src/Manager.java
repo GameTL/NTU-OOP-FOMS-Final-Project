@@ -1,8 +1,8 @@
 package src;
 import java.util.List;
 public class Manager extends Staff {
-    public Manager(String id, String name, String contactInfo, String role, String branch) {
-        super(id, name, contactInfo, role, branch);
+    public Manager(String id, String name, String contactInfo, String role, String branch, String gender, Integer age) {
+        super(id, name, role, branch, gender, age);
     }
 
     public void manageMenu(Menu menu, MenuItem item, String action) {
@@ -23,11 +23,8 @@ public class Manager extends Staff {
 
     public void displayStaffList(List<Staff> staffList) {
         System.out.println("Staff List for Branch: " + this.getBranch());
-        for (Staff staff : staffList) {
-            // Display only staff from the same branch as the manager
-            if (staff.getBranch().equals(this.getBranch())) {
-                System.out.println(staff);
-            }
-        }
+        staffList.stream()
+                 .filter(staff -> staff.getBranch().equals(this.getBranch()))
+                 .forEach(System.out::println);
     }
 }
