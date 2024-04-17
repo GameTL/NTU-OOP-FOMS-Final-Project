@@ -606,10 +606,11 @@ public class fomsApp implements fomsOperations {
 
         Branch selectedBranch = branches.get(selection - 1);
         ApplicationState.setCurrentBranch(selectedBranch);
-        menu.displayMenu(selectedBranch);
     }
 
-    public void displayCurrentOrder(Branch selectedBranch) { // Complete level 1
+    public void displayCurrentOrder() { // Complete level 1
+        selectedBranch = ApplicationState.getCurrentBranch();
+        menu.displayMenu(selectedBranch);
         int choice;
         do {
             System.out.println("-------------------------------");

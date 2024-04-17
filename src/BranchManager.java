@@ -8,9 +8,6 @@ public class BranchManager {
     
     private BranchManager() {
         branchList = new ArrayList<>();
-        branchList.add(new Branch("NTU"));
-        branchList.add(new Branch("JP"));
-        branchList.add(new Branch("JE"));
     }
     
     public void addBranch(Branch branch) {
