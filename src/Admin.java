@@ -85,7 +85,7 @@ public class Admin extends User {
     // Promote a staff to Manager
     public void promoteToManager(List<Staff> staffList, Staff staff, List<Manager> managerList, String branch) {
         if (staffList.remove(staff)) {
-            Manager newManager = new Manager(staff.getId(), staff.getName(), staff.getContactInfo(), "Manager", branch); // Pass branch to Manager constructor
+            Manager newManager = new Manager(staff.getId(), staff.getName(), "Manager", branch, staff.getGender(), staff.getAge()); // Pass branch to Manager constructor
             managerList.add(newManager);
             System.out.println("Staff promoted to Manager: " + newManager.getName() + " in branch " + branch);
         } else {

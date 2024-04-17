@@ -1,7 +1,7 @@
 package src;
 import java.util.List;
 public class Manager extends Staff {
-    public Manager(String id, String name, String contactInfo, String role, String branch, String gender, Integer age) {
+    public Manager(String id, String name, String role, String branch, String gender, Integer age) {
         super(id, name, role, branch, gender, age);
     }
 
