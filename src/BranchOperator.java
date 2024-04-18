@@ -3,6 +3,7 @@ package src;
 // import java.util.ArrayList;
 import java.util.HashMap;
 
+import static src.fomsApp.clearConsole;
 import static src.fomsApp.divider;
 
 import java.util.ArrayList;
@@ -69,12 +70,13 @@ public class BranchOperator {
             index++;
         }
 
-        
-        /*for (String branchName : branchMap.keySet()) {
-            System.out.println(index + ". " + branchName);
-            indexMap.put(index, branchName);
-            index++;
-        }*/
+        /*
+         * for (String branchName : branchMap.keySet()) {
+         * System.out.println(index + ". " + branchName);
+         * indexMap.put(index, branchName);
+         * index++;
+         * }
+         */
 
         // Allow user to select a branch by index
         divider();
@@ -163,7 +165,7 @@ public class BranchOperator {
 
     }
 
-    public void displayOrdersAndSelect() {
+    public Order displayOrdersAndSelect() {
         Scanner scanner = new Scanner(System.in);
         int index = 1;
 
@@ -203,17 +205,39 @@ public class BranchOperator {
                     order.isTakeaway() ? "Yes" : "No");
         }
 
-        // Allow user to select an order by index
-        System.out.println("Enter the index of the order to select, or 0 to exit:");
+        // Allow user to select an order by index   
+        divider();
+        System.out.println("""  
+            (Select Index to edit order)
+
+            (0) back""");
         int choice = scanner.nextInt();
         if (choice > 0 && choice <= orders.size()) {
             Order selectedOrder = orders.get(choice - 1);
-            System.out.println("Selected Order: " + selectedOrder.getOrderId());
+            clearConsole();
+            System.out.println("ORDER SELECTED");
+            // Print the header
+            System.out.printf(
+                    "%-5s %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
+                            + isTakeawayPadding + "s\n",
+                    "Index", "Order ID", "Customer ID", "Status", "Is Takeaway");
+
+                System.out.printf(
+                        "%-5d %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
+                                + isTakeawayPadding + "s\n",
+                        0,
+                        selectedOrder.getOrderId(),
+                        selectedOrder.getCustomerId(),
+                        selectedOrder.getStatus(),
+                        selectedOrder.isTakeaway() ? "Yes" : "No");
+            return selectedOrder;
             // Further action can be taken here depending on what needs to be done with the
             // selected order
-        } else if (choice != 0) {
+        } else if (choice < -1 || choice > orders.size()) {
             System.out.println("Invalid index. Please try again.");
             displayOrdersAndSelect();
         }
+        return null;
+
     }
 }

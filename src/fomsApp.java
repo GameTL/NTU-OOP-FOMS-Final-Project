@@ -9,6 +9,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import src.Order.Status;
+
 import java.util.Map;
 
 public class fomsApp implements fomsOperations {
@@ -92,12 +95,12 @@ public class fomsApp implements fomsOperations {
                 Manager.Gender.Female,
                 27,
                 "JE"));
-                branchOP.getCurrentBranch().setOrders(mockorderList);
-        
+        branchOP.getCurrentBranch().setOrders(mockorderList);
+
         // for testing
         // for testing
         branchOP.getCurrentBranch().addStaffMember(new Staff(
-                "s", 
+                "s",
                 "Mary lee",
                 Staff.Gender.Female,
                 44,
@@ -284,41 +287,33 @@ public class fomsApp implements fomsOperations {
             return;
         }
 
-        int choice;
         // do {
-            divider();
-            // List<Order> listOrder = branchOP.getCurrentBranch().getOrders();
-            branchOP.displayOrdersAndSelect();
+        divider();
+        do {
 
-            // for (Order order : orderList) {
-            //     if (order.getStatus().equals("New") && order.getCustomerId().equals(selectedBranch.getBranchName())) {
-            //         System.out.println(order.getOrderId());
-            //         currentOrders.add(order);
-            //         index++;
-            //     }
-            // }
-            // if (currentOrders.isEmpty()) {
-            //     System.out.println("No current orders available.");
-            //     break; // loop is broken if there are no orders
-            // }
-            // divider();
-            // System.out.println("(0) Back");
-            // System.out.println("(-1) Exit");
-            // choice = sc.nextInt();
-            // sc.nextLine();
-            // if (choice > 0 && choice <= currentOrders.size()) {
-            //     Order selectedOrder = currentOrders.get(choice - 1);
-            //     selectedOrder.setStatus(Order.Status.ReadyForPickup);
-            //     System.out.println("Order ID: " + selectedOrder.getOrderId() + " is now ready to pick up.");
-            // } else if (choice == 0) {
-            //     break; // Go back to the previous menu
-            // } else if (choice == -1) {
-            //     System.out.println("Program terminating...");
-            //     System.exit(0);
-            // } else {
-            //     System.out.println("Invalid choice. Please enter a valid option.");
-            // }
-        // } while (choice != 0 && choice != -1);
+            Order selectedOrder = branchOP.displayOrdersAndSelect();
+            if (selectedOrder != null) {
+                // clearConsole();
+                System.out.println("(1) Status:      New\n(2) Status:      ReadyForPickup\n(3) Status:      Completed\n(4) Set Takeaway: Takeaway\n(5) Set Takeway:  Dine-In");
+                int choice = this.sc.nextInt();
+                switch (choice) {
+                    case 1:
+                        selectedOrder.setStatus(Status.New);
+                    case 2:
+                        selectedOrder.setStatus(Status.ReadyForPickup);
+                    case 3:
+                        selectedOrder.setStatus(Status.Completed);
+                    case 4:
+                        selectedOrder.setTakeaway(true);
+                    case 5:
+                        selectedOrder.setTakeaway(false);
+                }
+                clearConsole();
+            } else {
+                break;
+            }
+        } while (true);
+
     }
 
     // >Admin
@@ -356,7 +351,7 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void paymentGateway(Order order) { 
+    public void paymentGateway(Order order) {
         System.out.println("Your order total is: $" + order.getTotalCost());
         System.out.println("Please select your payment method:\n(1) Credit Card\n(2) Debit Card\n(3) Online payment");
         int paymentChoice = sc.nextInt();
@@ -737,6 +732,7 @@ public class fomsApp implements fomsOperations {
         // }
 
     }
+
     public void displayStaffCurrentOrder(Order order) { // Complete level 1
         System.out.println("Current Order Details:");
         System.out.println("-------------------------------");
@@ -812,7 +808,7 @@ public class fomsApp implements fomsOperations {
 
         if (sc.hasNextLine()) { // Clear buffer before new input
             sc.nextLine();
-        } 
+        }
 
         while (true) {
             System.out.println("Enter the name of the item you wish to order.");
