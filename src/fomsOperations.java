@@ -38,7 +38,7 @@ public interface fomsOperations {
     // >User
     public abstract void  UserBranchSelector(); // 1.1.X
 
-    public abstract void  cardPaymentGateway();
+    public abstract void  paymentGateway(Order order);
 
     public abstract void  displayUserCurrentOrder(Order order); // 1.1.1
 
