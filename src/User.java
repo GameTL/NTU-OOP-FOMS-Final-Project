@@ -2,10 +2,10 @@
 
 public abstract class User {
     public enum Gender {
-        Male, Female
+        MALE, FEMALE, OTHER;
     }
     public enum Role {
-        Staff, Admin, Manager
+        Staff, Admin, Manager;
     }
     protected String id;
     protected String name;

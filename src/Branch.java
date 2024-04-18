@@ -27,6 +27,11 @@ public class Branch{
             this.staffMembers.add(staff);
         }
     }
+    public void removeStaffMember(Staff staff){
+        if (staff != null){
+            this.staffMembers.remove(staff);
+        }
+    }
     public void addManager(Manager manager) {
         if (manager != null) {
             this.staffMembers.add(manager);
