@@ -109,10 +109,4 @@ public class Branch{
             System.out.printf("%-20s %-10s %-10s %-5s\n", manager.getName(), "Manager", manager.getGender().toString(), manager.getAge());
         }
     }
-    
-    
-    
-    // public void displayCurrentOrder(Menu menu) {
-        //     menu.displayMenu(this);
-        // }
     }

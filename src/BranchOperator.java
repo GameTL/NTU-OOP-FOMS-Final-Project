@@ -162,4 +162,58 @@ public class BranchOperator {
         }
 
     }
+
+    public void displayOrdersAndSelect() {
+        Scanner scanner = new Scanner(System.in);
+        int index = 1;
+
+        // Header with padding
+        List<Order> orders = this.getCurrentBranch().getOrders();
+        // Determine the maximum length of each field to set column widths dynamically
+        int maxOrderIdLength = "Order ID".length();
+        int maxCustomerIdLength = "Customer ID".length();
+        int maxStatusLength = "Status".length();
+        for (Order order : orders) {
+            maxOrderIdLength = Math.max(maxOrderIdLength, order.getOrderId().length());
+            maxCustomerIdLength = Math.max(maxCustomerIdLength, order.getCustomerId().length());
+            maxStatusLength = Math.max(maxStatusLength, order.getStatus().toString().length());
+        }
+
+        // Adding 4 spaces for padding
+        int orderIdPadding = maxOrderIdLength + 4;
+        int customerIdPadding = maxCustomerIdLength + 4;
+        int statusPadding = maxStatusLength + 4;
+        int isTakeawayPadding = "Is Takeaway".length() + 4; // Static since values are either "Yes" or "No"
+
+        // Print the header
+        System.out.printf(
+                "%-5s %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
+                        + isTakeawayPadding + "s\n",
+                "Index", "Order ID", "Customer ID", "Status", "Is Takeaway");
+
+        // Print each order
+        for (Order order : orders) {
+            System.out.printf(
+                    "%-5d %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
+                            + isTakeawayPadding + "s\n",
+                    index++,
+                    order.getOrderId(),
+                    order.getCustomerId(),
+                    order.getStatus(),
+                    order.isTakeaway() ? "Yes" : "No");
+        }
+
+        // Allow user to select an order by index
+        System.out.println("Enter the index of the order to select, or 0 to exit:");
+        int choice = scanner.nextInt();
+        if (choice > 0 && choice <= orders.size()) {
+            Order selectedOrder = orders.get(choice - 1);
+            System.out.println("Selected Order: " + selectedOrder.getOrderId());
+            // Further action can be taken here depending on what needs to be done with the
+            // selected order
+        } else if (choice != 0) {
+            System.out.println("Invalid index. Please try again.");
+            displayOrdersAndSelect();
+        }
+    }
 }
