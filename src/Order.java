@@ -3,8 +3,11 @@ package src;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.io.Serializable;
 
-public class Order {
+public class Order implements Serializable{
+    private static final long serialVersionUID = 6L;
+    
     public enum Status {
         New,
         ReadyForPickup,
@@ -23,7 +26,7 @@ public class Order {
         this.orderId = UUID.randomUUID().toString();
         this.customerId = customerId;
         this.items = new ArrayList<>();
-        this.status = status.New; // Default status
+        this.status = Status.New; // Default status
         this.isTakeaway = isTakeaway;
     }
 

@@ -12,8 +12,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Map;
+import java.io.Serializable;
 
-public class BranchOperator {
+public class BranchOperator implements Serializable{
+    private static final long serialVersionUID = 9L;
+    private Admin adminOP;
 
     private Map<String, Branch> branchMap = new HashMap<>();
     private Branch currentBranch;
@@ -43,11 +46,14 @@ public class BranchOperator {
             branchMap.remove(name); // Remove the branch from the map
         }
     }
-
+    public void initAdmin(Admin admin){
+        adminOP = admin;
+    }
     private Scanner scanner = new Scanner(System.in);
 
     public List<Staff> getAllStaff() {
         List<Staff> allStaff = new ArrayList<>(); // Start with all staff members
+        allStaff.add((Staff) adminOP);
         for (Branch branch : branchMap.values()) {
             allStaff.addAll(branch.getStaffMembers());
             allStaff.addAll(branch.getManagerMembers());
@@ -91,9 +97,7 @@ public class BranchOperator {
             System.out.println("Invalid index. Please try again.");
         }
     }
-
-    public void printAndModifyStaffDetails(List<Staff> staffList, List<String> filterBranch, String sortByAttribute) {
-
+    public void printStaffDetails(List<Staff> staffList, List<String> filterBranch, String sortByAttribute) {
         // How to use filter
         // List<String> filterBranches = new ArrayList<>();
         // filterBranches.add("NTU");
@@ -145,26 +149,68 @@ public class BranchOperator {
                             + "s\n",
                     index++, staff.getName(), staff.getGender(), staff.getAge(), staff.getBranch());
         }
-
-        // Allow user to select and modify a staff member
-        modifyStaff(staffList);
     }
 
-    private void modifyStaff(List<Staff> staffList) {
+    public void modifyStaff(List<Staff> staffList) {
         System.out.println("Enter the index of the staff to modify, or 0 to exit:");
         int choice = scanner.nextInt();
+        scanner.nextLine();
+
         if (choice > 0 && choice <= staffList.size()) {
             Staff selectedStaff = staffList.get(choice - 1);
             System.out.println("Selected: " + selectedStaff.getName());
-            System.out.println("Enter new age:");
-            int newAge = scanner.nextInt();
-            selectedStaff.setAge(newAge); // Assuming a setter exists
-            System.out.println("Updated age for " + selectedStaff.getName() + " to " + newAge);
-        }
+            divider();
+            System.out.println("Choose an attribute to modify:");
+            System.out.println("1. Name");
+            System.out.println("2. Age");
+            System.out.println("3. Gender");
+            System.out.println("4. Branch");
+            System.out.println("Enter your choice:");
+            divider();
 
+            int attributeChoice = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (attributeChoice) {
+            case 1:
+                System.out.println("Enter new name:");
+                String newName = scanner.nextLine();
+                selectedStaff.setName(newName);
+                System.out.println("Updated name for " + selectedStaff.getName());
+                break;
+            case 2:
+                System.out.println("Enter new age:");
+                int newAge = scanner.nextInt();
+                selectedStaff.setAge(newAge);
+                System.out.println("Updated age for " + selectedStaff.getName() + " to " + newAge);
+
+                break;
+            case 3:
+                System.out.println("Enter new gender (Male, Female, Other):");
+                String newGenderStr = scanner.nextLine();
+                User.Gender newGender;
+                try {
+                    newGender = User.Gender.valueOf(newGenderStr.toUpperCase());
+                    selectedStaff.setGender(newGender);
+                    System.out.println("Updated gender for " + selectedStaff.getName());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid gender. Please enter Male, Female, or Other.");
+                }
+                break;
+            case 4: //for transfering branch
+                listAndSelectBranch(); // SET TO NEW SELECTED BRANCH
+                String editBranch = scanner.nextLine();
+                selectedStaff.setBranch(editBranch);
+            default:
+                System.out.println("Invalid choice. Please enter a valid option.");
+                break;
+            }
+        } else if (choice != 0) {
+            System.out.println("Invalid index. Please try again.");
+        }
     }
 
-    public Order displayOrdersAndSelect() { // FOR STAFF
+    public Order displayOrdersAndSelectForStaff() { // FOR STAFF
         Scanner scanner = new Scanner(System.in);
         int index = 1;
 
@@ -214,34 +260,64 @@ public class BranchOperator {
         if (choice > 0 && choice <= orders.size()) {
             Order selectedOrder = orders.get(choice - 1);
             clearConsole();
-            System.out.println("ORDER SELECTED");
+            divider();
+            System.out.println("ORDER INFORMATION AND MODIFICATION");
             // Print the header
             System.out.printf(
-                    "%-5s %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
-                            + isTakeawayPadding + "s\n",
-                    "Index", "Order ID", "Customer ID", "Status", "Is Takeaway");
-
-            System.out.printf(
+                "%-5s %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
+                + isTakeawayPadding + "s\n",
+                "Index", "Order ID", "Customer ID", "Status", "Is Takeaway");
+                
+                System.out.printf(
                     "%-5d %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
-                            + isTakeawayPadding + "s\n",
+                    + isTakeawayPadding + "s\n",
                     0,
                     selectedOrder.getOrderId(),
                     selectedOrder.getCustomerId(),
                     selectedOrder.getStatus(),
                     selectedOrder.isTakeaway() ? "Yes" : "No");
+                    
+                    // PRINT INFORMATION ABOUT A ORDER
+        System.out.println("");
+        System.out.println("ORDER ITEMS");
+
+            List<OrderItem> CartMenuItemList = selectedOrder.getItems();
+            int maxNameLength = "Item Name".length();
+            int maxQuantityLength = String.valueOf("Quantity").length();
+            int maxTakeawayLength = "Takeaway".length(); 
+            for (OrderItem item : CartMenuItemList) {
+                maxNameLength = Math.max(maxNameLength, item.getMenuItem().getName().length());
+                maxQuantityLength = Math.max(maxQuantityLength, String.valueOf(item.getQuantity()).length());
+                // Assuming `isTakeaway()` method returns a boolean that can be shown directly or needs conversion
+                maxTakeawayLength = Math.max(maxTakeawayLength, selectedOrder.isTakeaway() ? "Yes".length() : "No".length()); 
+            }
+            
+            int maxNamePadding = maxNameLength + 4;
+            int maxQuantityPadding = maxQuantityLength + 4;
+            int maxTakeawayPadding = maxTakeawayLength + 4; // Calculate padding for the takeaway column
+            
+            // Print header with Takeaway column
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s %-" + maxTakeawayPadding + "s%n", "Index", "Name", "Quantity", "Takeaway");
+            for (OrderItem item : CartMenuItemList) {
+                // Print each item with Takeaway status
+                System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s %-" + maxTakeawayPadding + "s%n", 0, item.getMenuItem().getName(), item.getQuantity(), selectedOrder.isTakeaway() ? "Yes" : "No");
+            }
+            divider();
+            System.out.printf("Total Price: %.2f\n",selectedOrder.getTotalCost());
+            divider();
             return selectedOrder;
             // Further action can be taken here depending on what needs to be done with the
             // selected order
         } else if (choice < -1 || choice > orders.size()) {
             System.out.println("Invalid index. Please try again.");
-            displayOrdersAndSelect();
+            displayOrdersAndSelectForStaff();
         }
         return null;
 
     }
 
     public Order displayMenuAndSelect(Order orderCart) { // FOR CUSTOMER
-        Scanner scanner = new Scanner(System.in);
+        // Scanner scanner = new Scanner(System.in);
         int index = 1;
         clearConsole();
         divider();
@@ -324,5 +400,77 @@ public class BranchOperator {
         return orderCart;
     }
     
-    
+    public void addItem(Menu menu) {
+        if (menu != null) {
+            System.out.println("Adding item to menu of " + currentBranch.getBranchName());
+            System.out.println("Enter the name of the new menu item:");
+            String name = scanner.nextLine();
+
+            System.out.println("Enter the price of the new menu item:");
+            double price = scanner.nextDouble();
+            scanner.nextLine();  // Clear buffer after double input
+
+            System.out.println("Enter the category of the new menu item:");
+            String category = scanner.nextLine();
+
+            MenuItem newItem = new MenuItem(name, price, currentBranch.getBranchName(), category);
+            menu.addMenuItem(newItem);
+            System.out.println("Item added successfully to " + currentBranch.getBranchName());
+        } else {
+            System.out.println("No active menu found. Cannot add item.");
+        }
+    }
+
+    public void removeItem(Menu menu) {
+        if (menu != null) {
+            System.out.println("Enter the name of the menu item to remove:");
+            String name = scanner.nextLine();
+
+            MenuItem itemToRemove = new MenuItem(name, 0, currentBranch.getBranchName(), null);
+            boolean removed = menu.removeMenuItem(itemToRemove);
+            if (removed) {
+                System.out.println("Item removed successfully from " + currentBranch.getBranchName());
+            } else {
+                System.out.println("Item not found in " + currentBranch.getBranchName());
+            }
+        } else {
+            System.out.println("No active menu found. Cannot remove item.");
+        }
+    }
+
+    public void updateItem(Menu menu) {
+        if (menu != null) {
+            System.out.println("Enter the name of the menu item to update:");
+            String name = scanner.nextLine();
+
+            MenuItem itemToUpdate = menu.findMenuItemByName(name, currentBranch.getBranchName());
+            if (itemToUpdate != null) {
+                System.out.println("Select attribute to update (name, price, category):");
+                String attribute = scanner.nextLine();
+                switch (attribute.toLowerCase()) {
+                    case "name":
+                        System.out.println("Enter new name:");
+                        itemToUpdate.setName(scanner.nextLine());
+                        break;
+                    case "price":
+                        System.out.println("Enter new price:");
+                        itemToUpdate.setPrice(scanner.nextDouble());
+                        scanner.nextLine(); // Consume newline
+                        break;
+                    case "category":
+                        System.out.println("Enter new category:");
+                        itemToUpdate.setCategory(scanner.nextLine());
+                        break;
+                    default:
+                        System.out.println("Invalid attribute.");
+                        return;
+                }
+                System.out.println("Item updated successfully in " + currentBranch.getBranchName());
+            } else {
+                System.out.println("Item not found in " + currentBranch.getBranchName());
+            }
+        } else {
+            System.out.println("No active menu found. Cannot update item.");
+        }
+    }
 }

@@ -1,11 +1,11 @@
 package src;
 
-public class CreditCardPayment extends Payment {
-    private static final long serialVersionUID = 13L;
+public class CryptoPayment extends Payment {
+    private static final long serialVersionUID = 14L;
 
     @Override
     public boolean processPayment(double amount) {
-        System.out.println("Processing credit card payment...");
+        System.out.println("Processing crypto payment...");
         System.out.printf("Amount: $%.2f\n", amount);
         return true;
     }

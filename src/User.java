@@ -1,6 +1,10 @@
-    package src;
+package src;
 
-public abstract class User {
+import java.io.Serializable;
+
+public abstract class User implements Serializable{
+    private static final long serialVersionUID = 1L;
+    
     public enum Gender {
         MALE, FEMALE, OTHER;
     }

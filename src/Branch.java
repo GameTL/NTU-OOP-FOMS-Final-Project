@@ -2,12 +2,13 @@ package src;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class Branch{
+public class Branch implements Serializable{
+    private static final long serialVersionUID = 10L;
     private String branchName;
     // private int numOfStaff;
     private Menu branchMenu;
-    private String location;
     // private List<BranchManager> branchManagerMembers;
     private List<Staff> staffMembers;
     private List<Manager> managerMembers;
@@ -15,12 +16,15 @@ public class Branch{
     private Boolean available;
 
     public Branch(String branchName, String location, Integer staffQuota){
-        this.location = location;
         this.branchName = branchName;
         this.branchMenu = new Menu();
         this.staffMembers = new ArrayList<>();
         this.managerMembers = new ArrayList<>(); // Initialize manager lists
+        this.Orders = new ArrayList<>();
         this.available = true;
+
+        // Orders.add(new Order("00000", true));
+        // Orders.get(0).setStatus(Order.Status.Completed);
     }
     public void addStaffMember(Staff staff) {
         if (staff != null) {
@@ -34,7 +38,7 @@ public class Branch{
     }
     public void addManager(Manager manager) {
         if (manager != null) {
-            this.staffMembers.add(manager);
+            this.managerMembers.add(manager);
         }
     }
     // Get List of staff
@@ -71,7 +75,7 @@ public class Branch{
     }
     // Orders
     public List<Order> getOrders() {
-        return new ArrayList<>(Orders); // Return a copy of the staff list
+        return this.Orders; // DON'T RETURN A COPY DUHHHH
     }
     public void setOrders(List<Order> orderList) {
         Orders = orderList;
@@ -86,10 +90,6 @@ public class Branch{
     public void setAvailable(boolean available) {
         this.available = available;
     }
-	public void printAndModifyStaffDetails(List<Staff> staffMembers2, Object object, Object object2) {
-        // TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'printAndModifyStaffDetails'");
-	}
     public void printStaffAndManagers() {
         System.out.println("Branch: " + this.branchName);
         System.out.printf("%-20s %-10s %-10s %-5s\n", "Name", "Role", "Gender", "Age");

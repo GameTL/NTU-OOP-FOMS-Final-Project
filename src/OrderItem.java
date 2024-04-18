@@ -1,5 +1,10 @@
 package src;
-public class OrderItem {
+
+import java.io.Serializable;
+
+public class OrderItem implements Serializable{
+    private static final long serialVersionUID = 5L;
+    
     private MenuItem menuItem;
     private int quantity;
 

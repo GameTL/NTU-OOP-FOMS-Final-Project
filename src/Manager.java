@@ -3,13 +3,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Manager extends Staff {
+    private static final long serialVersionUID = 12L;
+
     private Scanner scanner = new Scanner(System.in);
 
      public Manager(String id, String name, Gender gender, Integer age, String branch) {
         super(id, name, gender, age, branch);
     }
 
-    public void addItem(Menu menu) {
+    /*public void addItem(Menu menu) {
         System.out.println("Enter the name of the new menu item: ");
         String name = scanner.nextLine();
 
@@ -74,7 +76,7 @@ public class Manager extends Staff {
         } else {
             System.out.println("Item not found.");
         }
-    }
+    }*/
 
     public void displayStaffList(List<Staff> staffList) {
         System.out.println("Staff List for Branch: " + this.getBranch());

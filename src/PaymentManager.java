@@ -1,7 +1,10 @@
 package src;
 import java.util.Scanner;
+import java.io.Serializable;
 
-public class PaymentManager {
+public class PaymentManager implements Serializable{
+    private static final long serialVersionUID = 3L;
+
     private static PaymentRegistry paymentRegistry = new PaymentRegistry();
 
     static {
@@ -51,7 +54,13 @@ public class PaymentManager {
         if (paymentSuccess) {
             payment.displayCompletePayment();
             order.setStatus(Order.Status.New);
-            System.out.println("Order ID: " + order.getOrderId());
+            System.out.println("Order ID:      " + order.getOrderId());
+            System.out.println("CustomerID ID: " + order.getCustomerId());
+            System.out.println("Your Order have been sent to the kitchen\nPRESS 0 THEN ENTER TO CONTINUE");
+            // Scanner tempsc = new Scanner(System.in);
+            // tempsc.nextInt();
+            // tempsc.close();
+
             return true;
         } else {
             System.out.println("Payment failed.");

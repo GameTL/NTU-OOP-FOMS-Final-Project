@@ -3,8 +3,11 @@ package src;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.io.Serializable;
 
-public class PaymentRegistry {
+public class PaymentRegistry implements Serializable{
+    private static final long serialVersionUID = 2L;
+    
     private Map<Integer, PaymentMethod> paymentMethods = new LinkedHashMap<>();
 
     public void registerPaymentMethod(int methodOption, Payment paymentProcessor, String description) {

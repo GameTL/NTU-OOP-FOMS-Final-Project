@@ -8,6 +8,7 @@ public class utils {
         byte[] hash = md.digest(input.getBytes());
         return hash;
     }
+    // byte[] getHash("password") "password" ---> LADKSJFDKLSFJ890890230948lLSDKJFKLDSJ
 
     public class AuthenticationService {
         public static boolean login(String username, String password) {

@@ -39,21 +39,21 @@ public class Customer extends User {
             System.out.println(order);
         }
     }
-    
-    public void collectOrder(String orderId) {
-        for (Order order : orderHistory) {
-            if (order.getOrderId().equals(orderId)) {
-                if ("Ready to pickup".equals(order.getStatus())) {
-                    order.setStatus(Order.Status.Completed);
-                    System.out.println("Order " + orderId + " collected successfully. Status changed to Completed.");
-                } else {
-                    System.out.println("Order " + orderId + " is not ready for pickup. Current status: " + order.getStatus());
-                }
-                return;
-            }
-        }
-        System.out.println("Order with ID " + orderId + " not found in your order history.");
-    }
+    //* Unused */
+    // public void collectOrder(String orderId) {
+    //     for (Order order : orderHistory) {
+    //         if (order.getOrderId().equals(orderId)) {
+    //             if ("Ready to pickup".equals(order.getStatus())) {
+    //                 order.setStatus(Order.Status.Completed);
+    //                 System.out.println("Order " + orderId + " collected successfully. Status changed to Completed.");
+    //             } else {
+    //                 System.out.println("Order " + orderId + " is not ready for pickup. Current status: " + order.getStatus());
+    //             }
+    //             return;
+    //         }
+    //     }
+    //     System.out.println("Order with ID " + orderId + " not found in your order history.");
+    // }
 
 }
 

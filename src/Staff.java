@@ -3,11 +3,12 @@ package src;
 import java.util.Scanner;
 import java.util.List;
 public class Staff extends User {
+    private static final long serialVersionUID = 11L;
 
     // private String role;
     private String branch;
     private Gender gender;
-    private Role role;
+    // private Role role;
     private Integer age;
     private String password;
 
@@ -19,7 +20,7 @@ public class Staff extends User {
         this.branch = branch;
         this.gender = gender;
         this.age = age;
-        this.password = "1";
+        this.password = "password";
     }
 
     // Getter and Setter for role
@@ -62,10 +63,15 @@ public class Staff extends User {
         order.setStatus(Order.Status.ReadyForPickup);
         System.out.println("Order processed.");
     }
+    
+    // public void viewOrderDetails() {
+    //     System.out.println("Enter OrderID to view order: ");
+    //     int orderID = sc.nextInt();
+    // }
 
-    public void viewOrderDetails() {
-        System.out.println("Enter OrderID to view order: ");
-        int orderID = sc.nextInt();
+    //change password and save
+    public void setPassword(String newPassword){
+        this.password = newPassword;
     }
 
     // password check method
@@ -112,9 +118,4 @@ public class Staff extends User {
 
     // return hash;
     // }
-
-    public String getContactInfo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getContactInfo'");
-    }
 }

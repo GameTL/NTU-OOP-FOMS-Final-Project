@@ -11,7 +11,7 @@ public interface fomsOperations {
     
     public abstract void  staffHome(); // 1.2.2.X
 
-    public abstract void  displayStaffCurrentOrder(Order order); // 1.1.1
+    public abstract void  displayStaffCurrentOrder(); // 1.1.1
     
     // public abstract void  displayBranchCurrentOrder(Branch branch);
     // >>Admin
@@ -26,8 +26,6 @@ public interface fomsOperations {
 
     public abstract void  promoteStaff(); // 1.2.1.6
 
-    public abstract void  transferStaff(); // 1.2.1.7
-
     // >>BranchManager
     public abstract void  ManagerHome(); // 1.2.3.X
 
@@ -38,7 +36,7 @@ public interface fomsOperations {
     // >User
     public abstract void  customerBranchSelector(); // 1.1.X
 
-    public abstract void  paymentGateway(Order order);
+    public abstract boolean  paymentGateway(Order order);
 
     // public abstract  Order  displayUserCurrentOrder(Order orderCart); // 1.1.1
 

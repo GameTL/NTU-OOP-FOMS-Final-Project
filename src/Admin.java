@@ -2,15 +2,15 @@ package src;
 
 import java.util.List;
 
-public class Admin extends User {
+public class Admin extends Staff {
     private String password;
 
     // private PaymentRegistry paymentRegistry;
     // // private BranchManager branchManager;
 
-    public Admin(String id, String name) {
-        super(id, name);
-        // this.paymentRegistry = paymentRegistry; //TODO
+    public Admin(String id, String name,Gender gender, Integer age, String branch) {
+        super(id, name, gender, age, branch);
+        setPassword("password");
     }
 
     // Method for managing staff accounts (add, edit, remove)

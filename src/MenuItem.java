@@ -1,6 +1,10 @@
 package src;
 
-public class MenuItem {
+import java.io.Serializable;
+
+public class MenuItem implements Serializable{
+    private static final long serialVersionUID = 7L;
+    
     private String name;
     private double price;
     private String category;
