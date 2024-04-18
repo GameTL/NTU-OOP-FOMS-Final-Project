@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Map;
 
 public class fomsApp implements fomsOperations {
+
     // Declare the Scanner as an instance variable of the class
     /*
      * 1. List of Branch, Admin, CurrentUser
@@ -27,6 +28,7 @@ public class fomsApp implements fomsOperations {
     BranchOperator branchOP = new BranchOperator();
     // Adding branchess
 
+    public int padding = 4;
     private Scanner sc;
     private User currentUser;
 
@@ -90,7 +92,22 @@ public class fomsApp implements fomsOperations {
                 Manager.Gender.Female,
                 27,
                 "JE"));
-        branchOP.getCurrentBranch().setOrders(mockorderList);
+                branchOP.getCurrentBranch().setOrders(mockorderList);
+        
+        // for testing
+        // for testing
+        branchOP.getCurrentBranch().addStaffMember(new Staff(
+                "s", 
+                "Mary lee",
+                Staff.Gender.Female,
+                44,
+                "JE"));
+        branchOP.getCurrentBranch().addManager(new Manager(
+                "m",
+                "Alica Ang",
+                Manager.Gender.Female,
+                27,
+                "JE"));
 
     }
     // private //List of Branch
@@ -268,18 +285,10 @@ public class fomsApp implements fomsOperations {
         }
 
         int choice;
-        do {
+        // do {
             divider();
-            List<Order> listOrder = branchOP.getCurrentBranch().getOrders();
-            System.out.printf("""
-                                 Staff Homepage @ %s
-                                Show Current Order
-                    %s
-                    (0) back
-                    (-1) exit
-                    """, selectedBranch.getBranchName(), listOrder);
-            List<Order> currentOrders = new ArrayList<>();
-            int index = 1;
+            // List<Order> listOrder = branchOP.getCurrentBranch().getOrders();
+            branchOP.displayOrdersAndSelect();
 
             // for (Order order : orderList) {
             //     if (order.getStatus().equals("New") && order.getCustomerId().equals(selectedBranch.getBranchName())) {
@@ -292,24 +301,24 @@ public class fomsApp implements fomsOperations {
             //     System.out.println("No current orders available.");
             //     break; // loop is broken if there are no orders
             // }
-            divider();
-            System.out.println("(0) Back");
-            System.out.println("(-1) Exit");
-            choice = sc.nextInt();
-            sc.nextLine();
-            if (choice > 0 && choice <= currentOrders.size()) {
-                Order selectedOrder = currentOrders.get(choice - 1);
-                selectedOrder.setStatus(Order.Status.ReadyForPickup);
-                System.out.println("Order ID: " + selectedOrder.getOrderId() + " is now ready to pick up.");
-            } else if (choice == 0) {
-                break; // Go back to the previous menu
-            } else if (choice == -1) {
-                System.out.println("Program terminating...");
-                System.exit(0);
-            } else {
-                System.out.println("Invalid choice. Please enter a valid option.");
-            }
-        } while (choice != 0 && choice != -1);
+            // divider();
+            // System.out.println("(0) Back");
+            // System.out.println("(-1) Exit");
+            // choice = sc.nextInt();
+            // sc.nextLine();
+            // if (choice > 0 && choice <= currentOrders.size()) {
+            //     Order selectedOrder = currentOrders.get(choice - 1);
+            //     selectedOrder.setStatus(Order.Status.ReadyForPickup);
+            //     System.out.println("Order ID: " + selectedOrder.getOrderId() + " is now ready to pick up.");
+            // } else if (choice == 0) {
+            //     break; // Go back to the previous menu
+            // } else if (choice == -1) {
+            //     System.out.println("Program terminating...");
+            //     System.exit(0);
+            // } else {
+            //     System.out.println("Invalid choice. Please enter a valid option.");
+            // }
+        // } while (choice != 0 && choice != -1);
     }
 
     // >Admin
@@ -731,6 +740,31 @@ public class fomsApp implements fomsOperations {
         // }
         // }
 
+    }
+    public void displayStaffCurrentOrder(Order order) { // Complete level 1
+        System.out.println("Current Order Details:");
+        System.out.println("-------------------------------");
+        List<OrderItem> items = order.getItems();
+        if (items.isEmpty()) {
+            System.out.println("No items in your order.");
+        } else {
+            for (OrderItem item : items) {
+                System.out.printf("Item: %s, Quantity: %d, Price: %.2f\n", item.getMenuItem().getName(),
+                        item.getQuantity(), item.getMenuItem().getPrice());
+            }
+        }
+        System.out.println("-------------------------------");
+        System.out.println("\nDo you want to confirm this order? (Yes/No)");
+        Scanner scanner = new Scanner(System.in);
+        String confirmation = scanner.nextLine().trim();
+
+        if ("Yes".equalsIgnoreCase(confirmation)) {
+            System.out.println("Order confirmed.");
+            // Here you can call any methods to finalize the order processing
+        } else {
+            System.out.println("Order not confirmed.");
+            // Handle order cancellation or modification
+        }
     }
 
     public void displayUserCurrentOrder(Order order) { // Complete level 1

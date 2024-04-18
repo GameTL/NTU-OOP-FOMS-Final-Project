@@ -2,14 +2,16 @@ package src;
 public interface fomsOperations {
     // Main
     public abstract void  userSelector(); // 1.X
-
+    
     // >Staff
     public abstract void  adminHome(); // 1.2.1
-
-
+    
+    
     public abstract void  staffLogin(); // 1.2.X
-
+    
     public abstract void  staffHome(); // 1.2.2.X
+
+    public abstract void  displayStaffCurrentOrder(Order order); // 1.1.1
     
     // public abstract void  displayBranchCurrentOrder(Branch branch);
     // >>Admin
