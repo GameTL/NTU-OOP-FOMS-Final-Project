@@ -15,36 +15,36 @@ public class PaymentManager {
         return paymentRegistry;
     }
 
-    public static boolean processPayment(Order order) {
-        if (order == null) {
-            System.out.println("Error: Order Not Assigned. Exiting...");
-            return false;
-        }
+//    public static boolean processPayment(Order order) {
+//        if (order == null) {
+//            System.out.println("Error: Order Not Assigned. Exiting...");
+//            return false;
+//        }
+//
+//        double amount = calculate(order);
+//        System.out.println("Due Amount: S$ " + String.format("%.2f", amount));
+//        displayPaymentMethods();
+//
+//        Scanner scanner = new Scanner(System.in);
+//        int paymentMethodChoice = scanner.nextInt();
+//
+//        Payment selectedPaymentMethod = paymentRegistry.getPaymentMethod(paymentMethodChoice);
+//        if (selectedPaymentMethod != null) {
+//            return processPayment(selectedPaymentMethod, order, amount);
+//        } else {
+//            System.out.println("Invalid payment method choice. Payment canceled.");
+//            return false;
+//        }
+//    }
 
-        double amount = calculate(order);
-        System.out.println("Due Amount: S$ " + String.format("%.2f", amount));
-        displayPaymentMethods();
-
-        Scanner scanner = new Scanner(System.in);
-        int paymentMethodChoice = scanner.nextInt();
-
-        Payment selectedPaymentMethod = paymentRegistry.getPaymentMethod(paymentMethodChoice);
-        if (selectedPaymentMethod != null) {
-            return processPayment(selectedPaymentMethod, order, amount);
-        } else {
-            System.out.println("Invalid payment method choice. Payment canceled.");
-            return false;
-        }
-    }
-
-    private static void displayPaymentMethods() {
-        System.out.println("Please choose your payment method");
-        System.out.println("=========================================");
-        paymentRegistry.getAllPaymentMethods().forEach(entry -> {
-            System.out.println("(" + entry.getKey() + ") " + entry.getValue().getDescription());
-        });
-        System.out.println("=========================================\nPlease enter your choice:\n Enter -1 to cancel payment.");
-    }
+//    private static void displayPaymentMethods() {
+//        System.out.println("Please choose your payment method");
+//        System.out.println("=========================================");
+//        paymentRegistry.getAllPaymentMethods().forEach(entry -> {
+//            System.out.println("(" + entry.getKey() + ") " + entry.getValue().getDescription());
+//        });
+//        System.out.println("=========================================\nPlease enter your choice:\n Enter -1 to cancel payment.");
+//    }
 
     private static boolean processPayment(Payment payment, Order order, double amount) {
         boolean paymentSuccess = payment.processPayment(amount);
