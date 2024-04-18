@@ -36,6 +36,8 @@ public class fomsApp implements fomsOperations {
     Menu menu = new Menu();
     private Admin onlyAdmin = new Admin("boss", "Boss");
     private PaymentRegistry paymentRegistry = PaymentManager.getPaymentRegistry();
+    private static PaymentManager paymentManager = new PaymentManager();
+    private static Scanner scanner = new Scanner(System.in);
 
     public void initializer() {
         List<Order> mockorderList = new ArrayList<>();
@@ -347,32 +349,36 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void paymentGateway(Order order) { 
-        System.out.println("Your order total is: $" + order.getTotalCost());
-        System.out.println("Please select your payment method:\n(1) Credit Card\n(2) Debit Card\n(3) Online payment");
-        int paymentChoice = sc.nextInt();
-        Payment payment;
-
-        switch (paymentChoice) {
-            case 1:
-                payment = new CreditCardPayment();
-                payment.processPayment(order.getTotalCost());
-                payment.displayCompletePayment();
-                break;
-            case 2:
-                payment = new DebitCardPayment();
-                payment.processPayment(order.getTotalCost());
-                payment.displayCompletePayment();
-                break;
-            case 3:
-                payment = new OnlinePayment();
-                payment.processPayment(order.getTotalCost());
-                payment.displayCompletePayment();
-                break;
-            default:
-                System.out.println("Invalid payment method selected.");
-                break;
+    public void paymentGateway(Order order) { //updated by shuya
+        if (order == null) {
+            System.out.println("Error: No order to process.");
+            return;
         }
+
+        System.out.println("Your order total is: $" + String.format("%.2f", order.getTotalCost()));
+        displayPaymentMethods();
+
+        System.out.println("Please enter your choice of payment method:");
+        int paymentChoice = scanner.nextInt();
+
+        // Check for cancellation option
+        if (paymentChoice == -1) {
+            System.out.println("Payment cancelled.");
+            return;
+        }
+        // Process payment 
+        PaymentManager.makePayment(paymentChoice, order);
+        
+    }
+
+    private static void displayPaymentMethods() {
+        System.out.println("Available Payment Methods:");
+        System.out.println("=========================================");
+        PaymentManager.getPaymentRegistry().getAllPaymentMethods().forEach(entry -> {
+            System.out.println("(" + entry.getKey() + ") " + entry.getValue().getDescription());
+        });
+        System.out.println("=========================================");
+        System.out.println("Enter -1 to cancel payment.");
     }
 
     public void displayStaff() { // Complete level 1
