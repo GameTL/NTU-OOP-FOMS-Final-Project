@@ -761,15 +761,20 @@ public class fomsApp implements fomsOperations {
         MenuItem selectedItem;
         int quantity;
 
+        if (sc.hasNextLine()) { // Clear buffer before new input
+            sc.nextLine();
+        } 
+
         while (true) {
             System.out.println("Enter the name of the item you wish to order.");
+            System.out.println("If you would like to check-out, type 'Done'.");
             itemName = sc.nextLine().trim();
 
-            if (itemName.equalsIgnoreCase("exit")) {
+            if (itemName.equalsIgnoreCase("Done")) {
                 break;
             }
 
-            selectedItem = menu.findMenuItemByName(itemName);
+            selectedItem = menu.findMenuItemByName(itemName, selectedBranch.getBranchName());
             if (selectedItem == null) {
                 System.out.println("Item not found. Please enter a valid item name.");
                 continue;
@@ -785,8 +790,10 @@ public class fomsApp implements fomsOperations {
 
             currentOrder.addItem(selectedItem, quantity); // Add the item and quantity to the order
             System.out.println("Added " + quantity + " of " + selectedItem.getName() + " to your order.");
+            //TODO Add a total counter to be displayed after displayUserCurrentOrder
         }
         displayUserCurrentOrder(currentOrder);
+        //TODO Print total counter
     }
 
     public static void main(String[] args) {
