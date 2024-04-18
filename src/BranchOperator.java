@@ -86,8 +86,7 @@ public class BranchOperator {
         if (choice > 0 && choice < index) {
             String selectedBranchName = indexMap.get(choice);
             setCurrentBranch(selectedBranchName);
-            Branch selectedBranch = branchMap.get(selectedBranchName);
-            System.out.println("Selected Branch: " + selectedBranch.getBranchName());
+            System.out.println("Selected Branch: " + getCurrentBranch().getBranchName());
         } else if (choice != 0) {
             System.out.println("Invalid index. Please try again.");
         }
@@ -268,12 +267,13 @@ public class BranchOperator {
             divider();
             System.out.printf("Total Price: %.2f",orderCart.getTotalCost());
         }
-    
+        
+        
         System.out.println("");
         divider();
         System.out.printf("""
-                            Welcome to %s\n""", currentBranch.getBranchName());
-        List<MenuItem> MenuItemList = this.getCurrentBranch().getBranchMenu().getMenuItems();
+                            Welcome to %s\n""", getCurrentBranch().getBranchName());
+        List<MenuItem> MenuItemList = getCurrentBranch().getBranchMenu().getMenuItems();
         int maxNameLength = "Order ID".length();
         int maxPriceLength = String.valueOf("Price").length();
         int maxCatLength = "Status".length();
@@ -289,7 +289,9 @@ public class BranchOperator {
         System.out.println();
         System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", "Index", "Name", "Category", "Price");
         for (MenuItem item : MenuItemList) {
-            System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", index++, item.getName(), item.getCategory(), item.getPrice());
+            if (item.getBranch().equals(currentBranch.getBranchName())) {
+                System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", index++, item.getName(), item.getCategory(), item.getPrice());
+            }
         }
         divider();
         System.out.println("");
@@ -301,7 +303,7 @@ public class BranchOperator {
             System.out.printf("""
                 Welcome to %s
                 Please Choose your menu 
-                (0) Checkout\n""");
+                (0) Checkout\n""", currentBranch.getBranchName());
         }
         divider();
     
