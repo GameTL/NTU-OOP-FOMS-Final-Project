@@ -36,7 +36,7 @@ public interface fomsOperations {
     public abstract void  displayBranchStaff(); // 1.2.3.2
 
     // >User
-    public abstract void  UserBranchSelector(); // 1.1.X
+    public abstract void  customerBranchSelector(); // 1.1.X
 
     public abstract void  paymentGateway(Order order);
 

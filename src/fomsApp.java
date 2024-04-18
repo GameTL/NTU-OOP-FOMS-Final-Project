@@ -100,7 +100,7 @@ public class fomsApp implements fomsOperations {
                 Manager.Gender.FEMALE,
                 27,
                 "JE"));
-        branchOP.getCurrentBranch().setOrders(mockorderList);
+        branchOP.getCurrentBranch().setOrders(mockorderList);   
 
         // for testing
         // for testing
@@ -157,7 +157,7 @@ public class fomsApp implements fomsOperations {
                     // Generate a random number between 10000 and 9999
                     String randomID = String.valueOf(10000 + random.nextInt(90000));
                     currentCustomerId = randomID;
-                    UserBranchSelector();
+                    customerBranchSelector();
                     break;
                 case 2:
                     clearConsole();
@@ -323,22 +323,23 @@ public class fomsApp implements fomsOperations {
 
         System.out.println("Select the staff member to remove, or done to cancel:");
         String staffToBeRemoved = scanner.nextLine();
-        if (condition) {
-            System.out.println("Operation cancelled.");
-            return;
-        } else {
-            if (canChangeStaff(branch, -1)) {
-                branch.removeStaffMember(staffToBeRemoved);
-                System.out.println("Staff member removed successfully.");
-                divider();
-                System.out.println("Your current staff list @ " + branch);
-                divider();
-                displayBranchStaff();
-                divider();
-            } else {
-                System.out.println("Cannot remove staff due to manager-to-staff ratio restrictions.");
-            }
-        } 
+        //TODO Bugs
+        // if (condition) {
+        //     System.out.println("Operation cancelled.");
+        //     return;
+        // } else {
+        //     if (canChangeStaff(branch, -1)) {
+        //         branch.removeStaffMember(staffToBeRemoved);
+        //         System.out.println("Staff member removed successfully.");
+        //         divider();
+        //         System.out.println("Your current staff list @ " + branch);
+        //         divider();
+        //         displayBranchStaff();
+        //         divider();
+        //     } else {
+        //         System.out.println("Cannot remove staff due to manager-to-staff ratio restrictions.");
+        //     }
+        // } 
     }
     
     private void editStaffDetails(){
@@ -773,36 +774,14 @@ public class fomsApp implements fomsOperations {
     }
 
     // >User
-    public void UserBranchSelector() { // Complete level 2
+    public void customerBranchSelector() { // Complete level 2
         clearConsole();
         divider();
         System.out.println("           OUR FAST FOOD BRANCHES");
         divider();
-
         branchOP.listAndSelectBranch();
         clearConsole();
         menuList();
-        // branchOP.setCurrentBranch(selectedBranch);
-
-        // Collection<Branch> branches = branchOP.getAllBranches(); // TODO change to
-        // fit new initializer
-        // for (int i = 0; i < branches.size(); i++) {
-        // System.out.println(String.format("%20s", "(" + (i + 1) + ") " +
-        // branches.get(i).getBranchName()));
-        // }
-        // System.out.println("=========================================");
-
-        // Scanner sc = new Scanner(System.in);
-        // int selection = -1;
-
-        // while (selection < 1 || selection > branches.size()) {
-        // System.out.print("Please choose your branch: ");
-        // if (sc.hasNextInt()) {
-        // selection = sc.nextInt();
-        // } else {
-        // System.out.println("Invalid input. Please enter a number.");
-        // }
-        // }
 
     }
     
@@ -841,11 +820,13 @@ public class fomsApp implements fomsOperations {
 
     public void menuList() {
         Order OrderCart = new Order(null, false);
-
         OrderCart = branchOP.displayMenuAndSelect(OrderCart);
         divider();
-        // displayUserCurrentOrder(OrderCart);
-        // displayPaymentMethods();
+        clearConsole();
+        if (OrderCart.getItems() != null){     
+            paymentGateway(OrderCart);
+        }
+
     }
 
     // displayUserCurrentOrder(currentOrder);
