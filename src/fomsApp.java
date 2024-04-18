@@ -224,12 +224,12 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1: // Add staff
-                    // TODO
+                    addStaff();
                     break;
                 case 2: // Remove staff
-                    // TODO
+                    removeStaff();
                 case 3: // Transfer staff
-                    // TODO
+                    editStaffDetails();
                 case 0:
                     break;
                 case -1:
@@ -238,6 +238,15 @@ public class fomsApp implements fomsOperations {
 
             }
         } while (choice < 3);
+    }
+    private void addStaff(){
+        //TODO method
+    }
+    private void removeStaff(){
+        //TODO method
+    }
+    private void editStaffDetails(){
+        //TODO method
     }
 
     public void staffLogin() {
