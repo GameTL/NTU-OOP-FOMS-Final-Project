@@ -60,21 +60,32 @@ public class BranchOperator {
 
         // Print all branches with an index
         System.out.println("List of Branches:");
-        for (String branchName : branchMap.keySet()) {
-            System.out.println(index + ". " + branchName);
+        for (Map.Entry<String, Branch> entry : branchMap.entrySet()) {
+            String branchName = entry.getKey();
+            Branch branch = entry.getValue();
+            String status = branch.isAvailable() ? "OPEN" : "CLOSE"; // Check each branch's availability
+            System.out.println(index + ". " + branchName + " - " + status);
             indexMap.put(index, branchName);
             index++;
         }
+
+        
+        /*for (String branchName : branchMap.keySet()) {
+            System.out.println(index + ". " + branchName);
+            indexMap.put(index, branchName);
+            index++;
+        }*/
 
         // Allow user to select a branch by index
         divider();
         System.out.println("Enter the index of the branch to select, or 0 to exit:");
         int choice = scanner.nextInt();
+
         if (choice > 0 && choice < index) {
             String selectedBranchName = indexMap.get(choice);
+            setCurrentBranch(selectedBranchName);
             Branch selectedBranch = branchMap.get(selectedBranchName);
             System.out.println("Selected Branch: " + selectedBranch.getBranchName());
-            // Here, you could potentially do more actions with the selected branch
         } else if (choice != 0) {
             System.out.println("Invalid index. Please try again.");
         }

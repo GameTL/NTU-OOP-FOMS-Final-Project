@@ -48,9 +48,9 @@ public class Menu {
         return null;
     }
 
-    public MenuItem findMenuItemByName(String name) {
+    public MenuItem findMenuItemByName(String name, String branch) {
         for (MenuItem item : items) {
-            if (item.getName().equalsIgnoreCase(name)) {
+            if (item.getName().equalsIgnoreCase(name) && item.getBranch().equals(branch)) {
                 return item;
             }
         }

@@ -15,6 +15,7 @@ public class Order {
     private String orderId;
     private String customerId;
     private List<OrderItem> items;
+    private double totalCost = 0;
 
     private boolean isTakeaway;
 
@@ -29,13 +30,18 @@ public class Order {
     // Add an item to the order
     public void addItem(MenuItem menuItem, int quantity) {
         this.items.add(new OrderItem(menuItem, quantity));
+        totalCost += menuItem.getPrice() * quantity;
+    }
+
+    public double getTotalCost(){
+        return totalCost;
     }
 
     // Remove an item from the order
     public void removeItem(OrderItem orderItem) {
         this.items.remove(orderItem);
     }
-
+    
     // Getters and Setters
     public String getOrderId() {
         return orderId;

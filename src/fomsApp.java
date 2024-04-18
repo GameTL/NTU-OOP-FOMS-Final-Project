@@ -356,36 +356,32 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    public void cardPaymentGateway() { // Complete level 1
-        int choice;
-        do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
+    public void paymentGateway(Order order) { 
+        System.out.println("Your order total is: $" + order.getTotalCost());
+        System.out.println("Please select your payment method:\n(1) Credit Card\n(2) Debit Card\n(3) Online payment");
+        int paymentChoice = sc.nextInt();
+        Payment payment;
 
-            System.out.printf("""
-                    -------------------------------
-                            Payment Type
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    """, CurrentOrderList);
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    // TODO
-                    break;
-                case 2:
-                    // TODO
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
-
-            }
-        } while (choice < 3);
+        switch (paymentChoice) {
+            case 1:
+                payment = new CreditCardPayment();
+                payment.processPayment(order.getTotalCost());
+                payment.displayCompletePayment();
+                break;
+            case 2:
+                payment = new DebitCardPayment();
+                payment.processPayment(order.getTotalCost());
+                payment.displayCompletePayment();
+                break;
+            case 3:
+                payment = new OnlinePayment();
+                payment.processPayment(order.getTotalCost());
+                payment.displayCompletePayment();
+                break;
+            default:
+                System.out.println("Invalid payment method selected.");
+                break;
+        }
     }
 
     public void displayStaff() { // Complete level 1
@@ -778,6 +774,7 @@ public class fomsApp implements fomsOperations {
                 System.out.printf("Item: %s, Quantity: %d, Price: %.2f\n", item.getMenuItem().getName(),
                         item.getQuantity(), item.getMenuItem().getPrice());
             }
+            System.out.println("Total Cost: $" + order.getTotalCost());
         }
         System.out.println("-------------------------------");
         System.out.println("\nDo you want to confirm this order? (Yes/No)");
@@ -813,15 +810,20 @@ public class fomsApp implements fomsOperations {
         MenuItem selectedItem;
         int quantity;
 
+        if (sc.hasNextLine()) { // Clear buffer before new input
+            sc.nextLine();
+        } 
+
         while (true) {
             System.out.println("Enter the name of the item you wish to order.");
+            System.out.println("If you would like to check-out, type 'Done'.");
             itemName = sc.nextLine().trim();
 
-            if (itemName.equalsIgnoreCase("exit")) {
+            if (itemName.equalsIgnoreCase("Done")) {
                 break;
             }
 
-            selectedItem = menu.findMenuItemByName(itemName);
+            selectedItem = menu.findMenuItemByName(itemName, selectedBranch.getBranchName());
             if (selectedItem == null) {
                 System.out.println("Item not found. Please enter a valid item name.");
                 continue;
@@ -839,6 +841,7 @@ public class fomsApp implements fomsOperations {
             System.out.println("Added " + quantity + " of " + selectedItem.getName() + " to your order.");
         }
         displayUserCurrentOrder(currentOrder);
+        paymentGateway(currentOrder);
     }
 
     public static void main(String[] args) {
