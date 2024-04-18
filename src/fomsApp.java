@@ -143,8 +143,8 @@ public class fomsApp implements fomsOperations {
 
                     (0) back
                     (-1) exit""");
-            choice = sc.nextInt();
             divider();
+            choice = sc.nextInt();
             switch (choice) {
                 case 1:
                     UserBranchSelector();
@@ -769,12 +769,13 @@ public class fomsApp implements fomsOperations {
         }
     }
 
-    public void displayUserCurrentOrder(Order order) { // Complete level 1
+    public boolean displayUserCurrentOrder(Order order) { // Complete level 1
         System.out.println("Current Order Details:");
-        System.out.println("-------------------------------");
+        divider();
         List<OrderItem> items = order.getItems();
         if (items.isEmpty()) {
             System.out.println("No items in your order.");
+            return false;
         } else {
             for (OrderItem item : items) {
                 System.out.printf("Item: %s, Quantity: %d, Price: %.2f\n", item.getMenuItem().getName(),
@@ -782,17 +783,18 @@ public class fomsApp implements fomsOperations {
             }
             System.out.println("Total Cost: $" + order.getTotalCost());
         }
-        System.out.println("-------------------------------");
+        divider();
         System.out.println("\nDo you want to confirm this order? (Yes/No)");
         Scanner scanner = new Scanner(System.in);
         String confirmation = scanner.nextLine().trim();
 
         if ("Yes".equalsIgnoreCase(confirmation)) {
             System.out.println("Order confirmed.");
-            // Here you can call any methods to finalize the order processing
+            paymentGateway(currentOrder);
+            return true;
         } else {
             System.out.println("Order not confirmed.");
-            // Handle order cancellation or modification
+            return false;
         }
     }
 
@@ -806,49 +808,49 @@ public class fomsApp implements fomsOperations {
         // Menu menu = selectedBranch.getBranchMenu();
         Menu menu = branchOP.getCurrentBranch().getBranchMenu();
         List<MenuItem> menuItems = menu.getMenuItems();
-
-        divider();
-        System.out.println("              Menu at " + selectedBranch.getBranchName());
-        menu.displayMenu(selectedBranch);
-        divider();
-
         String itemName;
         MenuItem selectedItem;
         int quantity;
 
-        if (sc.hasNextLine()) { // Clear buffer before new input
-            sc.nextLine();
-        } 
-
-        while (true) {
-            System.out.println("Enter the name of the item you wish to order.");
-            System.out.println("If you would like to check-out, type 'Done'.");
+        do{
+            divider();
+            System.out.println("              Menu at " + selectedBranch.getBranchName());
+            menu.displayMenu(selectedBranch);
+            divider();
+            System.out.println("Enter the name of the item you wish to order, or type 'Done' to review order:");
+            
             itemName = sc.nextLine().trim();
 
             if (itemName.equalsIgnoreCase("Done")) {
-                break;
+                if (displayUserCurrentOrder(currentOrder)) {
+                    break;  // Exit the loop if the order is confirmed
+                }
+                // If the order is not confirmed, clear the order or let user modify it
+                // This is where you might clear or reset parts of `currentOrder` if needed
+                continue; // Continues the loop, prompting the user again
             }
-
+    
             selectedItem = menu.findMenuItemByName(itemName, selectedBranch.getBranchName());
             if (selectedItem == null) {
                 System.out.println("Item not found. Please enter a valid item name.");
                 continue;
             }
-
+    
             System.out.print("Enter the quantity you want: ");
             while (!sc.hasNextInt()) {
-                sc.next(); // Consume the incorrect input
+                sc.next(); // Consume incorrect input
                 System.out.println("Invalid input. Please enter a number for the quantity.");
             }
             quantity = sc.nextInt();
-            sc.nextLine();
-
-            currentOrder.addItem(selectedItem, quantity); // Add the item and quantity to the order
+            sc.nextLine(); // Consume the newline character after the number input
+    
+            currentOrder.addItem(selectedItem, quantity);
             System.out.println("Added " + quantity + " of " + selectedItem.getName() + " to your order.");
-        }
-        displayUserCurrentOrder(currentOrder);
-        paymentGateway(currentOrder);
+        } while(true);
     }
+
+        
+    //displayUserCurrentOrder(currentOrder);
 
     public static void main(String[] args) {
         fomsApp app = new fomsApp();

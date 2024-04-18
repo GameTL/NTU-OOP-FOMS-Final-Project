@@ -30,7 +30,7 @@ public class Order {
     // Add an item to the order
     public void addItem(MenuItem menuItem, int quantity) {
         this.items.add(new OrderItem(menuItem, quantity));
-        totalCost += menuItem.getPrice() * quantity;
+        totalCost += menuItem.getPrice() * quantity;  // Update total cost
     }
 
     public double getTotalCost(){
