@@ -808,25 +808,33 @@ public class fomsApp implements fomsOperations {
         // Menu menu = selectedBranch.getBranchMenu();
         Menu menu = branchOP.getCurrentBranch().getBranchMenu();
         List<MenuItem> menuItems = menu.getMenuItems();
+
+        if (sc.hasNextLine()) {
+            sc.nextLine();
+        }
+        
         String itemName;
         MenuItem selectedItem;
         int quantity;
 
+        divider();
+        System.out.println("              Menu at " + selectedBranch.getBranchName());
+        menu.displayMenu(selectedBranch);
+        divider();
+       
         do{
-            divider();
-            System.out.println("              Menu at " + selectedBranch.getBranchName());
-            menu.displayMenu(selectedBranch);
-            divider();
             System.out.println("Enter the name of the item you wish to order, or type 'Done' to review order:");
-            
             itemName = sc.nextLine().trim();
 
             if (itemName.equalsIgnoreCase("Done")) {
                 if (displayUserCurrentOrder(currentOrder)) {
                     break;  // Exit the loop if the order is confirmed
                 }
-                // If the order is not confirmed, clear the order or let user modify it
-                // This is where you might clear or reset parts of `currentOrder` if needed
+                divider();
+                System.out.println("              Menu at " + selectedBranch.getBranchName());
+                menu.displayMenu(selectedBranch);
+                divider();
+                
                 continue; // Continues the loop, prompting the user again
             }
     
