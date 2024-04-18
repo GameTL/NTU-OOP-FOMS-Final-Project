@@ -4,6 +4,7 @@
 
 package src;
 
+import java.util.Random;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class fomsApp implements fomsOperations {
     public int padding = 4;
     private Scanner sc;
     private User currentUser;
+    private String currentCustomerId;
 
     public static List<Order> orderList;
     private Order currentOrder = new Order("123", false);
@@ -150,6 +152,10 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
+                    Random random = new Random();
+                    // Generate a random number between 10000 and 9999
+                    String randomID = String.valueOf(10000 + random.nextInt(90000));
+                    currentCustomerId = randomID;
                     UserBranchSelector();
                     break;
                 case 2:
@@ -172,7 +178,7 @@ public class fomsApp implements fomsOperations {
             divider();
             System.out.println("""
                             Admin Homepage
-                    (1) Assign manager
+                    (1) Edit staff
                     (2) Display all staff
                     (3) Edit payment
                     (4) Open/close Branch
@@ -185,7 +191,7 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    assignManager();
+                    editStaff();
                     break;
                 case 2:
                     displayStaff();
@@ -207,37 +213,63 @@ public class fomsApp implements fomsOperations {
     }
     // Admin
 
-    public void editStaff() { // Complete level 1
-        // editing details
-        int choice;
+    public void editStaff() { // Admin page for editing details
+        int choice = 0;
         do {
             divider();
             System.out.println("""
                             Admin Homepage
                     (1) Add staff
                     (2) Remove staff
-                    (3) Transfer staff
+                    (3) Edit staff details
 
                     (0) back
                     (-1) exit""");
             divider();
+            System.out.println("Please enter your choice: ");
             choice = sc.nextInt();
             switch (choice) {
-                case 1: // Add staff
-                    // TODO
+                case 1: // Add new staff
+                    System.out.println("Enter the name of the branch you would like to add them to:");
+                    String branchName = sc.nextLine();
+                    Branch branch = branchOP.getBranchMap().get(branchName);
+
+                    if (branch == null) {
+        System.out.println("Branch does not exist.");
+        return;
+    }
+
+    // Check if the addition is allowed based on manager-staff ratio
+    if (!canChangeStaff(branch, 1)) {
+        System.out.println("Cannot add staff due to manager-to-staff ratio restrictions.");
+        return;
+    }
                     break;
                 case 2: // Remove staff
                     // TODO
-                case 3: // Transfer staff
+                case 3: // edit staff details
                     // TODO
                 case 0:
                     break;
                 case -1:
                     System.out.println("Program terminating ....");
                     System.exit(0);
-
+                default:
+                    System.out.println("Invald choice. Please choose a valid option.");
             }
-        } while (choice < 3);
+        } while (choice != 0);
+    }
+
+    private boolean isValidManagerToStaffRatio(Branch branch, int changeInStaffCount) {
+        int totalStaff = branch.getStaffMembers().size() + changeInStaffCount; // Calculate future staff count
+        int numberOfManagers = branch.getManagerMembers().size(); // Current managers
+        
+        if (totalStaff <= 4 && numberOfManagers >= 1) return true;
+        if (totalStaff <= 8 && numberOfManagers >= 2) return true;
+        if (totalStaff <= 15 && numberOfManagers >= 3) return true;
+        if (totalStaff > 15 && numberOfManagers >= (totalStaff / 5)) return true; 
+
+        return false; // If none of the conditions are met, the ratio is not valid
     }
 
     public void staffLogin() {
@@ -296,7 +328,8 @@ public class fomsApp implements fomsOperations {
             Order selectedOrder = branchOP.displayOrdersAndSelect();
             if (selectedOrder != null) {
                 // clearConsole();
-                System.out.println("(1) Status:      New\n(2) Status:      ReadyForPickup\n(3) Status:      Completed\n(4) Set Takeaway: Takeaway\n(5) Set Takeway:  Dine-In");
+                System.out.println(
+                        "(1) Status:      New\n(2) Status:      ReadyForPickup\n(3) Status:      Completed\n(4) Set Takeaway: Takeaway\n(5) Set Takeway:  Dine-In");
                 int choice = this.sc.nextInt();
                 switch (choice) {
                     case 1:
@@ -319,41 +352,7 @@ public class fomsApp implements fomsOperations {
     }
 
     // >Admin
-    public void assignManager() {
-
-        int choice;
-        do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
-
-            System.out.printf("""
-                    -------------------------------
-                           Manager Assignment
-                    %s
-
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    """, CurrentOrderList);
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    // onlyAdmin.assignManager(); // assignManager is not in Admin so need to create
-
-                    break;
-                case 2:
-                    //
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
-
-            }
-        } while (choice < 3);
-    }
-
-    public void paymentGateway(Order order) { //updated by shuya
+    public void paymentGateway(Order order) { // updated by shuya
         if (order == null) {
             System.out.println("Error: No order to process.");
             return;
@@ -370,9 +369,9 @@ public class fomsApp implements fomsOperations {
             System.out.println("Payment cancelled.");
             return;
         }
-        // Process payment 
+        // Process payment
         PaymentManager.makePayment(paymentChoice, order);
-        
+
     }
 
     private static void displayPaymentMethods() {
@@ -386,35 +385,31 @@ public class fomsApp implements fomsOperations {
     }
 
     public void displayStaff() { // Complete level 1
-        int choice;
-        do {
-            String CurrentOrderList = "(1) OrderID2\n(2) OrderID1";
-            // String list_branch = "";
+        clearConsole();
+        Branch currentBranch = branchOP.getCurrentBranch();
 
-            System.out.printf("""
-                    -------------------------------
-                               All Staff
-                    %s
-                    (0) back
-                    (-1) exit
-                    -------------------------------
-                    """, CurrentOrderList);
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    // All of the staff
-                    // onlyAdmin.displayStaffList();
-                    // displayStaff();
+        if (currentBranch == null) {
+            System.out.println("No branch selected. Please select a branch first.");
+            return;
+        }
 
-                    break;
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
+        List<Staff> staffList = currentBranch.getStaffMembers();
+        if (staffList.isEmpty()) {
+            System.out.println("No staff members found in the " + currentBranch.getBranchName() + " branch.");
+            return;
+        }
 
-            }
-        } while (choice < 2);
+        System.out.println("Staff in " + currentBranch.getBranchName() + ":");
+        divider();
+        System.out.printf("%-10s %-20s %-15s %-15s\n", "ID", "Name", "Role", "Contact Info"); // Adjust headers as
+                                                                                              // needed
+        for (Staff staff : staffList) {
+            System.out.printf("%-10s %-20s %-15s %-15s\n",
+                    staff.getId(),
+                    staff.getName(),
+                    staff.getContactInfo()); // Make sure these methods exist in your Staff class
+        }
+        divider();
     }
 
     public void editPayment() { // shuya
@@ -615,7 +610,7 @@ public class fomsApp implements fomsOperations {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    branchOP.getCurrentBranch().printCurrentOrder();
+                    branchOP.displayOrdersAndSelect();
                     break;
                 case 2:
                     branchOP.getCurrentBranch().printStaffAndManagers();
@@ -706,7 +701,6 @@ public class fomsApp implements fomsOperations {
 
     // >User
     public void UserBranchSelector() { // Complete level 2
-        // Ask the user to input the chosen branch
         clearConsole();
         divider();
         System.out.println("           OUR FAST FOOD BRANCHES");
@@ -739,122 +733,50 @@ public class fomsApp implements fomsOperations {
 
     }
 
-    public void displayStaffCurrentOrder(Order order) { // Complete level 1
+    public void displayStaffCurrentOrder(Order orderCart) { // Complete level 1
         System.out.println("Current Order Details:");
-        System.out.println("-------------------------------");
-        List<OrderItem> items = order.getItems();
-        if (items.isEmpty()) {
-            System.out.println("No items in your order.");
-        } else {
-            for (OrderItem item : items) {
-                System.out.printf("Item: %s, Quantity: %d, Price: %.2f\n", item.getMenuItem().getName(),
-                        item.getQuantity(), item.getMenuItem().getPrice());
+        divider();
+        List<OrderItem> CartMenuItemList = orderCart.getItems();
+            int maxNameLength = "Item Name".length();
+            int maxQuantityLength = String.valueOf("Quantity").length();
+            for (OrderItem item : CartMenuItemList) {
+                maxNameLength = Math.max(maxNameLength, item.getMenuItem().getName().length());
+                maxQuantityLength = Math.max(maxQuantityLength, String.valueOf(item.getQuantity()).length());
             }
-        }
-        System.out.println("-------------------------------");
+    
+            int maxNamePadding = maxNameLength + 4;
+            int maxQuantityPadding = maxQuantityLength + 4;
+    
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", "Index", "Name", "Quantity");
+            for (OrderItem item : CartMenuItemList) {
+                System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", 0, item.getMenuItem().getName(), item.getQuantity());
+            }
+            divider();
+            System.out.printf("Total Price: %.2f",orderCart.getTotalCost());
         System.out.println("\nDo you want to confirm this order? (Yes/No)");
         Scanner scanner = new Scanner(System.in);
         String confirmation = scanner.nextLine().trim();
 
         if ("Yes".equalsIgnoreCase(confirmation)) {
             System.out.println("Order confirmed.");
-            // Here you can call any methods to finalize the order processing
+            branchOP.getCurrentBranch().addOrder(orderCart);
         } else {
             System.out.println("Order not confirmed.");
-            // Handle order cancellation or modification
         }
     }
 
-    public boolean displayUserCurrentOrder(Order order) { // Complete level 1
-        System.out.println("Current Order Details:");
-        divider();
-        List<OrderItem> items = order.getItems();
-        if (items.isEmpty()) {
-            System.out.println("No items in your order.");
-            return false;
-        } else {
-            for (OrderItem item : items) {
-                System.out.printf("Item: %s, Quantity: %d, Price: %.2f\n", item.getMenuItem().getName(),
-                        item.getQuantity(), item.getMenuItem().getPrice());
-            }
-            System.out.println("Total Cost: $" + order.getTotalCost());
-        }
-        divider();
-        System.out.println("\nDo you want to confirm this order? (Yes/No)");
-        Scanner scanner = new Scanner(System.in);
-        String confirmation = scanner.nextLine().trim();
+    
 
-        if ("Yes".equalsIgnoreCase(confirmation)) {
-            System.out.println("Order confirmed.");
-            paymentGateway(currentOrder);
-            return true;
-        } else {
-            System.out.println("Order not confirmed.");
-            return false;
-        }
+    public void menuList() {
+        Order OrderCart = new Order(null, false);
+
+        OrderCart = branchOP.displayMenuAndSelect(OrderCart);
+        divider();
+        displayUserCurrentOrder(OrderCart);
+        // displayPaymentMethods();
     }
 
-    public void menuList() { // Complete level 1
-        Branch selectedBranch = branchOP.getCurrentBranch();
-        if (selectedBranch == null) { // if no branch is selected
-            System.out.println("No branch selected. Please select a branch first.");
-            return;
-        }
-
-        // Menu menu = selectedBranch.getBranchMenu();
-        Menu menu = branchOP.getCurrentBranch().getBranchMenu();
-        List<MenuItem> menuItems = menu.getMenuItems();
-
-        if (sc.hasNextLine()) {
-            sc.nextLine();
-        }
-        
-        String itemName;
-        MenuItem selectedItem;
-        int quantity;
-
-        divider();
-        System.out.println("              Menu at " + selectedBranch.getBranchName());
-        menu.displayMenu(selectedBranch);
-        divider();
-       
-        do{
-            System.out.println("Enter the name of the item you wish to order, or type 'Done' to review order:");
-            itemName = sc.nextLine().trim();
-
-            if (itemName.equalsIgnoreCase("Done")) {
-                if (displayUserCurrentOrder(currentOrder)) {
-                    break;  // Exit the loop if the order is confirmed
-                }
-                divider();
-                System.out.println("              Menu at " + selectedBranch.getBranchName());
-                menu.displayMenu(selectedBranch);
-                divider();
-                
-                continue; // Continues the loop, prompting the user again
-            }
-    
-            selectedItem = menu.findMenuItemByName(itemName, selectedBranch.getBranchName());
-            if (selectedItem == null) {
-                System.out.println("Item not found. Please enter a valid item name.");
-                continue;
-            }
-    
-            System.out.print("Enter the quantity you want: ");
-            while (!sc.hasNextInt()) {
-                sc.next(); // Consume incorrect input
-                System.out.println("Invalid input. Please enter a number for the quantity.");
-            }
-            quantity = sc.nextInt();
-            sc.nextLine(); // Consume the newline character after the number input
-    
-            currentOrder.addItem(selectedItem, quantity);
-            System.out.println("Added " + quantity + " of " + selectedItem.getName() + " to your order.");
-        } while(true);
-    }
-
-        
-    //displayUserCurrentOrder(currentOrder);
+    // displayUserCurrentOrder(currentOrder);
 
     public static void main(String[] args) {
         fomsApp app = new fomsApp();

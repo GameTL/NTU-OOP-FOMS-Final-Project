@@ -57,14 +57,15 @@ public class Menu {
         return null;
     }
 
-    public void displayMenu(Branch branch) {
-        int index = 1;
-        for (MenuItem item : items) {
-            if (item.getBranch().equalsIgnoreCase(branch.getBranchName())) {
-                System.out.println(index + ". " + item);
-                index++;
-            }
-        }
-        // sc.close();
+    // public void displayMenu(Branch branch) {
+    //     int index = 1;
+    //     for (MenuItem item : items) {
+    //         if (item.getBranch().equalsIgnoreCase(branch.getBranchName())) {
+    //             System.out.println(index + ". " + item);
+    //             index++;
+    //         }
+    //     }
+    //     // sc.close();
     }
-}
+    
+

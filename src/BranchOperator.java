@@ -165,7 +165,7 @@ public class BranchOperator {
 
     }
 
-    public Order displayOrdersAndSelect() {
+    public Order displayOrdersAndSelect() { // FOR STAFF
         Scanner scanner = new Scanner(System.in);
         int index = 1;
 
@@ -205,12 +205,12 @@ public class BranchOperator {
                     order.isTakeaway() ? "Yes" : "No");
         }
 
-        // Allow user to select an order by index   
+        // Allow user to select an order by index
         divider();
-        System.out.println("""  
-            (Select Index to edit order)
+        System.out.println("""
+                (Select Index to edit order)
 
-            (0) back""");
+                (0) back""");
         int choice = scanner.nextInt();
         if (choice > 0 && choice <= orders.size()) {
             Order selectedOrder = orders.get(choice - 1);
@@ -222,14 +222,14 @@ public class BranchOperator {
                             + isTakeawayPadding + "s\n",
                     "Index", "Order ID", "Customer ID", "Status", "Is Takeaway");
 
-                System.out.printf(
-                        "%-5d %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
-                                + isTakeawayPadding + "s\n",
-                        0,
-                        selectedOrder.getOrderId(),
-                        selectedOrder.getCustomerId(),
-                        selectedOrder.getStatus(),
-                        selectedOrder.isTakeaway() ? "Yes" : "No");
+            System.out.printf(
+                    "%-5d %-" + orderIdPadding + "s %-" + customerIdPadding + "s %-" + statusPadding + "s %-"
+                            + isTakeawayPadding + "s\n",
+                    0,
+                    selectedOrder.getOrderId(),
+                    selectedOrder.getCustomerId(),
+                    selectedOrder.getStatus(),
+                    selectedOrder.isTakeaway() ? "Yes" : "No");
             return selectedOrder;
             // Further action can be taken here depending on what needs to be done with the
             // selected order
@@ -240,4 +240,87 @@ public class BranchOperator {
         return null;
 
     }
+
+    public Order displayMenuAndSelect(Order orderCart) { // FOR CUSTOMER
+        Scanner scanner = new Scanner(System.in);
+        int index = 1;
+        clearConsole();
+        divider();
+        if (orderCart.getItems().size() == 0) {
+            System.out.println("Your cart is empty!");
+        } else {
+            System.out.println("Your cart");
+            List<OrderItem> CartMenuItemList = orderCart.getItems();
+            int maxNameLength = "Item Name".length();
+            int maxQuantityLength = String.valueOf("Quantity").length();
+            for (OrderItem item : CartMenuItemList) {
+                maxNameLength = Math.max(maxNameLength, item.getMenuItem().getName().length());
+                maxQuantityLength = Math.max(maxQuantityLength, String.valueOf(item.getQuantity()).length());
+            }
+    
+            int maxNamePadding = maxNameLength + 4;
+            int maxQuantityPadding = maxQuantityLength + 4;
+    
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", "Index", "Name", "Quantity");
+            for (OrderItem item : CartMenuItemList) {
+                System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", 0, item.getMenuItem().getName(), item.getQuantity());
+            }
+            divider();
+            System.out.printf("Total Price: %.2f",orderCart.getTotalCost());
+        }
+    
+        System.out.println("");
+        divider();
+        System.out.printf("""
+                            Welcome to %s\n""", currentBranch.getBranchName());
+        List<MenuItem> MenuItemList = this.getCurrentBranch().getBranchMenu().getMenuItems();
+        int maxNameLength = "Order ID".length();
+        int maxPriceLength = String.valueOf("Price").length();
+        int maxCatLength = "Status".length();
+        for (MenuItem item : MenuItemList) {
+            maxNameLength = Math.max(maxNameLength, item.getName().length());
+            maxPriceLength = Math.max(maxPriceLength, String.valueOf(item.getPrice()).length());
+            maxCatLength = Math.max(maxCatLength, item.getCategory().length());
+        }
+    
+        int maxNamePadding = maxNameLength + 4;
+        int maxPricePadding = maxPriceLength + 4;
+        int maxCatPadding = maxCatLength + 4;
+        System.out.println();
+        System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", "Index", "Name", "Category", "Price");
+        for (MenuItem item : MenuItemList) {
+            System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", index++, item.getName(), item.getCategory(), item.getPrice());
+        }
+        divider();
+        System.out.println("");
+        if (orderCart.getItems().size() == 0) {
+            System.out.printf("""
+                    Please Choose your menu 
+                    (0) Back\n""");
+        } else {
+            System.out.printf("""
+                Welcome to %s
+                Please Choose your menu 
+                (0) Checkout\n""");
+        }
+        divider();
+    
+        int choice = scanner.nextInt();
+        if (choice != 0) {
+            MenuItem selectedMenu = MenuItemList.get(choice - 1);
+            clearConsole();
+            System.out.println("MENU SELECTED");
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", "Index", selectedMenu.getName(), selectedMenu.getCategory(), selectedMenu.getPrice());
+            divider();
+            System.out.println("""
+                    Please insert Quantity
+                    (0) back""");
+            int quantity = scanner.nextInt();
+            orderCart.addItem(selectedMenu, quantity);
+            displayMenuAndSelect(orderCart);
+        }
+        return orderCart;
+    }
+    
+    
 }
