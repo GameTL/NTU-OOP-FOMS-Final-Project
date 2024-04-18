@@ -71,29 +71,15 @@ public class Branch{
     public void setOrders(List<Order> orderList) {
         Orders = orderList;
     }
-    public void setOrders(Order order) {
+    public void addOrder(Order order) {
         Orders.add(order);
     }
-
-
-
-    // public List<BranchManager> getbranchManagerMembers() {
-        //     return branchManagerMembers;
-        // }
-        
-        // public void setBranchManagerMembers(List<BranchManager> branchManagerMembers) {
-            //     this.branchManagerMembers = branchManagerMembers;
-            // }
-            
-            public boolean isAvailable() {
-                return available;
-            }
-            
-            public void setAvailable(boolean available) {
-                this.available = available;
-            }
-            public void printCurrentOrder() {
-                this.branchMenu.displayMenu(this);
+    public boolean isAvailable() {
+        return available;
+    }
+    
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 	public void printAndModifyStaffDetails(List<Staff> staffMembers2, Object object, Object object2) {
         // TODO Auto-generated method stub

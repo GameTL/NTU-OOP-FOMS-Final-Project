@@ -18,8 +18,6 @@ public interface fomsOperations {
 
     public abstract void  editStaff(); // 1.2.1.1
 
-    public abstract void  assignManager(); // 1.2.1.2
-
     public abstract void  displayStaff(); // 1.2.1.3
 
     public abstract void  editPayment(); // 1.2.1.4
@@ -42,7 +40,7 @@ public interface fomsOperations {
 
     public abstract void  paymentGateway(Order order);
 
-    public abstract boolean  displayUserCurrentOrder(Order order); // 1.1.1
+    public abstract boolean  displayUserCurrentOrder(Order orderCart); // 1.1.1
 
     public abstract void  menuList(); // 1.1.2
     // Level X.X.1
