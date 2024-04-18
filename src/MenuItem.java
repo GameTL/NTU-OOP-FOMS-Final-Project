@@ -1,4 +1,5 @@
 package src;
+
 public class MenuItem {
     private String name;
     private double price;

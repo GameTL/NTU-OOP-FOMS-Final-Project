@@ -50,10 +50,28 @@ public class PaymentManager {
         boolean paymentSuccess = payment.processPayment(amount);
         if (paymentSuccess) {
             payment.displayCompletePayment();
-            order.setStatus(Order.Status.Completed);
+            order.setStatus(Order.Status.New);
+            System.out.println("Order ID: " + order.getOrderId());
             return true;
         } else {
             System.out.println("Payment failed.");
+            return false;
+        }
+    }
+    
+ // Public method to process a payment using a selected method
+    public static boolean makePayment(int methodOption, Order order) {
+        if (order == null || methodOption < 0) {
+            System.out.println("Error: Invalid payment method or order.");
+            return false;
+        }
+
+        Payment paymentMethod = getPaymentRegistry().getPaymentMethod(methodOption);
+        if (paymentMethod != null) {
+            double amount = calculate(order);
+            return processPayment(paymentMethod, order, amount);
+        } else {
+            System.out.println("Invalid payment method choice. Payment canceled.");
             return false;
         }
     }
