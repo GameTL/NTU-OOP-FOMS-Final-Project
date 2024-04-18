@@ -1,4 +1,4 @@
-/* 
+ /* 
  * /usr/bin/env /Users/game/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages -cp /Users/game/Library/Application\ Support/Code/User/workspaceStorage/2f5c87283ad91abdee12af6a0051733b/redhat.java/jdt_ws/NTU-OOP-FOMS-Final-Project_ea206817/bin src.fomsApp 
  */
 
@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import src.Order.Status;
+import src.User;
 
 import java.util.Map;
 
@@ -59,14 +60,14 @@ public class fomsApp implements fomsOperations {
         branchOP.getCurrentBranch().addManager(new Manager(
                 "TomC",
                 "Tom Chan",
-                Manager.Gender.Male,
+                Manager.Gender.MALE,
                 56,
                 "JP"));
         branchOP.getCurrentBranch().setOrders(mockorderList);
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "JustinL",
                 "Justin Loh",
-                Staff.Gender.Male,
+                Staff.Gender.MALE,
                 49,
                 "JP"));
         branchOP.getCurrentBranch().setOrders(mockorderList);
@@ -75,13 +76,13 @@ public class fomsApp implements fomsOperations {
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "kumarB",
                 "Kumar Blackmore",
-                Staff.Gender.Male,
+                Staff.Gender.MALE,
                 32,
                 "NTU"));
         branchOP.getCurrentBranch().addManager(new Manager(
                 "Alexei",
                 "Alexei",
-                User.Gender.Male,
+                User.Gender.MALE,
                 25,
                 "NTU"));
         branchOP.getCurrentBranch().setOrders(mockorderList);
@@ -90,13 +91,13 @@ public class fomsApp implements fomsOperations {
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "MaryL",
                 "Mary lee",
-                Staff.Gender.Female,
+                Staff.Gender.FEMALE,
                 44,
                 "JE"));
         branchOP.getCurrentBranch().addManager(new Manager(
                 "AlicaA",
                 "Alica Ang",
-                Manager.Gender.Female,
+                Manager.Gender.FEMALE,
                 27,
                 "JE"));
         branchOP.getCurrentBranch().setOrders(mockorderList);
@@ -106,13 +107,13 @@ public class fomsApp implements fomsOperations {
         branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "s",
                 "Mary lee",
-                Staff.Gender.Female,
+                Staff.Gender.FEMALE,
                 44,
                 "JE"));
         branchOP.getCurrentBranch().addManager(new Manager(
                 "m",
                 "Alica Ang",
-                Manager.Gender.Female,
+                Manager.Gender.FEMALE,
                 27,
                 "JE"));
 
@@ -229,26 +230,13 @@ public class fomsApp implements fomsOperations {
             System.out.println("Please enter your choice: ");
             choice = sc.nextInt();
             switch (choice) {
-                case 1: // Add new staff
-                    System.out.println("Enter the name of the branch you would like to add them to:");
-                    String branchName = sc.nextLine();
-                    Branch branch = branchOP.getBranchMap().get(branchName);
-
-                    if (branch == null) {
-        System.out.println("Branch does not exist.");
-        return;
-    }
-
-    // Check if the addition is allowed based on manager-staff ratio
-    // if (!canChangeStaff(branch, 1)) {
-    //     System.out.println("Cannot add staff due to manager-to-staff ratio restrictions.");
-    //     return;
-    // }
+                case 1: // Add staff
+                    addStaff();
                     break;
                 case 2: // Remove staff
-                    // TODO
-                case 3: // edit staff details
-                    // TODO
+                    removeStaff();
+                case 3: // Transfer staff
+                    editStaffDetails();
                 case 0:
                     break;
                 case -1:
@@ -260,16 +248,101 @@ public class fomsApp implements fomsOperations {
         } while (choice != 0);
     }
 
-    private boolean isValidManagerToStaffRatio(Branch branch, int changeInStaffCount) {
-        int totalStaff = branch.getStaffMembers().size() + changeInStaffCount; // Calculate future staff count
-        int numberOfManagers = branch.getManagerMembers().size(); // Current managers
+    private boolean canChangeStaff(Branch branch, int delta) {
+        int currentStaffCount = branch.getStaffMembers().size();
+        int currentManagerCount = branch.getManagerMembers().size();
+        int newStaffCount = currentStaffCount + delta;
+    
+        return (newStaffCount <= 4 && currentManagerCount >= 1) ||
+               (newStaffCount <= 8 && currentManagerCount >= 2) ||
+               (newStaffCount <= 15 && currentManagerCount >= 3) ||
+               (currentManagerCount >= (newStaffCount / 5));
+    }
+    
+    private void addStaff() {
+        System.out.print("Enter the branch name: ");
+        String branchName = scanner.nextLine();
+        Branch branch = branchOP.getBranchMap().get(branchName);
+    
+        if (branch == null) {
+            System.out.println("Branch does not exist.");
+            return;
+        }
+    
+        // Check if the addition is allowed based on manager-staff ratio rule
+        if (!canChangeStaff(branch, 1)) {
+            System.out.println("Cannot add staff due to manager-to-staff ratio restrictions.");
+            return;
+        }
+    
+        // Information input for new staff member
+        System.out.print("Enter staff name: ");
+        String name = scanner.nextLine();
         
-        if (totalStaff <= 4 && numberOfManagers >= 1) return true;
-        if (totalStaff <= 8 && numberOfManagers >= 2) return true;
-        if (totalStaff <= 15 && numberOfManagers >= 3) return true;
-        if (totalStaff > 15 && numberOfManagers >= (totalStaff / 5)) return true; 
+        System.out.print("Enter staff ID: ");
+        String chosenID = scanner.nextLine();
+        
+        System.out.print("Enter gender (Male/Female/Other): ");
+        String genderInput = scanner.nextLine();
+        User.Gender gender;
+        try{
+            gender = User.Gender.valueOf(genderInput.toUpperCase()); // Correctly parsing the enum
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid gender. Please enter Male, Female, or Other.");
+            return;
+        }
+        
+        System.out.print("Enter age: ");
+        int age = scanner.nextInt();
+    
+        Staff newStaff = new Staff(chosenID, name, gender, age, branchName); 
+        branch.addStaffMember(newStaff);
+        System.out.println("New staff added successfully.");
+        divider();
+        System.out.println("Your current staff list @ " + branch);
+        divider();
+        displayBranchStaff();
+        divider();
+    }
+    
+    private void removeStaff() {
+        System.out.print("Enter the branch name: ");
+        String branchName = scanner.nextLine().trim();
+        Branch branch = branchOP.getBranchMap().get(branchName);
+        
+        if (branch == null) {
+            System.out.println("Branch does not exist.");
+            return;
+        }
+        
+        List<Staff> staffList = branch.getStaffMembers();
+        if (staffList.isEmpty()) {
+            System.out.println("No staff members available to remove.");
+            return;
+        }
 
-        return false; // If none of the conditions are met, the ratio is not valid
+        System.out.println("Select the staff member to remove, or done to cancel:");
+        String staffToBeRemoved = scanner.nextLine();
+        if (condition) {
+            System.out.println("Operation cancelled.");
+            return;
+        } else {
+            if (canChangeStaff(branch, -1)) {
+                branch.removeStaffMember(staffToBeRemoved);
+                System.out.println("Staff member removed successfully.");
+                divider();
+                System.out.println("Your current staff list @ " + branch);
+                divider();
+                displayBranchStaff();
+                divider();
+            } else {
+                System.out.println("Cannot remove staff due to manager-to-staff ratio restrictions.");
+            }
+        } 
+    }
+    
+    private void editStaffDetails(){
+        //TODO method
     }
 
     public void staffLogin() {
@@ -412,7 +485,7 @@ public class fomsApp implements fomsOperations {
         divider();
     }
 
-    public void editPayment() { // shuya
+    public void editPayment() {
         int choice;
         listExistingPaymentMethods(); // Display existing payment methods at the start
         do {
@@ -765,38 +838,6 @@ public class fomsApp implements fomsOperations {
             System.out.println("Order not confirmed.");
         }
     }
-
-    // public Order displayUserCurrentOrder(Order orderCart) { // Complete level 1
-    //     System.out.println("Current Order Details:");
-    //     divider();
-    //     List<OrderItem> CartMenuItemList = orderCart.getItems();
-    //         int maxNameLength = "Item Name".length();
-    //         int maxQuantityLength = String.valueOf("Quantity").length();
-    //         for (OrderItem item : CartMenuItemList) {
-    //             maxNameLength = Math.max(maxNameLength, item.getMenuItem().getName().length());
-    //             maxQuantityLength = Math.max(maxQuantityLength, String.valueOf(item.getQuantity()).length());
-    //         }
-    
-    //         int maxNamePadding = maxNameLength + 4;
-    //         int maxQuantityPadding = maxQuantityLength + 4;
-    
-    //         System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", "Index", "Name", "Quantity");
-    //         for (OrderItem item : CartMenuItemList) {
-    //             System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", 0, item.getMenuItem().getName(), item.getQuantity());
-    //         }
-    //         divider();
-    //         System.out.printf("Total Price: %.2f",orderCart.getTotalCost());
-    //     System.out.println("\nDo you want to confirm this order? (Yes/No)");
-    //     Scanner scanner = new Scanner(System.in);
-    //     String confirmation = scanner.nextLine().trim();
-
-    //     if ("Yes".equalsIgnoreCase(confirmation)) {
-    //         System.out.println("Order confirmed.");
-    //         branchOP.getCurrentBranch().addOrder(orderCart);
-    //     } else {
-    //         System.out.println("Order not confirmed.");
-    //     }
-    // }
 
     public void menuList() {
         Order OrderCart = new Order(null, false);
