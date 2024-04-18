@@ -240,10 +240,10 @@ public class fomsApp implements fomsOperations {
     }
 
     // Check if the addition is allowed based on manager-staff ratio
-    if (!canChangeStaff(branch, 1)) {
-        System.out.println("Cannot add staff due to manager-to-staff ratio restrictions.");
-        return;
-    }
+    // if (!canChangeStaff(branch, 1)) {
+    //     System.out.println("Cannot add staff due to manager-to-staff ratio restrictions.");
+    //     return;
+    // }
                     break;
                 case 2: // Remove staff
                     // TODO
@@ -732,6 +732,7 @@ public class fomsApp implements fomsOperations {
         // }
 
     }
+    
 
     public void displayStaffCurrentOrder(Order orderCart) { // Complete level 1
         System.out.println("Current Order Details:");
@@ -765,14 +766,44 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    // public Order displayUserCurrentOrder(Order orderCart) { // Complete level 1
+    //     System.out.println("Current Order Details:");
+    //     divider();
+    //     List<OrderItem> CartMenuItemList = orderCart.getItems();
+    //         int maxNameLength = "Item Name".length();
+    //         int maxQuantityLength = String.valueOf("Quantity").length();
+    //         for (OrderItem item : CartMenuItemList) {
+    //             maxNameLength = Math.max(maxNameLength, item.getMenuItem().getName().length());
+    //             maxQuantityLength = Math.max(maxQuantityLength, String.valueOf(item.getQuantity()).length());
+    //         }
     
+    //         int maxNamePadding = maxNameLength + 4;
+    //         int maxQuantityPadding = maxQuantityLength + 4;
+    
+    //         System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", "Index", "Name", "Quantity");
+    //         for (OrderItem item : CartMenuItemList) {
+    //             System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxQuantityPadding + "s%n", 0, item.getMenuItem().getName(), item.getQuantity());
+    //         }
+    //         divider();
+    //         System.out.printf("Total Price: %.2f",orderCart.getTotalCost());
+    //     System.out.println("\nDo you want to confirm this order? (Yes/No)");
+    //     Scanner scanner = new Scanner(System.in);
+    //     String confirmation = scanner.nextLine().trim();
+
+    //     if ("Yes".equalsIgnoreCase(confirmation)) {
+    //         System.out.println("Order confirmed.");
+    //         branchOP.getCurrentBranch().addOrder(orderCart);
+    //     } else {
+    //         System.out.println("Order not confirmed.");
+    //     }
+    // }
 
     public void menuList() {
         Order OrderCart = new Order(null, false);
 
         OrderCart = branchOP.displayMenuAndSelect(OrderCart);
         divider();
-        displayUserCurrentOrder(OrderCart);
+        // displayUserCurrentOrder(OrderCart);
         // displayPaymentMethods();
     }
 
