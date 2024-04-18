@@ -19,7 +19,7 @@ public class Staff extends User {
         this.branch = branch;
         this.gender = gender;
         this.age = age;
-        this.password = password;
+        this.password = "1";
     }
 
     // Getter and Setter for role
@@ -74,10 +74,9 @@ public class Staff extends User {
     }
 
     // Method to handle login based on user ID and password
-    public static Staff loginStaff(List<Staff> staffList, String userId, String inputPassword) {
+    public static User loginStaff(List<Staff> staffList, String userId, String inputPassword) {
         for (Staff staff : staffList) {
             if (staff.getId().equals(userId) && staff.checkPassword(inputPassword)) {
-                System.out.println("Login successful for: " + staff.getName());
                 return staff;  // Login successful
             }
         }

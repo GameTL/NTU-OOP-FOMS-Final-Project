@@ -5,15 +5,15 @@ import java.util.HashMap;
 
 import static src.fomsApp.divider;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Map;
 
-
 public class BranchOperator {
-    
+
     private Map<String, Branch> branchMap = new HashMap<>();
     private Branch currentBranch;
 
@@ -29,9 +29,11 @@ public class BranchOperator {
     public Branch getCurrentBranch() {
         return currentBranch;
     }
+
     public Map<String, Branch> getBranchMap() {
         return branchMap;
     }
+
     public void removeBranch(String name) {
         if (branchMap.containsKey(name)) {
             if (branchMap.get(name) == currentBranch) {
@@ -42,6 +44,15 @@ public class BranchOperator {
     }
 
     private Scanner scanner = new Scanner(System.in);
+
+    public List<Staff> getAllStaff() {
+        List<Staff> allStaff = new ArrayList<>(); // Start with all staff members
+        for (Branch branch : branchMap.values()) {
+            allStaff.addAll(branch.getStaffMembers());
+            allStaff.addAll(branch.getManagerMembers());
+        }
+        return allStaff;
+    }
 
     public void listAndSelectBranch() {
         int index = 1;
@@ -79,14 +90,14 @@ public class BranchOperator {
             System.out.println("Invalid index. Please try again.");
         }
     }
+
     public void printAndModifyStaffDetails(List<Staff> staffList, List<String> filterBranch, String sortByAttribute) {
-        
-        // How to use filter 
+
+        // How to use filter
         // List<String> filterBranches = new ArrayList<>();
         // filterBranches.add("NTU");
         // filterBranches.add("NUS");
-        
-        
+
         // Filter and sort the staff list
         if (filterBranch != null && !filterBranch.isEmpty()) {
             staffList.removeIf(staff -> !filterBranch.contains(staff.getBranch()));
@@ -95,17 +106,23 @@ public class BranchOperator {
         if (sortByAttribute != null) {
             Collections.sort(staffList, Comparator.comparing(staff -> {
                 switch (sortByAttribute.toLowerCase()) {
-                    case "name": return staff.getName();
-                    case "age": return String.valueOf(staff.getAge());
-                    case "gender": return staff.getGender().toString();
-                    case "branch": return staff.getBranch();
-                    default: return "";
+                    case "name":
+                        return staff.getName();
+                    case "age":
+                        return String.valueOf(staff.getAge());
+                    case "gender":
+                        return staff.getGender().toString();
+                    case "branch":
+                        return staff.getBranch();
+                    default:
+                        return "";
                 }
             }));
         }
 
         // Find maximum length of each attribute to align columns
-        int maxName = "Name".length(), maxGender = "Gender".length(), maxAge = "Age".length(), maxBranch = "Branch".length();
+        int maxName = "Name".length(), maxGender = "Gender".length(), maxAge = "Age".length(),
+                maxBranch = "Branch".length();
         for (Staff staff : staffList) {
             maxName = Math.max(maxName, staff.getName().length());
             maxGender = Math.max(maxGender, staff.getGender().toString().length());
@@ -114,19 +131,24 @@ public class BranchOperator {
         }
 
         // Printing the header
-        System.out.printf("%-5s%-"+ (maxName + 4) +"s%-"+ (maxGender + 4) +"s%-"+ (maxAge + 4) +"s%-"+ (maxBranch + 4) +"s\n", 
-                          "Index", "Name", "Gender", "Age", "Branch");
+        System.out.printf(
+                "%-5s%-" + (maxName + 4) + "s%-" + (maxGender + 4) + "s%-" + (maxAge + 4) + "s%-" + (maxBranch + 4)
+                        + "s\n",
+                "Index", "Name", "Gender", "Age", "Branch");
 
         // Printing each staff member details with index
         int index = 1;
         for (Staff staff : staffList) {
-            System.out.printf("%-5d%-"+ (maxName + 4) +"s%-"+ (maxGender + 4) +"s%-"+ (maxAge + 4) +"s%-"+ (maxBranch + 4) +"s\n",
-                              index++, staff.getName(), staff.getGender(), staff.getAge(), staff.getBranch());
+            System.out.printf(
+                    "%-5d%-" + (maxName + 4) + "s%-" + (maxGender + 4) + "s%-" + (maxAge + 4) + "s%-" + (maxBranch + 4)
+                            + "s\n",
+                    index++, staff.getName(), staff.getGender(), staff.getAge(), staff.getBranch());
         }
 
         // Allow user to select and modify a staff member
         modifyStaff(staffList);
     }
+
     private void modifyStaff(List<Staff> staffList) {
         System.out.println("Enter the index of the staff to modify, or 0 to exit:");
         int choice = scanner.nextInt();
@@ -139,4 +161,5 @@ public class BranchOperator {
             System.out.println("Updated age for " + selectedStaff.getName() + " to " + newAge);
         }
 
-}}
+    }
+}
