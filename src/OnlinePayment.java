@@ -1,6 +1,7 @@
 package src;
 
 public class OnlinePayment extends Payment {
+    private static final long serialVersionUID = 16L;
 
     @Override
     public boolean processPayment(double amount) {
