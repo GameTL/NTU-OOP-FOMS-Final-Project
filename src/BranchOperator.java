@@ -427,6 +427,29 @@ public class BranchOperator implements Serializable{
             MenuItem newItem = new MenuItem(name, price, currentBranch.getBranchName(), category);
             menu.addMenuItem(newItem);
             System.out.println("Item added successfully to " + currentBranch.getBranchName());
+            divider();
+            int index = 1;
+            List<MenuItem> MenuItemList = getCurrentBranch().getBranchMenu().getMenuItems();
+            int maxNameLength = "Order ID".length();
+            int maxPriceLength = String.valueOf("Price").length();
+            int maxCatLength = "Status".length();
+            for (MenuItem item : MenuItemList) {
+                maxNameLength = Math.max(maxNameLength, item.getName().length());
+                maxPriceLength = Math.max(maxPriceLength, String.valueOf(item.getPrice()).length());
+                maxCatLength = Math.max(maxCatLength, item.getCategory().length());
+            }
+        
+            int maxNamePadding = maxNameLength + 4;
+            int maxPricePadding = maxPriceLength + 4;
+            int maxCatPadding = maxCatLength + 4;
+            System.out.println();
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n","Index", "Name", "Category", "Price");
+            for (MenuItem item : MenuItemList) {
+                if (item.getBranch().equals(currentBranch.getBranchName())) {
+                    System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", index++, item.getName(), item.getCategory(), item.getPrice());
+                }
+            }
+            divider();
         } else {
             System.out.println("No active menu found. Cannot add item.");
         }
@@ -434,9 +457,31 @@ public class BranchOperator implements Serializable{
 
     public void removeItem(Menu menu) {
         if (menu != null) {
+            divider();
+            int index = 1;
+            List<MenuItem> MenuItemList = getCurrentBranch().getBranchMenu().getMenuItems();
+            int maxNameLength = "Order ID".length();
+            int maxPriceLength = String.valueOf("Price").length();
+            int maxCatLength = "Status".length();
+            for (MenuItem item : MenuItemList) {
+                maxNameLength = Math.max(maxNameLength, item.getName().length());
+                maxPriceLength = Math.max(maxPriceLength, String.valueOf(item.getPrice()).length());
+                maxCatLength = Math.max(maxCatLength, item.getCategory().length());
+            }
+        
+            int maxNamePadding = maxNameLength + 4;
+            int maxPricePadding = maxPriceLength + 4;
+            int maxCatPadding = maxCatLength + 4;
+            System.out.println();
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n","Index", "Name", "Category", "Price");
+            for (MenuItem item : MenuItemList) {
+                if (item.getBranch().equals(currentBranch.getBranchName())) {
+                    System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", index++, item.getName(), item.getCategory(), item.getPrice());
+                }
+            }
+            divider();
             System.out.println("Enter the name of the menu item to remove:");
             String name = scanner.nextLine();
-
             MenuItem itemToRemove = new MenuItem(name, 0, currentBranch.getBranchName(), null);
             boolean removed = menu.removeMenuItem(itemToRemove);
             if (removed) {
@@ -451,6 +496,28 @@ public class BranchOperator implements Serializable{
 
     public void updateItem(Menu menu) {
         if (menu != null) {
+            int index = 1;
+            List<MenuItem> MenuItemList = getCurrentBranch().getBranchMenu().getMenuItems();
+            int maxNameLength = "Order ID".length();
+            int maxPriceLength = String.valueOf("Price").length();
+            int maxCatLength = "Status".length();
+            for (MenuItem item : MenuItemList) {
+                maxNameLength = Math.max(maxNameLength, item.getName().length());
+                maxPriceLength = Math.max(maxPriceLength, String.valueOf(item.getPrice()).length());
+                maxCatLength = Math.max(maxCatLength, item.getCategory().length());
+            }
+        
+            int maxNamePadding = maxNameLength + 4;
+            int maxPricePadding = maxPriceLength + 4;
+            int maxCatPadding = maxCatLength + 4;
+            System.out.println();
+            System.out.printf("%-5s %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n","Index", "Name", "Category", "Price");
+            for (MenuItem item : MenuItemList) {
+                if (item.getBranch().equals(currentBranch.getBranchName())) {
+                    System.out.printf("%-5d %-" + maxNamePadding + "s %-" + maxCatPadding + "s %-" + maxPricePadding + "s%n", index++, item.getName(), item.getCategory(), item.getPrice());
+                }
+            }
+            divider();
             System.out.println("Enter the name of the menu item to update:");
             String name = scanner.nextLine();
 
@@ -477,6 +544,7 @@ public class BranchOperator implements Serializable{
                         return;
                 }
                 System.out.println("Item updated successfully in " + currentBranch.getBranchName());
+
             } else {
                 System.out.println("Item not found in " + currentBranch.getBranchName());
             }
