@@ -155,7 +155,7 @@ public class fomsApp implements fomsOperations {
 
         // for testing
         // for testing
-        branchOP.getCurrentBranch().addStaffMember(new Staff(
+        /*branchOP.getCurrentBranch().addStaffMember(new Staff(
                 "s",
                 "Mary lee",
                 Staff.Gender.FEMALE,
@@ -166,7 +166,7 @@ public class fomsApp implements fomsOperations {
                 "Alica Ang",
                 Manager.Gender.FEMALE,
                 27,
-                "JE"));
+                "JE"));*/
 
     }
     // private //List of Branch
@@ -861,7 +861,7 @@ public class fomsApp implements fomsOperations {
                         break;
 
                 }
-            } while (choice < 3);
+            } while (choice != 0 && choice != -1);
         } else {
             System.out.println("Access Denied: Only managers can edit the menu.");
         }

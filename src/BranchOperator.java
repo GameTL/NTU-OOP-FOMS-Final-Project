@@ -183,7 +183,6 @@ public class BranchOperator implements Serializable{
                 int newAge = scanner.nextInt();
                 selectedStaff.setAge(newAge);
                 System.out.println("Updated age for " + selectedStaff.getName() + " to " + newAge);
-
                 break;
             case 3:
                 System.out.println("Enter new gender (Male, Female, Other):");
