@@ -1,7 +1,4 @@
-/* 
-* /usr/bin/env /Users/game/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages -cp /Users/game/Library/Application\ Support/Code/User/workspaceStorage/2f5c87283ad91abdee12af6a0051733b/redhat.java/jdt_ws/NTU-OOP-FOMS-Final-Project_ea206817/bin src.fomsApp 
-*/
-
+//For Java Doc -- Game made this on 26 March
 package src;
 
 import java.io.FileWriter;
@@ -26,7 +23,6 @@ import src.Order.Status;
 // import java.util.Map;
 
 public class fomsApp implements fomsOperations {
-    // private static final long serialVersionUID = 20L;
 
     // Declare the Scanner as an instance variable of the class
     /*
@@ -49,7 +45,6 @@ public class fomsApp implements fomsOperations {
     private String currentCustomerId;
 
     public static List<Order> orderList;
-    // private Order currentOrder = new Order("123", false);
 
     Menu menu = new Menu();
     private Admin onlyAdmin = new Admin("boss", "Boss", User.Gender.FEMALE, 62, "");
@@ -71,7 +66,7 @@ public class fomsApp implements fomsOperations {
         System.err.println("Error saving state: " + e.getMessage());
         e.printStackTrace();
     }
-}
+    }
 
     public void loadState() {
     try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("AppState.ser"))) {
@@ -82,64 +77,10 @@ public class fomsApp implements fomsOperations {
         System.err.println("Failed to load state: " + e.getMessage());
         e.printStackTrace();
     }
-    
 
+    }
 
-/*public class DataExporter {
-
-    public void exportStaffData(List<Staff> staffList, String filePath) {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.append("ID,Name,Gender,Age,Branch\n"); // CSV header
-            for (Staff staff : staffList) {
-                writer.append(String.format("%s,%s,%s,%d,%s\n",
-                    staff.getId(), staff.getName(), staff.getGender(), staff.getAge(), staff.getBranch()));
-            }
-        } catch (IOException e) {
-            System.out.println("Error while writing to CSV: " + e.getMessage());
-        }
-    }*/
-
-    // You can add similar methods for managers and menu items.
-}
-
-
-    // TO DO Repalce current initializer with the new one & rename current init as
-    // setupNewBranches
-    // TO DO activate saveState() when exiting for all case -1
-
-    // public void initializer() {
-    //     // clearConsole();
-    //     Scanner scanner = new Scanner(System.in);
-    //     System.out.println("Do you want to continue the previous session or start a new one?");
-    //     System.out.println("1. Continue previous session");
-    //     System.out.println("2. Start a new session");
-
-    //     // Get user choice
-    //     int choice = scanner.nextInt();
-
-    //     // Path to the serialized state file
-    //     File f = new File("AppState.ser");
-
-    //     // Option 1: Attempt to continue from a previous session
-    //     if (choice == 1) {
-    //         if (f.exists() && !f.isDirectory()) {
-    //             loadState(); // Load the saved state if it exists
-    //             System.out.println("Previous session successfully loaded.");
-    //         } else {
-    //             System.out.println("No previous session found. Starting a new session.");
-    //             setupNewBranches(); // Start a new session if no previous state exists
-    //         }
-    //     } else if (choice == 2) {
-    //         // Option 2: Start a fresh session
-    //         System.out.println("Starting a new session.");
-    //         setupNewBranches();
-    //     } else {
-    //         System.out.println("Invalid choice. Starting a new session by default.");
-    //         setupNewBranches(); // Default to starting a new session if an invalid choice is made
-    //     }
-    // }
-
-    public void initializer() { // TODO rename to setupNewBranches()
+    public void initializer() {
         Admin onlyAdmin = new Admin("boss", "Boss", User.Gender.FEMALE, 62, "");
         branchOP.initAdmin(onlyAdmin);
         // Making Mock Orders
@@ -503,7 +444,7 @@ public class fomsApp implements fomsOperations {
             }
         } else {
             staffList = branchOP.getAllStaff(); // Get all staff if no branch filter is specified or branch does not
-                                                // exist
+                                          
         }
 
         // Ask if user would like to filter by attribute
@@ -530,11 +471,9 @@ public class fomsApp implements fomsOperations {
                           Staff Login
                 Username:""");
         String username = sc.next();
-        // System.out.println("Entered username: " + username);
         System.out.println("""
                 Password:""");
         String password = sc.next();
-        // System.out.println("Entered password: " + password);
         currentUser = Staff.loginStaff(branchOP.getAllStaff(), username, password);
         divider();
         if (currentUser != null) {
@@ -565,7 +504,6 @@ public class fomsApp implements fomsOperations {
         }
     }
 
-    // change password and save
     public void changeStaffPassword() {
         if (currentUser instanceof Staff) {
             Staff staff = (Staff) currentUser;
@@ -647,7 +585,7 @@ public class fomsApp implements fomsOperations {
     }
 
     // >Admin
-    public boolean paymentGateway(Order order) { // updated by shuya
+    public boolean paymentGateway(Order order) { 
         if (order == null) {
             System.out.println("Error: No order to process.");
             return false;
@@ -854,7 +792,6 @@ public class fomsApp implements fomsOperations {
         branchOP.getCurrentBranch().removeStaffMember(tempStaff);
         branchOP.getCurrentBranch().addManager(newManager);
         System.out.println("Updated List of Manger in @" + branchOP.getCurrentBranch().getBranchName());
-        // System.out.println(branchOP.getCurrentBranch().getManagerMembers());
         for (Manager manager : branchOP.getCurrentBranch().getManagerMembers()) {
             System.out.printf("%-20s %-10s %-10s %-5s\n",
                     manager.getName(),
@@ -865,7 +802,7 @@ public class fomsApp implements fomsOperations {
     }
 
     // >BranchManager
-    public void ManagerHome() { // Complete level 1
+    public void ManagerHome() { 
         int choice;
     boolean exit = false; // Control flag for loop exit
     do {
@@ -916,7 +853,6 @@ public class fomsApp implements fomsOperations {
     public void editMenu() {
         int choice;
         if (currentUser instanceof Manager) {
-            // Manager manager = (Manager) currentUser;
             Branch currentBranch = branchOP.getCurrentBranch();
 
             do {
@@ -969,7 +905,7 @@ public class fomsApp implements fomsOperations {
                 System.out.println("-------------------------------");
                 System.out.println("    All staff @ this branch");
                 for (Staff staff : staffMembers) {
-                    System.out.println(staff); // TODO ? do we have a method for this
+                    System.out.println(staff); 
                     System.out.println();
                 }
                 System.out.println("-------------------------------");
@@ -1066,10 +1002,6 @@ public class fomsApp implements fomsOperations {
                 branchOP.getCurrentBranch().addOrder(OrderCart);
             }
         }
-        // * Debug
-        // System.out.println("i'm here ");
-        // System.out.println(branchOP.getCurrentBranch().getOrders());
-
     }
 
     public static void main(String[] args) {
