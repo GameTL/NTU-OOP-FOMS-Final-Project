@@ -4,8 +4,10 @@
 
 package src;
 
-import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Set;
@@ -14,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.io.IOException;
+
 import java.io.File;
 // import java.io.Serializable;
 
@@ -53,7 +55,12 @@ public class fomsApp implements fomsOperations {
     private Admin onlyAdmin = new Admin("boss", "Boss", User.Gender.FEMALE, 62, "");
     private PaymentRegistry paymentRegistry = PaymentManager.getPaymentRegistry();
     private static PaymentManager paymentManager = new PaymentManager();
-    private static Scanner scanner = new Scanner(System.in);
+    private transient Scanner scanner = new Scanner(System.in);
+    
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject(); // default deserialization logic
+        scanner = new Scanner(System.in); // re-initialize scanner after deserialization
+    }
 
     public void saveState() {
     try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("AppState.ser"))) {
@@ -75,7 +82,26 @@ public class fomsApp implements fomsOperations {
         System.err.println("Failed to load state: " + e.getMessage());
         e.printStackTrace();
     }
+    
+
+
+/*public class DataExporter {
+
+    public void exportStaffData(List<Staff> staffList, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.append("ID,Name,Gender,Age,Branch\n"); // CSV header
+            for (Staff staff : staffList) {
+                writer.append(String.format("%s,%s,%s,%d,%s\n",
+                    staff.getId(), staff.getName(), staff.getGender(), staff.getAge(), staff.getBranch()));
+            }
+        } catch (IOException e) {
+            System.out.println("Error while writing to CSV: " + e.getMessage());
+        }
+    }*/
+
+    // You can add similar methods for managers and menu items.
 }
+
 
     // TO DO Repalce current initializer with the new one & rename current init as
     // setupNewBranches
@@ -581,16 +607,22 @@ public class fomsApp implements fomsOperations {
                 switch (choice) {
                     case 1:
                         selectedOrder.setStatus(Status.New);
+                        break;
                     case 2:
                         selectedOrder.setStatus(Status.ReadyForPickup);
+                        break;
                     case 3:
                         selectedOrder.setStatus(Status.Completed);
+                        break;
                     case 4:
                         selectedOrder.setStatus(Status.Cancelled);
+                        break;
                     case 5:
                         selectedOrder.setTakeaway(true);
+                        break;
                     case 6:
                         selectedOrder.setTakeaway(false);
+                        break;
                 }
                 clearConsole();
             } else {
@@ -1046,7 +1078,3 @@ public class fomsApp implements fomsOperations {
 
     }
 };
-// cd/ Users/game/GitHub-School/NTU-OOP-FOMS-Final-Project ;
-// /usr/bin/env/Users/game/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin/java-XX:+ShowCodeDetailsInExceptionMessages
-// -cp
-// /Users/game/Library/Application\Support/Code/User/workspaceStorage/2f5c87283ad91abdee12af6a0051733b/redhat.java/jdt_ws/NTU-OOP-FOMS-Final-Project_ea206817/binsrc.fomsApp

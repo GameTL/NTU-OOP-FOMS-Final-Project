@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Map;
 import java.io.Serializable;
+import java.io.ObjectInputStream;
+import java.io.IOException;
 
 public class BranchOperator implements Serializable{
     private static final long serialVersionUID = 9L;
@@ -20,6 +22,12 @@ public class BranchOperator implements Serializable{
 
     private Map<String, Branch> branchMap = new HashMap<>();
     private Branch currentBranch;
+    private transient Scanner scanner = new Scanner(System.in);
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject(); // default deserialization logic
+        scanner = new Scanner(System.in); // re-initialize scanner after deserialization
+    }
 
     public void addOrReplaceBranch(String name, Branch branch) {
         branchMap.put(name, branch);
@@ -49,7 +57,6 @@ public class BranchOperator implements Serializable{
     public void initAdmin(Admin admin){
         adminOP = admin;
     }
-    private Scanner scanner = new Scanner(System.in);
 
     public List<Staff> getAllStaff() {
         List<Staff> allStaff = new ArrayList<>(); // Start with all staff members
