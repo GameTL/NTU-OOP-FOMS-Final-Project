@@ -959,7 +959,7 @@ public class fomsApp implements fomsOperations {
     }
 
     public void displayBranchStaff() { // Complete level 1
-        Branch selectedBranch = ApplicationState.getCurrentBranch();
+        Branch selectedBranch = branchOP.getCurrentBranch();
         int choice;
         List<Staff> staffMembers = selectedBranch.getStaffMembers();
         do {
