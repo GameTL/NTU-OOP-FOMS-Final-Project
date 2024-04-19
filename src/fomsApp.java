@@ -15,6 +15,8 @@ import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.io.File;
+// import java.io.Serializable;
 
 import src.Order.Status;
 // import src.User.Gender;
@@ -22,6 +24,7 @@ import src.Order.Status;
 // import java.util.Map;
 
 public class fomsApp implements fomsOperations {
+    // private static final long serialVersionUID = 20L;
 
     // Declare the Scanner as an instance variable of the class
     /*
@@ -53,37 +56,64 @@ public class fomsApp implements fomsOperations {
     private static Scanner scanner = new Scanner(System.in);
 
     public void saveState() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("AppState.ser"))) {
-            out.writeObject(branchOP); // First serialize BranchOperator
-            out.writeObject(paymentRegistry); // Then serialize PaymentRegistry
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("AppState.ser"))) {
+        out.writeObject(branchOP);
+        out.writeObject(paymentRegistry);
+        System.out.println("State saved successfully.");
+    } catch (IOException e) {
+        System.err.println("Error saving state: " + e.getMessage());
+        e.printStackTrace();
     }
+}
 
     public void loadState() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("AppState.ser"))) {
-            branchOP = (BranchOperator) in.readObject(); // First deserialize BranchOperator
-            paymentRegistry = (PaymentRegistry) in.readObject(); // Then deserialize PaymentRegistry
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("AppState.ser"))) {
+        branchOP = (BranchOperator) in.readObject();
+        paymentRegistry = (PaymentRegistry) in.readObject();
+        System.out.println("State loaded successfully.");
+    } catch (IOException | ClassNotFoundException e) {
+        System.err.println("Failed to load state: " + e.getMessage());
+        e.printStackTrace();
     }
+}
 
     // TO DO Repalce current initializer with the new one & rename current init as
     // setupNewBranches
     // TO DO activate saveState() when exiting for all case -1
 
     // public void initializer() {
-    // File f = new File("AppState.ser");
-    // if (f.exists() && !f.isDirectory()) {
-    // loadState(); // Load the saved state if it exists
-    // } else {
-    // setupNewBranches(); // rename current initializer as setupNewBranches()
-    // }
+    //     // clearConsole();
+    //     Scanner scanner = new Scanner(System.in);
+    //     System.out.println("Do you want to continue the previous session or start a new one?");
+    //     System.out.println("1. Continue previous session");
+    //     System.out.println("2. Start a new session");
+
+    //     // Get user choice
+    //     int choice = scanner.nextInt();
+
+    //     // Path to the serialized state file
+    //     File f = new File("AppState.ser");
+
+    //     // Option 1: Attempt to continue from a previous session
+    //     if (choice == 1) {
+    //         if (f.exists() && !f.isDirectory()) {
+    //             loadState(); // Load the saved state if it exists
+    //             System.out.println("Previous session successfully loaded.");
+    //         } else {
+    //             System.out.println("No previous session found. Starting a new session.");
+    //             setupNewBranches(); // Start a new session if no previous state exists
+    //         }
+    //     } else if (choice == 2) {
+    //         // Option 2: Start a fresh session
+    //         System.out.println("Starting a new session.");
+    //         setupNewBranches();
+    //     } else {
+    //         System.out.println("Invalid choice. Starting a new session by default.");
+    //         setupNewBranches(); // Default to starting a new session if an invalid choice is made
+    //     }
     // }
 
-    public void initializer() { // TO DO rename to setupNewBranches()
+    public void initializer() { // TODO rename to setupNewBranches()
         Admin onlyAdmin = new Admin("boss", "Boss", User.Gender.FEMALE, 62, "");
         branchOP.initAdmin(onlyAdmin);
         // Making Mock Orders
@@ -189,9 +219,11 @@ public class fomsApp implements fomsOperations {
 
     // Main
     public void userSelector() { // Complete level 2
+        System.out.println(branchOP.getAllStaff());
+        System.out.println(branchOP.getBranchMap().values());
         int choice;
 
-        clearConsole();
+        // clearConsole();
         do {
             divider();
             System.out.println("""
