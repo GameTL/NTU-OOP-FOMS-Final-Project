@@ -314,6 +314,18 @@ public class BranchOperator implements Serializable{
         return null;
 
     }
+    public List<Order> findOrderById(String customerId) { //FOR CUSTOMER
+        List<Order> matchingOrders = new ArrayList<>();
+        if (currentBranch != null) {
+            for (Order order : currentBranch.getOrders()) {
+                if (order.getCustomerId().equals(customerId)) {
+                    matchingOrders.add(order);
+                }
+            }
+        }
+        return matchingOrders;
+    }
+    
 
     public Order displayMenuAndSelect(Order orderCart) { // FOR CUSTOMER
         // Scanner scanner = new Scanner(System.in);

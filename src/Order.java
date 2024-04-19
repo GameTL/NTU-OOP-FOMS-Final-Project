@@ -11,7 +11,8 @@ public class Order implements Serializable{
     public enum Status {
         New,
         ReadyForPickup,
-        Completed
+        Completed,
+        Cancelled
     }
 
     private Status status;

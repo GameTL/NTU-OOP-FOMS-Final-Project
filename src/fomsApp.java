@@ -17,9 +17,9 @@ import java.io.ObjectInputStream;
 import java.io.IOException;
 
 import src.Order.Status;
-import src.User.Gender;
+// import src.User.Gender;
 
-import java.util.Map;
+// import java.util.Map;
 
 public class fomsApp implements fomsOperations {
 
@@ -197,7 +197,7 @@ public class fomsApp implements fomsOperations {
             System.out.println("""
                     Are you a customer or a staff?
                     (1) Customer
-                    (2) Staff
+                    (2) Staff/Manager/Admin
 
                     (0) back
                     (-1) exit""");
@@ -209,7 +209,7 @@ public class fomsApp implements fomsOperations {
                     // Generate a random number between 10000 and 9999
                     String randomID = String.valueOf(10000 + random.nextInt(90000));
                     currentCustomerId = randomID;
-                    customerBranchSelector();
+                    customerOrderFlow();
                     break;
                 case 2:
                     clearConsole();
@@ -230,50 +230,56 @@ public class fomsApp implements fomsOperations {
     // >Staff
     public void adminHome() { // Complete level 1
         int choice;
-        do {
-            divider();
-            System.out.println("""
+    boolean exit = false; // Control flag for loop exit
+    do {
+        divider();
+        System.out.println("""
                             Admin Homepage
-                    (1) Edit staff
-                    (2) Display all staff
-                    (3) Edit payment
-                    (4) Open/close Branch
-                    (5) Promote a Staff
-                    (6) Change password
+                (1) Edit staff
+                (2) Display all staff
+                (3) Edit payment
+                (4) Open/close Branch
+                (5) Promote a Staff
+                (6) Change password
 
-                    (0) back
-                    (-1) exit""");
-            divider();
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    editStaff();
-                    break;
-                case 2:
-                    displayStaff();
-                    break;
-                case 3:
-                    editPayment();
-                    break;
-                case 4:
-                    openCloseBranch();
-                    break;
-                case 5:
-                    promoteStaff();
-                    break;
-                case 6:
-                    changeStaffPassword();
-                    break;
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Saving state and exiting...");
-                    // saveState(); // Save the state before exiting
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
-                    break;
-            }
-        } while (choice < 3);
+                (0) back
+                (-1) exit""");
+        divider();
+        choice = sc.nextInt();
+        switch (choice) {
+            case 1:
+                editStaff();
+                break;
+            case 2:
+                displayStaff();
+                break;
+            case 3:
+                editPayment();
+                break;
+            case 4:
+                openCloseBranch();
+                break;
+            case 5:
+                promoteStaff();
+                break;
+            case 6:
+                changeStaffPassword();
+                break;
+            case 0:
+                // Exit loop to go back
+                exit = true;
+                break;
+            case -1:
+                System.out.println("Saving state and exiting...");
+                // saveState(); // Save the state before exiting
+                System.out.println("Program terminating ....");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+        }
+    } while (!exit);
     }
     // Admin
 
@@ -528,6 +534,7 @@ public class fomsApp implements fomsOperations {
         } else {
             System.out.println("Only staff members can change passwords.");
         }
+        clearConsole();
     }
 
     public void displayStaffCurrentOrder() {
@@ -537,7 +544,7 @@ public class fomsApp implements fomsOperations {
             if (selectedOrder != null) {
                 // clearConsole();
                 System.out.println(
-                        "(1) Status:      New\n(2) Status:      ReadyForPickup\n(3) Status:      Completed\n(4) Set Takeaway: Takeaway\n(5) Set Takeway:  Dine-In\n\n(0) Back");
+                        "(1) Status:      New\n(2) Status:      ReadyForPickup\n(3) Status:      Completed\n(4) Status:      Cancelled\n(5) Set Takeaway: Takeaway\n(6) Set Takeway:  Dine-In\n\n(0) Back");
                 int choice = this.sc.nextInt();
                 switch (choice) {
                     case 1:
@@ -547,8 +554,10 @@ public class fomsApp implements fomsOperations {
                     case 3:
                         selectedOrder.setStatus(Status.Completed);
                     case 4:
-                        selectedOrder.setTakeaway(true);
+                        selectedOrder.setStatus(Status.Cancelled);
                     case 5:
+                        selectedOrder.setTakeaway(true);
+                    case 6:
                         selectedOrder.setTakeaway(false);
                 }
                 clearConsole();
@@ -699,7 +708,6 @@ public class fomsApp implements fomsOperations {
 
             Payment newPayment = (Payment) cls.getDeclaredConstructor().newInstance();
             onlyAdmin.managePaymentMethod("add", id, newPayment, description);
-            System.out.println("Payment method added: " + description);
         } catch (Exception e) {
             System.out.println("Failed to add payment method. Error: " + e.getMessage());
         }
@@ -714,39 +722,50 @@ public class fomsApp implements fomsOperations {
     }
 
     public void openCloseBranch() {
+    clearConsole();
+    System.out.println("Select the branch to Open or Close");
+    branchOP.listAndSelectBranch(); // Assuming this method selects the branch and sets it as current
+    int choice;
+    boolean exit = false; // Control flag for loop exit
+
+    while (!exit) {
         clearConsole();
-        System.out.println("Select the branch to Open or Close");
-        branchOP.listAndSelectBranch();
-        int choice;
-        do {
-            divider();
-            System.out.printf("""
-                    (1) Close Branch
-                    (2) Open Branch
+        divider();
+        System.out.println(branchOP.getCurrentBranch().getBranchName() + "Branch is currently " + (branchOP.getCurrentBranch().isAvailable() ? "OPEN" : "CLOSED"));
+        System.out.printf("""
+                (1) Open Branch
+                (2) Close Branch
 
-                    (0) back
-                    (-1) exit
-                    """);
-            divider();
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    branchOP.getCurrentBranch().setAvailable(false);
-                    break;
-                case 2:
-                    branchOP.getCurrentBranch().setAvailable(true);
-                    break;
-                case 0:
-                    return;
-                case -1:
-                    System.out.println("Saving state and exiting...");
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
-                    break;
-            }
-        } while (choice != 0 && choice != -1);
-
+                (0) back
+                (-1) exit
+                """);
+        divider();
+        choice = sc.nextInt();
+        switch (choice) {
+            case 1:
+                branchOP.getCurrentBranch().setAvailable(true);
+                System.out.println("Branch has been closed.");
+                openCloseBranch();
+                break;
+            case 2:
+                branchOP.getCurrentBranch().setAvailable(false);
+                System.out.println("Branch has been opened.");
+                openCloseBranch();
+                break;
+            case 0:
+                exit = true;
+                break;
+            case -1:
+                System.out.println("Saving state and exiting...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+        }}
+        
     }
+
 
     public void promoteStaff() {
         clearConsole();
@@ -784,43 +803,51 @@ public class fomsApp implements fomsOperations {
     // >BranchManager
     public void ManagerHome() { // Complete level 1
         int choice;
-        do {
-            divider();
-            System.out.printf("""
-                             Manager Homepage @ %s
-                    (1) Show and Edit Current Order
-                    (2) Display Branch Staff
-                    (3) Edit Branch Menu
+    boolean exit = false; // Control flag for loop exit
+    do {
+        divider();
+        System.out.printf("""
+                       Manager Homepage @ %s
+                (1) Show and Edit Current Order
+                (2) Display Branch Staff
+                (3) Edit Branch Menu
 
-                    (0) back
-                    (-1) exit
-                    """, branchOP.getCurrentBranch().getBranchName());
-            divider();
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    clearConsole();
-                    displayStaffCurrentOrder();
-                    break;
-                case 2:
-                    clearConsole();
-                    branchOP.getCurrentBranch().printStaffAndManagers();
-                    break;
-                case 3:
-                    clearConsole();
-                    editMenu();
-                    break;
-                case 0:
-                    break;
-                case -1:
-                    System.out.println("Saving state and exiting...");
-                    // saveState(); // Save the state before exiting
-                    System.out.println("Program terminating ....");
-                    System.exit(0);
-                    break;
-            }
-        } while (choice < 3);
+                (0) back
+                (-1) exit
+                """, branchOP.getCurrentBranch().getBranchName());
+        divider();
+        choice = sc.nextInt();
+        switch (choice) {
+            case 1:
+                clearConsole();
+                displayStaffCurrentOrder();
+                break;
+            case 2:
+                clearConsole();
+                branchOP.getCurrentBranch().printStaffAndManagers();
+                break;
+            case 3:
+                clearConsole();
+                editMenu();
+                break;
+            case 0:
+                // Exit loop to go back
+                exit = true;
+                break;
+            case -1:
+                System.out.println("Saving state and exiting...");
+                // saveState(); // Save the state before exiting
+                System.out.println("Program terminating ....");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+        }
+    } while (!exit);
     }
+
+    
 
     public void editMenu() {
         int choice;
@@ -909,6 +936,51 @@ public class fomsApp implements fomsOperations {
     }
 
     // >User
+    public void customerOrderFlow(){
+        System.out.println("Welcome to our Order System!");
+        System.out.println("Have you already placed an order? (yes/no):");
+        String response = scanner.nextLine().trim().toLowerCase();
+
+        if ("yes".equals(response)) {
+            branchOP.listAndSelectBranch(); // Ensure the branch is selected first
+    
+            System.out.print("Please enter your Customer ID: ");
+            String customerId = scanner.nextLine().trim();
+    
+            List<Order> orders = branchOP.findOrderById(customerId);
+    
+            if (!orders.isEmpty()) {
+                System.out.println("You have the following orders:");
+                for (int i = 0; i < orders.size(); i++) {
+                    System.out.printf("%d. Order ID: %s, Status: %s\n", i + 1, orders.get(i).getOrderId(), orders.get(i).getStatus());
+                }
+                System.out.print("Enter the number of the order to collect: ");
+                int orderIndex = scanner.nextInt() - 1;
+                scanner.nextLine(); // Clear the buffer
+    
+                if (orderIndex >= 0 && orderIndex < orders.size()) {
+                    Order selectedOrder = orders.get(orderIndex);
+                    System.out.printf("Your order %s is ready to be collected at %s. Do you want to collect it now? (yes/no): ", selectedOrder.getOrderId(), branchOP.getCurrentBranch().getBranchName());
+                    String collect = scanner.nextLine().trim().toLowerCase();
+                    if ("yes".equals(collect)) {
+                        selectedOrder.setStatus(Order.Status.Completed);
+                        System.out.printf("Thank you! Your order status at %s has been updated to Completed.\n", branchOP.getCurrentBranch().getBranchName());
+                    } else {
+                        System.out.println("You can collect your order later. Thank you!");
+                    }
+                } else {
+                    System.out.println("Invalid order selection.");
+                }
+            } else {
+                System.out.println("No orders found with the Customer ID: " + customerId + " at " + branchOP.getCurrentBranch().getBranchName() + ".");
+            }
+        } else if ("no".equals(response)) {
+            customerBranchSelector();
+        } else {
+            System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+        }
+    }
+
     public void customerBranchSelector() { // Complete level 2
         clearConsole();
         divider();
