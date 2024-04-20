@@ -1,4 +1,3 @@
-//For Java Doc -- Game made this on 26 March
 package src;
 
 import java.io.FileWriter;
@@ -13,15 +12,17 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
 import java.io.File;
-// import java.io.Serializable;
-
 import src.Order.Status;
-// import src.User.Gender;
 
-// import java.util.Map;
-
+/**
+ * This Main Class holds global variables used across different classes of our program.
+ * It has a main method to run user interactions and mostly interacts with an operator class
+ * to store selections made in the program.
+ *
+ * @author Game Limsila  Created at 26/3/24 Email : @author limsila.limsila@yahoo.com
+ * @version 1.00.00
+ */
 public class fomsApp implements fomsOperations {
 
     // Declare the Scanner as an instance variable of the class
@@ -52,34 +53,63 @@ public class fomsApp implements fomsOperations {
     private static PaymentManager paymentManager = new PaymentManager();
     private transient Scanner scanner = new Scanner(System.in);
     
+    /**
+     * Restores the transient state of the application after deserialization.
+     * This method is automatically called when an object of this class is deserialized,
+     * ensuring that the scanner is re-initialized to handle user input after the object is read from the stream.
+     *
+     * @param ois the {@link ObjectInputStream} from which the object is being read.
+     * @throws IOException if an I/O error occurs while reading from the ObjectInputStream.
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found.
+     */
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        ois.defaultReadObject(); // default deserialization logic
-        scanner = new Scanner(System.in); // re-initialize scanner after deserialization
+        ois.defaultReadObject(); // Perform the default deserialization logic
+        scanner = new Scanner(System.in); // Re-initialize scanner to handle console input
     }
 
+    /**
+     * Saves the current state of the application to a file.
+     * This method serializes the main components of the application, such as the branch operator and payment registry,
+     * and writes them to "AppState.ser" file. It provides feedback in the console about the success or failure of the operation.
+     */
     public void saveState() {
-    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("AppState.ser"))) {
-        out.writeObject(branchOP);
-        out.writeObject(paymentRegistry);
-        System.out.println("State saved successfully.");
-    } catch (IOException e) {
-        System.err.println("Error saving state: " + e.getMessage());
-        e.printStackTrace();
-    }
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("AppState.ser"))) {
+            out.writeObject(branchOP);
+            out.writeObject(paymentRegistry);
+            System.out.println("State saved successfully.");
+        } catch (IOException e) {
+            System.err.println("Error saving state: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Loads the state of the application from a file.
+     * This method reads and deserializes the main components of the application from "AppState.ser" file,
+     * reestablishing the state of the branch operator and payment registry from the stored data.
+     * It provides feedback in the console about the success or failure of the operation.
+     */
     public void loadState() {
-    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("AppState.ser"))) {
-        branchOP = (BranchOperator) in.readObject();
-        paymentRegistry = (PaymentRegistry) in.readObject();
-        System.out.println("State loaded successfully.");
-    } catch (IOException | ClassNotFoundException e) {
-        System.err.println("Failed to load state: " + e.getMessage());
-        e.printStackTrace();
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("AppState.ser"))) {
+            branchOP = (BranchOperator) in.readObject();
+            paymentRegistry = (PaymentRegistry) in.readObject();
+            System.out.println("State loaded successfully.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Failed to load state: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    }
-
+    /**
+     * Initializes the application with predefined administrative accounts, branch setups, and mock orders.
+     * This method sets up three branches each with their respective managers, staff, menu items, and a list of mock orders
+     * to simulate a fully operational state at the start of the application.
+     * Each branch is configured with:
+     *     A unique set of staff members and a manager.
+     *     A set of initial menu items.
+     * An admin account is also initialized to oversee operations across all branches.
+     * This method is typically called at the start of the application to prepare the environment for operation.
+     */
     public void initializer() {
         Admin onlyAdmin = new Admin("boss", "Boss", User.Gender.FEMALE, 62, "");
         branchOP.initAdmin(onlyAdmin);
@@ -150,47 +180,48 @@ public class fomsApp implements fomsOperations {
         branchOP.getCurrentBranch().getBranchMenu().addMenuItem(new MenuItem("3PC SET MEAL", 10.4, "JE", "Set meal"));
         branchOP.getCurrentBranch().getBranchMenu().addMenuItem(new MenuItem("PEPSI", 2.1, "JE", "Drink"));
 
-        // for testing
-        // for testing
-        /*branchOP.getCurrentBranch().addStaffMember(new Staff(
-                "s",
-                "Mary lee",
-                Staff.Gender.FEMALE,
-                44,
-                "JE"));
-        branchOP.getCurrentBranch().addManager(new Manager(
-                "m",
-                "Alica Ang",
-                Manager.Gender.FEMALE,
-                27,
-                "JE"));*/
-
     }
-    // private //List of Branch
 
-    // Constructor
+    /**
+     * Constructs a new {@code fomsApp} instance, initializing the scanner and setting up initial application state.
+     * This constructor initializes a new {@code Scanner} to handle console input and calls the {@code initializer} method
+     * to set up predefined data for branches, staff, and mock orders.
+     */
     public fomsApp() {
-        // Initialize the Scanner with System.in as its input stream
         this.sc = new Scanner(System.in);
         initializer();
     }
 
+    /**
+     * Clears the console screen to make new information more visible.
+     * This method attempts to clear the terminal screen by sending specific control characters
+     * that instruct most terminal emulators to clear the screen.
+     */
     public static void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * Prints a divider line in the console to separate sections of output.
+     * This method is used throughout the application to enhance readability of console output by
+     * adding a consistent visual separator.
+     */
     public static void divider() {
         System.out.println("=========================================");
     }
 
-    // Main
-    public void userSelector() { // Complete level 2
+    /**
+     * Provides a user interface for selecting the type of user interacting with the system.
+     * Users can choose to identify themselves as either a customer or a staff member.
+     * Based on their choice, the application will navigate them to the appropriate part of the system
+     * to perform tasks specific to their role.
+     */
+    public void userSelector() { 
         System.out.println(branchOP.getAllStaff());
         System.out.println(branchOP.getBranchMap().values());
         int choice;
 
-        // clearConsole();
         do {
             divider();
             System.out.println("""
@@ -226,10 +257,22 @@ public class fomsApp implements fomsOperations {
         } while (choice < 3);
     }
 
-    // >Staff
+    // Admin
+    /**
+     * Provides the administration homepage interface allowing the admin user to manage various aspects of the system.
+     * This method presents a menu with several options for the admin user:
+     *     Edit staff details
+     *     Display all staff
+     *     Edit payment methods
+     *     Open or close branches
+     *     Promote staff members to managers
+     *     Change passwords for user accounts
+     * Each option leads to a different functionality that allows the admin to manage the system effectively. The user can also exit
+     * the menu or log out, at which point the application's state can be saved before termination.
+     */
     public void adminHome() { // Complete level 1
         int choice;
-    boolean exit = false; // Control flag for loop exit
+    boolean exit = false; 
     do {
         divider();
         System.out.println("""
@@ -280,8 +323,19 @@ public class fomsApp implements fomsOperations {
         }
     } while (!exit);
     }
+    
     // Admin
-
+    /**
+     * Displays the administration menu for managing staff within the system.
+     * This method provides an interface for the admin to add, remove, or edit staff details through a series of menu options.
+     * The user navigates through the menu using numeric inputs to select the desired operation:
+     *     (1) Add staff - Calls {@code addStaff()} to add a new staff member.
+     *     (2) Remove staff - Calls {@code removeStaff()} to remove an existing staff member.
+     *     (3) Edit staff details - Calls {@code editStaffDetails()} to modify details of an existing staff member.
+     *     (0) Back - Exits the current menu and returns to the previous menu.
+     *     (-1) Exit - Terminates the application after saving any changes.
+     * Each option is processed through a switch statement, and the method will loop until the user decides to exit by choosing '0' or '-1'.
+     */
     public void editStaff() { // Admin page for editing details
         int choice = 0;
         do {
@@ -317,7 +371,15 @@ public class fomsApp implements fomsOperations {
             }
         } while (choice != 0);
     }
-
+    /**
+     * Evaluates if staff members can be added to or removed from a given branch based on manager-to-staff ratios.
+     * This method checks if the proposed change in staff count (either increase or decrease) would keep the branch compliant
+     * with predefined staffing ratios.
+     *
+     * @param branch The branch for which staff changes are being considered.
+     * @param delta The net change in the number of staff members (positive for additions, negative for removals).
+     * @return {@code true} if the change maintains valid staff-to-manager ratios, {@code false} otherwise.
+     */
     private boolean canChangeStaff(Branch branch, int delta) {
         int currentStaffCount = branch.getStaffMembers().size();
         int currentManagerCount = branch.getManagerMembers().size();
@@ -329,6 +391,11 @@ public class fomsApp implements fomsOperations {
                 (currentManagerCount >= (newStaffCount / 5));
     }
 
+    /**
+     * Attempts to add a new staff member to a specified branch after validating branch existence and compliance with
+     * manager-to-staff ratio rules. It prompts the user for input regarding the new staff's details and, if the
+     * addition is valid, adds them to the branch.
+     */
     private void addStaff() {
         System.out.print("Enter the branch name: ");
         String branchName = scanner.nextLine();
@@ -377,6 +444,11 @@ public class fomsApp implements fomsOperations {
         divider();
     }
 
+    /**
+     * Provides functionality to remove a staff member from a branch. The method lists all staff members for a given
+     * branch and allows the user to select one for removal based on their index. It checks if the branch exists
+     * and if there are any staff members to remove.
+     */
     private void removeStaff() {
         System.out.print("Enter the branch name: ");
         branchOP.listAndSelectBranch();
@@ -417,6 +489,11 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Facilitates the filtering and editing of staff details within the system. Users can choose to filter staff
+     * by branch and specific attributes such as name, age, gender, or branch. This method allows for dynamic
+     * filtering and subsequent modification of staff details based on user input.
+     */
     private void editStaffDetails() {
         List<Staff> staffList;
         String filterBranch = null;
@@ -465,6 +542,12 @@ public class fomsApp implements fomsOperations {
         branchOP.modifyStaff(staffList);
     }
 
+    /**
+     * Manages the login process for staff, managers, and admin users. It prompts for username and password,
+     * authenticates against existing staff records, and directs the user to the appropriate home screen based
+     * on their role (Manager, Admin, or Staff). If the login credentials do not match, the login process is repeated.
+     * The method distinguishes between different types of users and sets up the environment accordingly.
+     */
     public void staffLogin() {
         divider();
         System.out.println("""
@@ -504,6 +587,12 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Allows staff members to change their password. This method ensures that only staff members can initiate a password
+     * change. It requires the user to enter the current password for verification and then input the new password along
+     * with a confirmation. If the new password and its confirmation match, and the current password is verified, the
+     * password change is processed successfully.
+     */
     public void changeStaffPassword() {
         if (currentUser instanceof Staff) {
             Staff staff = (Staff) currentUser;
@@ -533,6 +622,11 @@ public class fomsApp implements fomsOperations {
         clearConsole();
     }
 
+    /**
+     * Provides an interactive menu for staff to manage the status of orders within their assigned branch.
+     * Staff can view and update order statuses (New, ReadyForPickup, Completed, Cancelled) or toggle the takeaway option.
+     * The loop continues until there are no orders to manage or the staff chooses to exit.
+     */
     public void displayStaffCurrentOrder() {
         do {
 
@@ -570,6 +664,10 @@ public class fomsApp implements fomsOperations {
 
     }
 
+    /**
+     * Displays the current staff's home page, primarily facilitating order management.
+     * This function first ensures that a branch is selected before allowing access to order management.
+     */
     public void staffHome() {
         // Showing current orders
         Branch selectedBranch = branchOP.getCurrentBranch();
@@ -585,6 +683,14 @@ public class fomsApp implements fomsOperations {
     }
 
     // >Admin
+    /**
+     * Facilitates the payment process for an order.
+     * Presents the total amount due, lists available payment methods, and processes the selected payment method.
+     * If the user selects to cancel the payment or if an invalid order is passed, the method returns false.
+     *
+     * @param order The order for which the payment is being processed.
+     * @return true if the payment is successfully processed, false if the payment is cancelled or fails.
+     */
     public boolean paymentGateway(Order order) { 
         if (order == null) {
             System.out.println("Error: No order to process.");
@@ -608,6 +714,11 @@ public class fomsApp implements fomsOperations {
 
     }
 
+    /**
+     * Displays the available payment methods registered in the payment system.
+     * Each payment method is presented with an ID and a description. Users can select a method by entering its ID
+     * or cancel the payment process by entering -1.
+     */
     private static void displayPaymentMethods() {
         System.out.println("Available Payment Methods:");
         System.out.println("=========================================");
@@ -618,7 +729,12 @@ public class fomsApp implements fomsOperations {
         System.out.println("Enter -1 to cancel payment.");
     }
 
-    public void displayStaff() { // Complete level 1
+    /**
+     * Displays the list of staff members at the currently selected branch.
+     * This method first clears the console, checks if a branch has been selected, and if so, retrieves and lists all staff members.
+     * If no branch is selected or if there are no staff members in the selected branch, appropriate messages are displayed.
+     */
+    public void displayStaff() { 
         clearConsole();
         Branch currentBranch = branchOP.getCurrentBranch();
 
@@ -635,16 +751,21 @@ public class fomsApp implements fomsOperations {
 
         System.out.println("Staff in " + currentBranch.getBranchName() + ":");
         divider();
-        System.out.printf("%-10s %-20s %-15s \n", "ID", "Name", "Role"); // Adjust headers as
+        System.out.printf("%-10s %-20s\n", "ID", "Name"); // Adjust headers as
                                                                          // needed
         for (Staff staff : staffList) {
-            System.out.printf("%-10s %-20s %-15s \n",
+            System.out.printf("%-10s %-20s\n",
                     staff.getId(),
-                    staff.getName()); // Make sure these methods exist in your Staff class
+                    staff.getName());
         }
         divider();
     }
 
+    /**
+     * Provides an interface for editing payment methods. Allows adding or removing payment methods from the system.
+     * The method continuously displays options until the user decides to exit. Options include adding a new payment method,
+     * removing an existing one, or returning to the previous menu.
+     */
     public void editPayment() {
         int choice;
 
@@ -684,6 +805,10 @@ public class fomsApp implements fomsOperations {
         } while (choice != 0);
     }
 
+    /**
+     * Lists all existing payment methods available in the payment registry.
+     * Displays each payment method's ID and description.
+     */
     private void listExistingPaymentMethods() {
         Set<Entry<Integer, PaymentRegistry.PaymentMethod>> methods = paymentRegistry.getAllPaymentMethods();
         if (methods.isEmpty()) {
@@ -696,6 +821,11 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Adds a new payment method to the system based on user input. Requires an ID, a description,
+     * and the class name of the payment implementation. The method uses reflection to instantiate
+     * the payment class based on its name.
+     */
     private void addPaymentMethod() {
         System.out.println("Enter new payment method ID:");
         int id = sc.nextInt();
@@ -715,6 +845,10 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Removes a specified payment method from the system using its ID.
+     * User must confirm the ID of the payment method they wish to remove.
+     */
     private void removePaymentMethod() {
         System.out.println("Enter payment method ID to remove:");
         int id = sc.nextInt();
@@ -723,6 +857,12 @@ public class fomsApp implements fomsOperations {
         onlyAdmin.managePaymentMethod("remove", id, null, "");
     }
 
+    /**
+     * Provides an interface for opening or closing a branch. 
+     * Allows the administrator to toggle the availability of a branch within the system.
+     * The method first prompts the user to select a branch, then provides options to either open or close the selected branch.
+     * This method ensures that the user can review the current status of the branch before making changes.
+     */
     public void openCloseBranch() {
     clearConsole();
     System.out.println("Select the branch to Open or Close");
@@ -768,7 +908,12 @@ public class fomsApp implements fomsOperations {
         
     }
 
-
+    /**
+     * Facilitates the promotion of a staff member to a managerial position within a selected branch.
+     * This method allows the administrator to first select a branch and then choose a staff member from that branch to be promoted.
+     * It displays a list of all staff members, allowing the administrator to select one for promotion.
+     * Upon selection, the staff member is converted to a manager, and both the staff and manager lists are updated accordingly.
+     */
     public void promoteStaff() {
         clearConsole();
         List<Staff> allStaff = new ArrayList<>();
@@ -802,6 +947,12 @@ public class fomsApp implements fomsOperations {
     }
 
     // >BranchManager
+    /**
+     * Provides the main interface for branch managers within the application.
+     * Managers can navigate through various administrative tasks such as viewing and editing current orders,
+     * managing staff details, and modifying the branch menu. This method serves as the central hub for all
+     * managerial operations, offering choices that lead to specific functionalities for branch management.
+     */
     public void ManagerHome() { 
         int choice;
     boolean exit = false; // Control flag for loop exit
@@ -849,7 +1000,14 @@ public class fomsApp implements fomsOperations {
     }
 
     
-
+    /**
+     * Provides the menu editing interface for managers of a branch. This method allows managers to add,
+     * remove, or update items in the branch's menu. Access is restricted to users with manager privileges.
+     * Managers can perform a variety of modifications to ensure the menu reflects current offerings accurately.
+     *
+     * The method ensures that only authorized managers can make changes to the menu, providing options to
+     * add new items, remove existing ones, or update details of menu items such as price or description.
+     */
     public void editMenu() {
         int choice;
         if (currentUser instanceof Manager) {
@@ -894,6 +1052,11 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Displays a list of all staff members within a selected branch. Provides an interface for user interaction where
+     * users can view detailed information about each staff member in the branch. Users can navigate back to the previous menu
+     * or choose to exit the application from this view.
+     */
     public void displayBranchStaff() { // Complete level 1
         Branch selectedBranch = branchOP.getCurrentBranch();
         int choice;
@@ -936,6 +1099,12 @@ public class fomsApp implements fomsOperations {
     }
 
     // >User
+    /**
+     * Manages the flow for a customer's order interaction. It asks the customer whether they have already placed an order.
+     * If they have, it allows them to review and potentially collect their orders by confirming their customer ID.
+     * If they have not, it redirects them to the branch selector to place an order. This method ensures that customers can
+     * interact with their orders in an organized manner, handling both retrieval of existing orders and the placement of new ones.
+     */
     public void customerOrderFlow(){
         System.out.println("Welcome to our Order System!");
         System.out.println("Have you already placed an order? (yes/no):");
@@ -981,6 +1150,11 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Presents a user interface for customers to select a branch from which they would like to order.
+     * Clears the console and displays a list of available branches. Once a branch is selected,
+     * the menu list of the selected branch is displayed.
+     */
     public void customerBranchSelector() { // Complete level 2
         clearConsole();
         divider();
@@ -992,6 +1166,11 @@ public class fomsApp implements fomsOperations {
 
     }
 
+    /**
+     * Displays the menu list of the selected branch and allows the customer to create and customize their order.
+     * If items are added to the order cart, it prompts the customer for payment.
+     * If the payment is successful, the order is added to the branch's list of orders.
+     */
     public void menuList() {
         Order OrderCart = new Order(currentCustomerId, false);
         OrderCart = branchOP.displayMenuAndSelect(OrderCart);
@@ -1004,6 +1183,12 @@ public class fomsApp implements fomsOperations {
         }
     }
 
+    /**
+     * Main method to start the application. It initializes the application and navigates the user
+     * to the appropriate interface based on their role selection.
+     *
+     * @param args Command line arguments passed to the program.
+     */
     public static void main(String[] args) {
         fomsApp app = new fomsApp();
         app.userSelector(); // Call the instance method on the object

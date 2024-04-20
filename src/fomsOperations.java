@@ -1,46 +1,100 @@
 package src;
+
+/**
+ * Defines the operations available in the Food Order Management System (FOMS).
+ * This interface outlines the main functionalities for different types of users including staff, admins, branch managers, and customers.
+ */
 public interface fomsOperations {
-    // Main
-    public abstract void  userSelector(); // 1.X
-    
-    // >Staff
-    public abstract void  adminHome(); // 1.2.1
-    
-    
-    public abstract void  staffLogin(); // 1.2.X
-    
-    public abstract void  staffHome(); // 1.2.2.X
 
-    public abstract void  displayStaffCurrentOrder(); // 1.1.1
-    
-    // public abstract void  displayBranchCurrentOrder(Branch branch);
-    // >>Admin
+    /**
+     * Presents the main user selection interface, allowing users to identify themselves and navigate to their specific functionalities.
+     */
+    public abstract void userSelector();
 
-    public abstract void  editStaff(); // 1.2.1.1
+    // Staff-related operations //
 
-    public abstract void  displayStaff(); // 1.2.1.3
+    /**
+     * Displays the home interface for admin users with options for managing the system and user activities.
+     */
+    public abstract void adminHome();
 
-    public abstract void  editPayment(); // 1.2.1.4
+    /**
+     * Handles the login procedure for staff members.
+     */
+    public abstract void staffLogin();
 
-    public abstract void  openCloseBranch(); // 1.2.1.5
+    /**
+     * Displays the home interface for staff users, showing available actions and information relevant to staff.
+     */
+    public abstract void staffHome();
 
-    public abstract void  promoteStaff(); // 1.2.1.6
+    /**
+     * Displays the current orders assigned to the staff member that are pending completion.
+     */
+    public abstract void displayStaffCurrentOrder();
 
-    // >>BranchManager
-    public abstract void  ManagerHome(); // 1.2.3.X
+    // Admin-specific operations //
 
-    public abstract void  editMenu(); // 1.2.3.1
+    /**
+     * Provides functionality for editing staff member details such as roles or personal information.
+     */
+    public abstract void editStaff();
 
-    public abstract void  displayBranchStaff(); // 1.2.3.2
+    /**
+     * Displays all staff members, typically for administrative purposes such as management or review.
+     */
+    public abstract void displayStaff();
 
-    // >User
-    public abstract void  customerBranchSelector(); // 1.1.X
+    /**
+     * Allows admins to edit and configure payment methods and settings.
+     */
+    public abstract void editPayment();
 
-    public abstract boolean  paymentGateway(Order order);
+    /**
+     * Provides the ability to open or close branches, adjusting their operational status.
+     */
+    public abstract void openCloseBranch();
 
-    // public abstract  Order  displayUserCurrentOrder(Order orderCart); // 1.1.1
+    /**
+     * Enables the promotion of staff members to higher roles, such as promoting a staff member to a manager.
+     */
+    public abstract void promoteStaff();
 
-    public abstract void  menuList(); // 1.1.2
-    // Level X.X.1
+    // Branch Manager operations //
+
+    /**
+     * Displays the home interface for branch managers with managerial functionalities.
+     */
+    public abstract void ManagerHome();
+
+    /**
+     * Provides branch managers with the capability to edit the menu for their branch.
+     */
+    public abstract void editMenu();
+
+    /**
+     * Displays all staff members associated with a specific branch.
+     */
+    public abstract void displayBranchStaff();
+
+    // Customer-related operations //
+
+    /**
+     * Displays the branch selection interface for customers, allowing them to choose which branch's menu to view.
+     */
+    public abstract void customerBranchSelector();
+
+    /**
+     * Processes payments for orders, interfacing with external payment systems as necessary.
+     *
+     * @param order The order for which payment is being processed.
+     * @return true if the payment is processed successfully, false otherwise.
+     */
+    public abstract boolean paymentGateway(Order order);
+
+    /**
+     * Lists the menu items available for order, typically within a customer-facing interface.
+     */
+    public abstract void menuList();
 
 }
